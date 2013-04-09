@@ -23,6 +23,16 @@ namespace Biseth.Net.Settee.Http
             return asyncResult.ResponseData.ToString();
         }
 
+        public string Get(string url)
+        {
+            var asyncResult = BeginGet(url, null, null);
+            if (asyncResult != null && (asyncResult.IsCompleted || asyncResult.AsyncWaitHandle.WaitOne()))
+            {
+                return EndGet(asyncResult);
+            }
+            return null;
+        }
+
         private static void GetSersponseCallback(IAsyncResult ar)
         {
             if (ar == null || !(ar.AsyncState is HttpAsyncResult))

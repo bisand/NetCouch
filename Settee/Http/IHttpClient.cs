@@ -6,5 +6,6 @@ namespace Biseth.Net.Settee.Http
     {
         IAsyncResult BeginGet(string url, AsyncCallback callback, object state);
         string EndGet(IAsyncResult asyncResult);
+        string Get(string url);
     }
 }
