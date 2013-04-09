@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -45,11 +48,17 @@
     <Compile Include="Http\HttpClient.cs" />
     <Compile Include="Http\HttpMethod.cs" />
     <Compile Include="Http\IHttpClient.cs" />
+    <Compile Include="Http\IRequestClient.cs" />
+    <Compile Include="Serialization\ISerializer.cs" />
+    <Compile Include="Http\RequestClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\NewtonsoftSerializer.cs" />
     <Compile Include="Threading\BasicAsyncResult.cs" />
     <Compile Include="Threading\HttpAsyncResult.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
