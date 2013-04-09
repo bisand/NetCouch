@@ -1,8 +1,12 @@
-﻿namespace Biseth.Net.Settee.Serialization
+﻿using System;
+
+namespace Biseth.Net.Settee.Serialization
 {
-    public interface ISerializer
+    public interface ISerializer<TIn, TOut>
     {
-        string Serialize(object obj);
-        T Deserialize<T>(string text);
+        Func<TIn, string> Serialze { get; set; }
+        Func<string, TOut> Deserialze { get; set; }
+        string Serialize(TIn obj);
+        TOut Deserialize(string text);
     }
 }

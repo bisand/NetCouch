@@ -7,7 +7,7 @@ using Biseth.Net.Settee.Serialization;
 
 namespace Biseth.Net.Settee.Threading
 {
-    public class RequestAsyncResult<T> : BasicAsyncResult
+    public class RequestAsyncResult<TIn, TOut> : BasicAsyncResult
     {
         internal RequestAsyncResult(AsyncCallback callback, object state)
             : base(callback, state)
@@ -15,12 +15,13 @@ namespace Biseth.Net.Settee.Threading
             HttpClient = null;
             RequestData = null;
             ResponseData = null;
+            Serializer = new NewtonsoftSerializer<TIn, TOut>();
         }
 
         public string Method { get; set; }
         public IHttpClient HttpClient { get; set; }
-        public RequestData<T> RequestData { get; set; }
-        public ResponseData ResponseData { get; set; }
-        public ISerializer Serializer { get; set; }
+        public RequestData<TIn> RequestData { get; set; }
+        public ResponseData<TOut> ResponseData { get; set; }
+        public ISerializer<TIn, TOut> Serializer { get; set; }
     }
 }

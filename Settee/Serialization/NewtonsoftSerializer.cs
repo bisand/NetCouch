@@ -1,17 +1,21 @@
+using System;
 using Newtonsoft.Json;
 
 namespace Biseth.Net.Settee.Serialization
 {
-    class NewtonsoftSerializer : ISerializer
+    class NewtonsoftSerializer<TIn, TOut> : ISerializer<TIn, TOut>
     {
-        public string Serialize(object obj)
+        public Func<TIn, string> Serialze { get; set; }
+        public Func<string, TOut> Deserialze { get; set; }
+
+        public string Serialize(TIn obj)
         {
             return JsonConvert.SerializeObject(obj);
         }
 
-        public T Deserialize<T>(string text)
+        public TOut Deserialize(string text)
         {
-            return JsonConvert.DeserializeObject<T>(text);
+            return JsonConvert.DeserializeObject<TOut>(text);
         }
     }
 }
