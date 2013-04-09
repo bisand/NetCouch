@@ -127,6 +127,26 @@ namespace Biseth.Net.Settee.Http
             throw new NotImplementedException();
         }
 
+        private void RequestCallback<T>(IAsyncResult ar)
+        {
+            if (ar == null || !(ar.AsyncState is RequestAsyncResult<T>))
+                throw new NullReferenceException("Async result is null or async state is not of the expected type.");
+
+            var asyncResult = ar.AsyncState as RequestAsyncResult<T>;
+
+            switch (asyncResult.Method)
+            {
+                case HttpMethod.Get:
+                    asyncResult.ResponseData.Data = asyncResult.HttpClient.EndGet(ar);
+                    Func<string, T> deserialze = text => _serializer.Deserialize<T>(text);
+                    asyncResult.InternalAsyncResult = deserialze.BeginInvoke(asyncResult.ResponseData.Data, DeserializeCallback<T>, asyncResult);
+                    break;
+                default:
+                    asyncResult.SetComplete();
+                    break;
+            }
+        }
+
         private void SerializeCallback<T>(IAsyncResult ar)
         {
             if (ar == null || !(ar.AsyncState is RequestAsyncResult<T>))
@@ -156,24 +176,22 @@ namespace Biseth.Net.Settee.Http
             }
         }
 
-        private void RequestCallback<T>(IAsyncResult ar)
+        private void DeserializeCallback<T>(IAsyncResult ar)
         {
             if (ar == null || !(ar.AsyncState is RequestAsyncResult<T>))
                 throw new NullReferenceException("Async result is null or async state is not of the expected type.");
 
             var asyncResult = ar.AsyncState as RequestAsyncResult<T>;
-
             switch (asyncResult.Method)
             {
                 case HttpMethod.Get:
-                    asyncResult.ResponseData.Data = asyncResult.HttpClient.EndGet(ar);
-                    Func<string, T> deserialze = text => _serializer.Deserialize<T>(text);
-                    asyncResult.InternalAsyncResult = deserialze.BeginInvoke(asyncResult.ResponseData.Data, SerializeCallback<T>, asyncResult);
+                    asyncResult.InternalAsyncResult = asyncResult.HttpClient.BeginPut(asyncResult.RequestData.Url, RequestCallback<T>, asyncResult);
                     break;
                 default:
                     asyncResult.SetComplete();
                     break;
             }
         }
+
     }
 }
