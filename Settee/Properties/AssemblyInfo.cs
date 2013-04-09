@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Settee")]
+[assembly: AssemblyTitle("Biseth.Net.Settee")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Pareto")]
-[assembly: AssemblyProduct("Settee")]
-[assembly: AssemblyCopyright("Copyright © Pareto 2013")]
+[assembly: AssemblyCompany("biseth.net")]
+[assembly: AssemblyProduct("Biseth.Net.Settee")]
+[assembly: AssemblyCopyright("Copyright © André Biseth 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

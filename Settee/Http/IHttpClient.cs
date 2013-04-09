@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Web;
 
-namespace Settee.Http
+namespace Biseth.Net.Settee.Http
 {
     public interface IHttpClient
     {

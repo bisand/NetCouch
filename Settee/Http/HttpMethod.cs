@@ -1,4 +1,4 @@
-﻿namespace Settee.Http
+﻿namespace Biseth.Net.Settee.Http
 {
     public class HttpMethod
     {

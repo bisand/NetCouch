@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Settee.Threading
+namespace Biseth.Net.Settee.Threading
 {
     public class BasicAsyncResult : IAsyncResult, IDisposable
     {

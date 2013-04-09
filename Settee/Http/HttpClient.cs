@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Text;
-using Settee.Threading;
+using Biseth.Net.Settee.Threading;
 
-namespace Settee.Http
+namespace Biseth.Net.Settee.Http
 {
     public class HttpClient : IHttpClient
     {
