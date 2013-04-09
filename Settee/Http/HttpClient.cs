@@ -33,6 +33,81 @@ namespace Biseth.Net.Settee.Http
             return null;
         }
 
+        public IAsyncResult BeginPut(string url, AsyncCallback callback, object state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string EndPut(IAsyncResult asyncResult)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Put(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncResult BeginHead(string url, AsyncCallback callback, object state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string EndHead(IAsyncResult asyncResult)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Head(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncResult BeginPost(string url, AsyncCallback callback, object state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string EndPost(IAsyncResult asyncResult)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Post(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncResult BeginDelete(string url, AsyncCallback callback, object state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string EndDelete(IAsyncResult asyncResult)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Delete(string url)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncResult BeginOptions(string url, AsyncCallback callback, object state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string EndOptions(IAsyncResult asyncResult)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Options(string url)
+        {
+            throw new NotImplementedException();
+        }
+
         private static void GetSersponseCallback(IAsyncResult ar)
         {
             if (ar == null || !(ar.AsyncState is HttpAsyncResult))
