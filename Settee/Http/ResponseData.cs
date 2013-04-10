@@ -11,4 +11,12 @@ namespace Biseth.Net.Settee.Http
         public string Data { get; set; }
         public T DataDeserialized { get; set; }
     }
+
+    public static class ResponseDataExtensions
+    {
+        public static ResponseData<T> Root<T>(this ResponseData<T> responseData)
+        {
+            return responseData;
+        }
+    }
 }

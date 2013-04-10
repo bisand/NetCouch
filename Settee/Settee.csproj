@@ -45,6 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\CouchIndex.cs" />
+    <Compile Include="Couch\Api\CouchApi.cs" />
+    <Compile Include="Couch\Api\CouchApi2.cs" />
+    <Compile Include="Couch\Api\Elements\CouchApiConfig.cs" />
+    <Compile Include="Couch\Api\Elements\CouchApiRoot.cs" />
+    <Compile Include="Couch\Api\Extensions\CouchApiRootExtensions.cs" />
+    <Compile Include="Couch\Api\ICouchApi.cs" />
     <Compile Include="Http\HttpClient.cs" />
     <Compile Include="Http\HttpMethod.cs" />
     <Compile Include="Http\HttpResponseData.cs" />
@@ -66,7 +72,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Couch\" />
+    <Folder Include="Couch\Helpers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
