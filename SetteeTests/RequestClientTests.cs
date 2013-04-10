@@ -24,19 +24,20 @@ namespace SetteeTests
             var data = client.Get<HttpGetRoot>(CouchApi2.Root());
             Assert.IsNotNull(data);
 
-            var data2 = client.Get<object>(CouchApi2.Root().Config("couchdb"));
+            var data2 = client.Get<dynamic>(CouchApi2.Root().Config("couchdb"));
             Assert.IsNotNull(data2);
 
             var rootData = api.Root().Get<HttpGetRoot>();
             Assert.IsNotNull(rootData);
 
-            var configData = api.Root().Config().Get<Dictionary<string, object>>();
+            var configData = api.Root().Config().Get<dynamic>();
             Assert.IsNotNull(configData);
 
-            var configSectionData = api.Root().Config().Section("daemons").Get<object>();
+            var configSectionData = api.Root().Config().Section("daemons").Get<dynamic>();
+            var indexServer = configSectionData.DataDeserialized.index_server.ToString();
             Assert.IsNotNull(configSectionData);
 
-            var dbData = api.Root().Db("test").Get<object>();
+            var dbData = api.Root().Db("test").Get<dynamic>();
             Assert.IsNotNull(dbData);
         }
     }
