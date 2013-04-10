@@ -47,11 +47,13 @@
     <Compile Include="Attributes\CouchIndex.cs" />
     <Compile Include="Http\HttpClient.cs" />
     <Compile Include="Http\HttpMethod.cs" />
+    <Compile Include="Http\HttpResponseData.cs" />
     <Compile Include="Http\IHttpClient.cs" />
     <Compile Include="Http\IRequestClient.cs" />
     <Compile Include="Http\RequestData.cs" />
     <Compile Include="Http\ResponseData.cs" />
-    <Compile Include="Models\Couch\HttpGetRoot.cs" />
+    <Compile Include="Models\Couch\Database\DatabaseVendor.cs" />
+    <Compile Include="Models\Couch\Database\HttpGetRoot.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Http\RequestClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

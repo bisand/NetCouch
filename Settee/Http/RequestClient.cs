@@ -10,7 +10,7 @@ namespace Biseth.Net.Settee.Http
         private string _url;
 
         public RequestClient(string url)
-            : this(url, new HttpClient())
+            : this(url, new HttpClient(url))
         {
         }
 
@@ -28,6 +28,7 @@ namespace Biseth.Net.Settee.Http
             var asyncResult = new RequestAsyncResult<TOut, TOut>(callback, state)
                 {
                     RequestData = new RequestData<TOut>(url),
+                    ResponseData = new ResponseData<TOut>(),
                     HttpClient = _httpClient,
                     Method = HttpMethod.Get,
                 };
@@ -39,10 +40,10 @@ namespace Biseth.Net.Settee.Http
 
         public ResponseData<TOut> EndGet<TOut>(IAsyncResult ar)
         {
-            if (ar == null || !(ar.AsyncState is RequestAsyncResult<TOut, TOut>))
+            if (ar == null || !(ar is RequestAsyncResult<TOut, TOut>))
                 throw new NullReferenceException("Async result is null or async state is not of the expected type.");
 
-            var asyncResult = ar.AsyncState as RequestAsyncResult<TOut, TOut>;
+            var asyncResult = ar as RequestAsyncResult<TOut, TOut>;
             return asyncResult.ResponseData;
         }
 
@@ -143,8 +144,18 @@ namespace Biseth.Net.Settee.Http
             switch (asyncResult.Method)
             {
                 case HttpMethod.Get:
-                    asyncResult.ResponseData.Data = asyncResult.HttpClient.EndGet(ar);
-                    asyncResult.InternalAsyncResult = asyncResult.Serializer.Deserialze.BeginInvoke(asyncResult.ResponseData.Data, DeserializeCallback<TIn, TOut>, asyncResult);
+                    var responseData = asyncResult.HttpClient.EndGet(ar);
+                    if (responseData == null)
+                    {
+                        asyncResult.SetComplete();
+                        return;
+                    }
+                    asyncResult.ResponseData.Data = responseData.Data;
+                    asyncResult.ResponseData.ContentLength = responseData.ContentLength;
+                    asyncResult.ResponseData.ContentType = responseData.ContentType;
+                    asyncResult.ResponseData.StatusCode = responseData.StatusCode;
+                    asyncResult.ResponseData.StatusDescription = responseData.StatusDescription;
+                    asyncResult.InternalAsyncResult = asyncResult.Serializer.DeserializeFunc.BeginInvoke(responseData.Data, DeserializeCallback<TIn, TOut>, asyncResult);
                     break;
                 default:
                     asyncResult.SetComplete();
@@ -190,7 +201,7 @@ namespace Biseth.Net.Settee.Http
             switch (asyncResult.Method)
             {
                 case HttpMethod.Get:
-                    asyncResult.ResponseData.DataDeserialized = asyncResult.Serializer.Deserialze.EndInvoke(ar);
+                    asyncResult.ResponseData.DataDeserialized = asyncResult.Serializer.DeserializeFunc.EndInvoke(ar);
                     break;
             }
             asyncResult.SetComplete();

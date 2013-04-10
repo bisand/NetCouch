@@ -7,25 +7,44 @@ namespace Biseth.Net.Settee.Http
 {
     public class HttpClient : IHttpClient
     {
-        public IAsyncResult BeginGet(string url, AsyncCallback callback, object state)
+        public string BaseUrl { get; private set; }
+
+        public HttpClient(string baseUrl)
         {
-            var asyncResult = new HttpAsyncResult(callback, state) {Request = WebRequest.Create(url)};
+            BaseUrl = baseUrl;
+            BaseUri = new Uri(baseUrl);
+        }
+
+        public IAsyncResult BeginGet(string path, AsyncCallback callback, object state)
+        {
+            var builder = new UriBuilder(BaseUri) {Path = path};
+            var asyncResult = new HttpAsyncResult(callback, state) {Request = (HttpWebRequest) WebRequest.Create(builder.Uri)};
             asyncResult.InternalAsyncResult = asyncResult.Request.BeginGetResponse(GetSersponseCallback, asyncResult);
             return asyncResult;
         }
 
-        public string EndGet(IAsyncResult ar)
+        protected Uri BaseUri { get; private set; }
+
+        public HttpResponseData EndGet(IAsyncResult ar)
         {
-            if (ar == null || !(ar.AsyncState is HttpAsyncResult))
+            if (ar == null || !(ar is HttpAsyncResult))
                 throw new NullReferenceException("Async result is null or async state is not of the expected type.");
 
-            var asyncResult = ar.AsyncState as HttpAsyncResult;
-            return asyncResult.ResponseData.ToString();
+            var asyncResult = ar as HttpAsyncResult;
+            var responseData = new HttpResponseData
+                {
+                    Data = asyncResult.ResponseData.ToString(), 
+                    ContentLength = asyncResult.Response.ContentLength, 
+                    ContentType = asyncResult.Response.ContentType, 
+                    StatusCode = asyncResult.Response.StatusCode, 
+                    StatusDescription = asyncResult.Response.StatusDescription
+                };
+            return responseData;
         }
 
-        public string Get(string url)
+        public HttpResponseData Get(string path)
         {
-            var asyncResult = BeginGet(url, null, null);
+            var asyncResult = BeginGet(path, null, null);
             if (asyncResult != null && (asyncResult.IsCompleted || asyncResult.AsyncWaitHandle.WaitOne()))
             {
                 return EndGet(asyncResult);
@@ -33,7 +52,7 @@ namespace Biseth.Net.Settee.Http
             return null;
         }
 
-        public IAsyncResult BeginPut(string url, AsyncCallback callback, object state)
+        public IAsyncResult BeginPut(string path, AsyncCallback callback, object state)
         {
             throw new NotImplementedException();
         }
@@ -43,12 +62,12 @@ namespace Biseth.Net.Settee.Http
             throw new NotImplementedException();
         }
 
-        public string Put(string url)
+        public string Put(string path)
         {
             throw new NotImplementedException();
         }
 
-        public IAsyncResult BeginHead(string url, AsyncCallback callback, object state)
+        public IAsyncResult BeginHead(string path, AsyncCallback callback, object state)
         {
             throw new NotImplementedException();
         }
@@ -58,12 +77,12 @@ namespace Biseth.Net.Settee.Http
             throw new NotImplementedException();
         }
 
-        public string Head(string url)
+        public string Head(string path)
         {
             throw new NotImplementedException();
         }
 
-        public IAsyncResult BeginPost(string url, AsyncCallback callback, object state)
+        public IAsyncResult BeginPost(string path, AsyncCallback callback, object state)
         {
             throw new NotImplementedException();
         }
@@ -73,12 +92,12 @@ namespace Biseth.Net.Settee.Http
             throw new NotImplementedException();
         }
 
-        public string Post(string url)
+        public string Post(string path)
         {
             throw new NotImplementedException();
         }
 
-        public IAsyncResult BeginDelete(string url, AsyncCallback callback, object state)
+        public IAsyncResult BeginDelete(string path, AsyncCallback callback, object state)
         {
             throw new NotImplementedException();
         }
@@ -88,12 +107,12 @@ namespace Biseth.Net.Settee.Http
             throw new NotImplementedException();
         }
 
-        public string Delete(string url)
+        public string Delete(string path)
         {
             throw new NotImplementedException();
         }
 
-        public IAsyncResult BeginOptions(string url, AsyncCallback callback, object state)
+        public IAsyncResult BeginOptions(string path, AsyncCallback callback, object state)
         {
             throw new NotImplementedException();
         }
@@ -103,7 +122,7 @@ namespace Biseth.Net.Settee.Http
             throw new NotImplementedException();
         }
 
-        public string Options(string url)
+        public string Options(string path)
         {
             throw new NotImplementedException();
         }
@@ -114,7 +133,7 @@ namespace Biseth.Net.Settee.Http
                 throw new NullReferenceException("Async result is null or async state is not of the expected type.");
 
             var asyncResult = ar.AsyncState as HttpAsyncResult;
-            asyncResult.Response = asyncResult.Request.EndGetResponse(ar);
+            asyncResult.Response = (HttpWebResponse) asyncResult.Request.EndGetResponse(ar);
             asyncResult.ResponseStream = asyncResult.Response.GetResponseStream();
             if (asyncResult.ResponseStream != null)
                 asyncResult.InternalAsyncResult = asyncResult.ResponseStream.BeginRead(asyncResult.BufferRead, 0, asyncResult.BufferReadSize, BufferReadCallback, asyncResult);

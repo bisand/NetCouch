@@ -24,8 +24,8 @@ namespace Biseth.Net.Settee.Threading
             get { return BUFFER_SIZE; }
         }
 
-        public WebRequest Request { get; set; }
-        public WebResponse Response { get; set; }
+        public HttpWebRequest Request { get; set; }
+        public HttpWebResponse Response { get; set; }
         public Stream ResponseStream { get; set; }
         public StringBuilder ResponseData { get; set; }
     }

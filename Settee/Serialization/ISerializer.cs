@@ -4,8 +4,8 @@ namespace Biseth.Net.Settee.Serialization
 {
     public interface ISerializer<TIn, TOut>
     {
-        Func<TIn, string> Serialze { get; set; }
-        Func<string, TOut> Deserialze { get; set; }
+        Func<TIn, string> SerializeFunc { get; set; }
+        Func<string, TOut> DeserializeFunc { get; set; }
         string Serialize(TIn obj);
         TOut Deserialize(string text);
     }

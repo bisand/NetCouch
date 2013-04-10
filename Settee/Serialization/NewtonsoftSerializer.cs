@@ -5,8 +5,14 @@ namespace Biseth.Net.Settee.Serialization
 {
     class NewtonsoftSerializer<TIn, TOut> : ISerializer<TIn, TOut>
     {
-        public Func<TIn, string> Serialze { get; set; }
-        public Func<string, TOut> Deserialze { get; set; }
+        public NewtonsoftSerializer()
+        {
+            SerializeFunc = obj => JsonConvert.SerializeObject(obj);
+            DeserializeFunc = JsonConvert.DeserializeObject<TOut>;
+        }
+
+        public Func<TIn, string> SerializeFunc { get; set; }
+        public Func<string, TOut> DeserializeFunc { get; set; }
 
         public string Serialize(TIn obj)
         {
