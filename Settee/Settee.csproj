@@ -47,8 +47,12 @@
     <Compile Include="Attributes\CouchIndex.cs" />
     <Compile Include="Couch\Api\CouchApi.cs" />
     <Compile Include="Couch\Api\CouchApi2.cs" />
+    <Compile Include="Couch\Api\Elements\CouchApiConfigSection.cs" />
     <Compile Include="Couch\Api\Elements\CouchApiConfig.cs" />
     <Compile Include="Couch\Api\Elements\CouchApiRoot.cs" />
+    <Compile Include="Couch\Api\Elements\CouchApiConfigSectionKey.cs" />
+    <Compile Include="Couch\Api\Extensions\CouchApiDbExtensions.cs" />
+    <Compile Include="Couch\Api\Extensions\CouchApiConfigExtensions.cs" />
     <Compile Include="Couch\Api\Extensions\CouchApiRootExtensions.cs" />
     <Compile Include="Couch\Api\ICouchApi.cs" />
     <Compile Include="Http\HttpClient.cs" />

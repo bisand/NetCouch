@@ -6,9 +6,9 @@ namespace Biseth.Net.Settee.Couch.Api.Extensions
 {
     public static class CouchApiRootExtensions
     {
-        public static ResponseData<HttpGetRoot> Get(this CouchApiRoot element)
+        public static ResponseData<T> Get<T>(this CouchApiRoot element)
         {
-            var responseData = element.RequestClient.Get<HttpGetRoot>(element.PathElement);
+            var responseData = element.RequestClient.Get<T>(element.PathElement);
             return responseData;
         }
     }

@@ -34,10 +34,10 @@ namespace Biseth.Net.Settee.Http
             var responseData = new HttpResponseData
                 {
                     Data = asyncResult.ResponseData.ToString(), 
-                    ContentLength = asyncResult.Response.ContentLength, 
-                    ContentType = asyncResult.Response.ContentType, 
-                    StatusCode = asyncResult.Response.StatusCode, 
-                    StatusDescription = asyncResult.Response.StatusDescription
+                    ContentLength = asyncResult.Response != null ? asyncResult.Response.ContentLength : 0, 
+                    ContentType = asyncResult.Response != null ? asyncResult.Response.ContentType : "", 
+                    StatusCode = asyncResult.Response != null ? asyncResult.Response.StatusCode : HttpStatusCode.InternalServerError, 
+                    StatusDescription = asyncResult.Response != null ? asyncResult.Response.StatusDescription : "An error occurred!",
                 };
             return responseData;
         }
@@ -133,7 +133,14 @@ namespace Biseth.Net.Settee.Http
                 throw new NullReferenceException("Async result is null or async state is not of the expected type.");
 
             var asyncResult = ar.AsyncState as HttpAsyncResult;
-            asyncResult.Response = (HttpWebResponse) asyncResult.Request.EndGetResponse(ar);
+            try
+            {
+                asyncResult.Response = (HttpWebResponse) asyncResult.Request.EndGetResponse(ar);
+            }
+            catch (WebException ex)
+            {
+                asyncResult.Response = (HttpWebResponse) ex.Response;
+            }
             asyncResult.ResponseStream = asyncResult.Response.GetResponseStream();
             if (asyncResult.ResponseStream != null)
                 asyncResult.InternalAsyncResult = asyncResult.ResponseStream.BeginRead(asyncResult.BufferRead, 0, asyncResult.BufferReadSize, BufferReadCallback, asyncResult);

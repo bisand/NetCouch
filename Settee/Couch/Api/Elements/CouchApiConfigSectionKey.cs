@@ -2,9 +2,9 @@
 
 namespace Biseth.Net.Settee.Couch.Api.Elements
 {
-    public class CouchApiConfig : CouchApiRoot
+    public class CouchApiConfigSectionKey : CouchApiRoot
     {
-        public CouchApiConfig(RequestClient requestClient)
+        public CouchApiConfigSectionKey(RequestClient requestClient)
             : base(requestClient)
         {
         }
