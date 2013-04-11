@@ -1,6 +1,5 @@
 ﻿using Biseth.Net.Settee.Couch.Api.Elements;
 using Biseth.Net.Settee.Http;
-using Biseth.Net.Settee.Models.Couch.Database;
 
 namespace Biseth.Net.Settee.Couch.Api.Extensions
 {

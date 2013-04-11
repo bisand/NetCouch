@@ -195,12 +195,13 @@ namespace Biseth.Net.Settee.Http
                 throw new ArgumentNullException("requestData");
 
             var url = requestData.Url;
-            var asyncResult = new RequestAsyncResult<TIn, TOut>(callback, state) {
-                RequestData = requestData,
-                ResponseData = new ResponseData<TOut>(),
-                HttpClient = _httpClient,
-                Method = HttpMethod.Post,
-            };
+            var asyncResult = new RequestAsyncResult<TIn, TOut>(callback, state)
+                {
+                    RequestData = requestData,
+                    ResponseData = new ResponseData<TOut>(),
+                    HttpClient = _httpClient,
+                    Method = HttpMethod.Post,
+                };
 
             asyncResult.InternalAsyncResult = asyncResult.Serializer.SerializeFunc.BeginInvoke(requestData.RequestObject, SerializeCallback<TIn, TOut>, asyncResult);
 

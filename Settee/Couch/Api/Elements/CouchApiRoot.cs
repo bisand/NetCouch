@@ -14,18 +14,4 @@ namespace Biseth.Net.Settee.Couch.Api.Elements
 
         public string PathElement { get; set; }
     }
-
-    public class CouchApiDbCommand : CouchApiRoot
-    {
-        public CouchApiDbCommand(RequestClient requestClient) : base(requestClient)
-        {
-        }
-    }
-
-    public class CouchApiDb : CouchApiRoot
-    {
-        public CouchApiDb(RequestClient requestClient) : base(requestClient)
-        {
-        }
-    }
 }

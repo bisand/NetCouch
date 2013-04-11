@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Biseth.Net.Settee.Serialization
 {
-    class NewtonsoftSerializer<TIn, TOut> : ISerializer<TIn, TOut>
+    internal class NewtonsoftSerializer<TIn, TOut> : ISerializer<TIn, TOut>
     {
         public NewtonsoftSerializer()
         {

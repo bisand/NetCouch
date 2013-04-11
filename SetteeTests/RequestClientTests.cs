@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using Biseth.Net.Settee.Couch.Api;
 using Biseth.Net.Settee.Couch.Api.Extensions;
-using Biseth.Net.Settee.Couch.Helpers.Api;
 using Biseth.Net.Settee.Http;
-using Biseth.Net.Settee.Models.Couch;
 using Biseth.Net.Settee.Models.Couch.Database;
 using NUnit.Framework;
 
@@ -21,12 +16,6 @@ namespace SetteeTests
         {
             var client = new RequestClient("http://localhost:5984/");
             var api = new CouchApi(client);
-
-            var data = client.Get<HttpGetRoot>(CouchApi2.Root());
-            Assert.IsNotNull(data);
-
-            var data2 = client.Get<dynamic>(CouchApi2.Root().Config("couchdb"));
-            Assert.IsNotNull(data2);
 
             var rootData = api.Root().Get<HttpGetRoot>();
             Assert.IsNotNull(rootData);
@@ -49,9 +38,12 @@ namespace SetteeTests
             person.BirthDate = new DateTime(1974, 3, 12);
             person.Weight = 78;
             person.Height = 178;
+
             var post = api.Root().Db("test").Doc().Post<Person, dynamic>(person);
+            Assert.IsNotNull(post);
+
             var postDoc = api.Root().Db("test").Doc("Test").Put<Person, dynamic>(person);
-            Assert.IsNotNull(dbData);
+            Assert.IsNotNull(postDoc);
         }
     }
 }

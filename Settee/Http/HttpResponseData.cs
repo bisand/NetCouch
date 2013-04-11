@@ -8,6 +8,6 @@ namespace Biseth.Net.Settee.Http
         public long ContentLength { get; set; }
         public HttpStatusCode StatusCode { get; set; }
         public string StatusDescription { get; set; }
-        public string Data { get; set; } 
+        public string Data { get; set; }
     }
 }

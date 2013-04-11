@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Net;
-using System.Text;
 using Biseth.Net.Settee.Http;
 using Biseth.Net.Settee.Serialization;
 
