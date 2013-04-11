@@ -5,28 +5,28 @@ namespace Biseth.Net.Settee.Http
 {
     public interface IRequestClient
     {
-        IAsyncResult BeginGet<TOut>(string url, AsyncCallback callback, object state);
+        IAsyncResult BeginGet<TOut>(string path, AsyncCallback callback, object state);
         ResponseData<TOut> EndGet<TOut>(IAsyncResult ar);
-        ResponseData<TOut> Get<TOut>(string url);
+        ResponseData<TOut> Get<TOut>(string path);
+
+        IAsyncResult BeginHead<TOut>(string path, AsyncCallback callback, object state);
+        ResponseData<TOut> EndHead<TOut>(IAsyncResult ar);
+        ResponseData<TOut> Head<TOut>(string path);
+
+        IAsyncResult BeginOptions<TOut>(string path, AsyncCallback callback, object state);
+        ResponseData<TOut> EndOptions<TOut>(IAsyncResult ar);
+        ResponseData<TOut> Options<TOut>(string path);
+
+        IAsyncResult BeginDelete<TOut>(string path, AsyncCallback callback, object state);
+        ResponseData<TOut> EndDelete<TOut>(IAsyncResult ar);
+        ResponseData<TOut> Delete<TOut>(string path);
 
         IAsyncResult BeginPut<TIn, TOut>(RequestData<TIn> requestData, AsyncCallback callback, object state);
-        ResponseData<TOut> EndPut<TOut>(IAsyncResult ar);
+        ResponseData<TOut> EndPut<TIn, TOut>(IAsyncResult ar);
         ResponseData<TOut> Put<TIn, TOut>(RequestData<TIn> requestData);
 
-        IAsyncResult BeginHead<TIn, TOut>(RequestData<TIn> requestData, AsyncCallback callback, object state);
-        ResponseData<TOut> EndHead<TOut>(IAsyncResult ar);
-        ResponseData<TOut> Head<TIn, TOut>(RequestData<TIn> requestData);
-
         IAsyncResult BeginPost<TIn, TOut>(RequestData<TIn> requestData, AsyncCallback callback, object state);
-        ResponseData<TOut> EndPost<TOut>(IAsyncResult ar);
+        ResponseData<TOut> EndPost<TIn, TOut>(IAsyncResult ar);
         ResponseData<TOut> Post<TIn, TOut>(RequestData<TIn> requestData);
-
-        IAsyncResult BeginDelete<TIn, TOut>(RequestData<TIn> requestData, AsyncCallback callback, object state);
-        ResponseData<TOut> EndDelete<TOut>(IAsyncResult ar);
-        ResponseData<TOut> Delete<TIn, TOut>(RequestData<TIn> requestData);
-
-        IAsyncResult BeginOptions<TIn, TOut>(RequestData<TOut> requestData, AsyncCallback callback, object state);
-        ResponseData<TOut> EndOptions<TOut>(IAsyncResult ar);
-        ResponseData<TOut> Options<TIn, TOut>(RequestData<TIn> requestData);
     }
 }

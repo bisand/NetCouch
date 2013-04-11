@@ -4,28 +4,28 @@ namespace Biseth.Net.Settee.Http
 {
     public interface IHttpClient
     {
-        IAsyncResult BeginGet(string path, AsyncCallback callback, object state);
-        HttpResponseData EndGet(IAsyncResult asyncResult);
-        HttpResponseData Get(string path);
+        IAsyncResult BeginGet(HttpRequestData requestData, AsyncCallback callback, object state);
+        HttpResponseData EndGet(IAsyncResult ar);
+        HttpResponseData Get(HttpRequestData requestData);
 
-        IAsyncResult BeginPut(string path, AsyncCallback callback, object state);
-        string EndPut(IAsyncResult asyncResult);
-        string Put(string path);
+        IAsyncResult BeginHead(HttpRequestData requestData, AsyncCallback callback, object state);
+        HttpResponseData EndHead(IAsyncResult ar);
+        HttpResponseData Head(HttpRequestData requestData);
 
-        IAsyncResult BeginHead(string path, AsyncCallback callback, object state);
-        string EndHead(IAsyncResult asyncResult);
-        string Head(string path);
+        IAsyncResult BeginDelete(HttpRequestData requestData, AsyncCallback callback, object state);
+        HttpResponseData EndDelete(IAsyncResult ar);
+        HttpResponseData Delete(HttpRequestData requestData);
 
-        IAsyncResult BeginPost(string path, AsyncCallback callback, object state);
-        string EndPost(IAsyncResult asyncResult);
-        string Post(string path);
+        IAsyncResult BeginOptions(HttpRequestData requestData, AsyncCallback callback, object state);
+        HttpResponseData EndOptions(IAsyncResult ar);
+        HttpResponseData Options(HttpRequestData requestData);
 
-        IAsyncResult BeginDelete(string path, AsyncCallback callback, object state);
-        string EndDelete(IAsyncResult asyncResult);
-        string Delete(string path);
+        IAsyncResult BeginPut(HttpRequestData requestData, AsyncCallback callback, object state);
+        HttpResponseData EndPut(IAsyncResult ar);
+        HttpResponseData Put(HttpRequestData requestData);
 
-        IAsyncResult BeginOptions(string path, AsyncCallback callback, object state);
-        string EndOptions(IAsyncResult asyncResult);
-        string Options(string path);
+        IAsyncResult BeginPost(HttpRequestData requestData, AsyncCallback callback, object state);
+        HttpResponseData EndPost(IAsyncResult ar);
+        HttpResponseData Post(HttpRequestData requestData);
     }
 }

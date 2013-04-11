@@ -16,6 +16,7 @@ namespace Biseth.Net.Settee.Threading
             Request = null;
             Response = null;
             BufferRead = new byte[BUFFER_SIZE];
+            RequestData = new StringBuilder();
             ResponseData = new StringBuilder();
         }
 
@@ -26,7 +27,9 @@ namespace Biseth.Net.Settee.Threading
 
         public HttpWebRequest Request { get; set; }
         public HttpWebResponse Response { get; set; }
+        public Stream RequestStream { get; set; }
         public Stream ResponseStream { get; set; }
+        public StringBuilder RequestData { get; set; }
         public StringBuilder ResponseData { get; set; }
     }
 }

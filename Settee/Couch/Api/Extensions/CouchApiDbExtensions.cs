@@ -1,4 +1,5 @@
-﻿using Biseth.Net.Settee.Couch.Api.Elements;
+﻿using System;
+using Biseth.Net.Settee.Couch.Api.Elements;
 
 namespace Biseth.Net.Settee.Couch.Api.Extensions
 {
@@ -6,9 +7,12 @@ namespace Biseth.Net.Settee.Couch.Api.Extensions
     {
         public static CouchApiDb Db(this CouchApiRoot element, string databaseName)
         {
+            if (string.IsNullOrWhiteSpace(databaseName))
+                throw new ArgumentNullException("databaseName");
+
             var result = new CouchApiDb(element.RequestClient)
                 {
-                    PathElement = element.PathElement + databaseName + "/"
+                    PathElement = element.PathElement + databaseName.ToLower() + "/"
                 };
             return result;
         }

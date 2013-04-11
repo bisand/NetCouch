@@ -53,10 +53,12 @@
     <Compile Include="Couch\Api\Elements\CouchApiConfigSectionKey.cs" />
     <Compile Include="Couch\Api\Extensions\CouchApiDbExtensions.cs" />
     <Compile Include="Couch\Api\Extensions\CouchApiConfigExtensions.cs" />
+    <Compile Include="Couch\Api\Extensions\CouchApiDocumentExtensions.cs" />
     <Compile Include="Couch\Api\Extensions\CouchApiRootExtensions.cs" />
     <Compile Include="Couch\Api\ICouchApi.cs" />
     <Compile Include="Http\HttpClient.cs" />
     <Compile Include="Http\HttpMethod.cs" />
+    <Compile Include="Http\HttpRequestData.cs" />
     <Compile Include="Http\HttpResponseData.cs" />
     <Compile Include="Http\IHttpClient.cs" />
     <Compile Include="Http\IRequestClient.cs" />

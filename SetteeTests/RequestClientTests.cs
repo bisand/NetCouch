@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using Biseth.Net.Settee.Couch.Api;
 using Biseth.Net.Settee.Couch.Api.Extensions;
@@ -37,7 +38,19 @@ namespace SetteeTests
             var indexServer = configSectionData.DataDeserialized.index_server.ToString();
             Assert.IsNotNull(configSectionData);
 
-            var dbData = api.Root().Db("test").Get<dynamic>();
+            var dbData = api.Root().Db("Test").Get<dynamic>();
+            if (dbData.StatusCode != HttpStatusCode.OK)
+            {
+                var newDbData = api.Root().Db("Test").Put<dynamic, object>();
+            }
+            var person = new Person();
+            person.FirstName = "André";
+            person.LastName = "Biseth";
+            person.BirthDate = new DateTime(1974, 3, 12);
+            person.Weight = 78;
+            person.Height = 178;
+            var post = api.Root().Db("test").Doc().Post<Person, dynamic>(person);
+            var postDoc = api.Root().Db("test").Doc("Test").Put<Person, dynamic>(person);
             Assert.IsNotNull(dbData);
         }
     }

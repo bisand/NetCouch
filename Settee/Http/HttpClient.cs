@@ -7,44 +7,29 @@ namespace Biseth.Net.Settee.Http
 {
     public class HttpClient : IHttpClient
     {
-        public string BaseUrl { get; private set; }
-
         public HttpClient(string baseUrl)
         {
             BaseUrl = baseUrl;
             BaseUri = new Uri(baseUrl);
         }
 
-        public IAsyncResult BeginGet(string path, AsyncCallback callback, object state)
-        {
-            var builder = new UriBuilder(BaseUri) {Path = path};
-            var asyncResult = new HttpAsyncResult(callback, state) {Request = (HttpWebRequest) WebRequest.Create(builder.Uri)};
-            asyncResult.InternalAsyncResult = asyncResult.Request.BeginGetResponse(GetSersponseCallback, asyncResult);
-            return asyncResult;
-        }
+        public string BaseUrl { get; private set; }
 
         protected Uri BaseUri { get; private set; }
 
-        public HttpResponseData EndGet(IAsyncResult ar)
+        public IAsyncResult BeginGet(HttpRequestData requestData, AsyncCallback callback, object state)
         {
-            if (ar == null || !(ar is HttpAsyncResult))
-                throw new NullReferenceException("Async result is null or async state is not of the expected type.");
-
-            var asyncResult = ar as HttpAsyncResult;
-            var responseData = new HttpResponseData
-                {
-                    Data = asyncResult.ResponseData.ToString(), 
-                    ContentLength = asyncResult.Response != null ? asyncResult.Response.ContentLength : 0, 
-                    ContentType = asyncResult.Response != null ? asyncResult.Response.ContentType : "", 
-                    StatusCode = asyncResult.Response != null ? asyncResult.Response.StatusCode : HttpStatusCode.InternalServerError, 
-                    StatusDescription = asyncResult.Response != null ? asyncResult.Response.StatusDescription : "An error occurred!",
-                };
-            return responseData;
+            return StartProcessing(requestData, callback, state);
         }
 
-        public HttpResponseData Get(string path)
+        public HttpResponseData EndGet(IAsyncResult ar)
         {
-            var asyncResult = BeginGet(path, null, null);
+            return GetHttpResponseData(ar);
+        }
+
+        public HttpResponseData Get(HttpRequestData requestData)
+        {
+            var asyncResult = BeginGet(requestData, null, null);
             if (asyncResult != null && (asyncResult.IsCompleted || asyncResult.AsyncWaitHandle.WaitOne()))
             {
                 return EndGet(asyncResult);
@@ -52,82 +37,196 @@ namespace Biseth.Net.Settee.Http
             return null;
         }
 
-        public IAsyncResult BeginPut(string path, AsyncCallback callback, object state)
+        public IAsyncResult BeginPut(HttpRequestData requestData, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return StartProcessing(requestData, callback, state);
         }
 
-        public string EndPut(IAsyncResult asyncResult)
+        public HttpResponseData EndPut(IAsyncResult ar)
         {
-            throw new NotImplementedException();
+            return GetHttpResponseData(ar);
         }
 
-        public string Put(string path)
+        public HttpResponseData Put(HttpRequestData requestData)
         {
-            throw new NotImplementedException();
+            var asyncResult = BeginPut(requestData, null, null);
+            if (asyncResult != null && (asyncResult.IsCompleted || asyncResult.AsyncWaitHandle.WaitOne()))
+            {
+                return EndPut(asyncResult);
+            }
+            return null;
         }
 
-        public IAsyncResult BeginHead(string path, AsyncCallback callback, object state)
+        public IAsyncResult BeginHead(HttpRequestData requestData, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return StartProcessing(requestData, callback, state);
         }
 
-        public string EndHead(IAsyncResult asyncResult)
+        public HttpResponseData EndHead(IAsyncResult ar)
         {
-            throw new NotImplementedException();
+            return GetHttpResponseData(ar);
         }
 
-        public string Head(string path)
+        public HttpResponseData Head(HttpRequestData requestData)
         {
-            throw new NotImplementedException();
+            var asyncResult = BeginHead(requestData, null, null);
+            if (asyncResult != null && (asyncResult.IsCompleted || asyncResult.AsyncWaitHandle.WaitOne()))
+            {
+                return EndHead(asyncResult);
+            }
+            return null;
         }
 
-        public IAsyncResult BeginPost(string path, AsyncCallback callback, object state)
+        public IAsyncResult BeginPost(HttpRequestData requestData, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return StartProcessing(requestData, callback, state);
         }
 
-        public string EndPost(IAsyncResult asyncResult)
+        public HttpResponseData EndPost(IAsyncResult ar)
         {
-            throw new NotImplementedException();
+            return GetHttpResponseData(ar);
         }
 
-        public string Post(string path)
+        public HttpResponseData Post(HttpRequestData requestData)
         {
-            throw new NotImplementedException();
+            var asyncResult = BeginPost(requestData, null, null);
+            if (asyncResult != null && (asyncResult.IsCompleted || asyncResult.AsyncWaitHandle.WaitOne()))
+            {
+                return EndPost(asyncResult);
+            }
+            return null;
         }
 
-        public IAsyncResult BeginDelete(string path, AsyncCallback callback, object state)
+        public IAsyncResult BeginDelete(HttpRequestData requestData, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return StartProcessing(requestData, callback, state);
         }
 
-        public string EndDelete(IAsyncResult asyncResult)
+        public HttpResponseData EndDelete(IAsyncResult ar)
         {
-            throw new NotImplementedException();
+            return GetHttpResponseData(ar);
         }
 
-        public string Delete(string path)
+        public HttpResponseData Delete(HttpRequestData requestData)
         {
-            throw new NotImplementedException();
+            var asyncResult = BeginDelete(requestData, null, null);
+            if (asyncResult != null && (asyncResult.IsCompleted || asyncResult.AsyncWaitHandle.WaitOne()))
+            {
+                return EndDelete(asyncResult);
+            }
+            return null;
         }
 
-        public IAsyncResult BeginOptions(string path, AsyncCallback callback, object state)
+        public IAsyncResult BeginOptions(HttpRequestData requestData, AsyncCallback callback, object state)
         {
-            throw new NotImplementedException();
+            return StartProcessing(requestData, callback, state);
         }
 
-        public string EndOptions(IAsyncResult asyncResult)
+        public HttpResponseData EndOptions(IAsyncResult ar)
         {
-            throw new NotImplementedException();
+            return GetHttpResponseData(ar);
         }
 
-        public string Options(string path)
+        public HttpResponseData Options(HttpRequestData requestData)
         {
-            throw new NotImplementedException();
+            var asyncResult = BeginOptions(requestData, null, null);
+            if (asyncResult != null && (asyncResult.IsCompleted || asyncResult.AsyncWaitHandle.WaitOne()))
+            {
+                return EndOptions(asyncResult);
+            }
+            return null;
         }
 
-        private static void GetSersponseCallback(IAsyncResult ar)
+        private IAsyncResult StartProcessing(HttpRequestData requestData, AsyncCallback callback, object state)
+        {
+            var builder = new UriBuilder(BaseUri) {Path = requestData.Path};
+            var asyncResult = new HttpAsyncResult(callback, state) {Request = (HttpWebRequest) WebRequest.Create(builder.Uri)};
+            asyncResult.Request.Method = requestData.Method;
+            if (requestData.ContentType != null)
+                asyncResult.Request.ContentType = requestData.ContentType;
+            if (requestData.Data != null)
+                asyncResult.RequestData.Append(requestData.Data);
+            switch (requestData.Method)
+            {
+                case HttpMethod.Get:
+                case HttpMethod.Head:
+                case HttpMethod.Delete:
+                case HttpMethod.Options:
+                    asyncResult.InternalAsyncResult = asyncResult.Request.BeginGetResponse(GetResponseCallback, asyncResult);
+                    return asyncResult;
+                case HttpMethod.Put:
+                case HttpMethod.Post:
+                    asyncResult.InternalAsyncResult = asyncResult.Request.BeginGetRequestStream(GetRequestStreamCallback, asyncResult);
+                    return asyncResult;
+            }
+            throw new ArgumentException(string.Format("Invalid method '{0}'", requestData.Method), "method");
+        }
+
+        private static HttpResponseData GetHttpResponseData(IAsyncResult ar)
+        {
+            if (ar == null || !(ar is HttpAsyncResult))
+                throw new NullReferenceException("Async result is null or async state is not of the expected type.");
+
+            var asyncResult = ar as HttpAsyncResult;
+            var responseData = new HttpResponseData
+                {
+                    Data = asyncResult.ResponseData.ToString(),
+                    ContentLength = asyncResult.Response != null ? asyncResult.Response.ContentLength : 0,
+                    ContentType = asyncResult.Response != null ? asyncResult.Response.ContentType : "",
+                    StatusCode = asyncResult.Response != null ? asyncResult.Response.StatusCode : HttpStatusCode.InternalServerError,
+                    StatusDescription = asyncResult.Response != null ? asyncResult.Response.StatusDescription : "An error occurred!",
+                };
+            return responseData;
+        }
+
+        private static void GetRequestStreamCallback(IAsyncResult ar)
+        {
+            if (ar == null || !(ar.AsyncState is HttpAsyncResult))
+                throw new NullReferenceException("Async result is null or async state is not of the expected type.");
+
+            var asyncResult = ar.AsyncState as HttpAsyncResult;
+            try
+            {
+                asyncResult.RequestStream = asyncResult.Request.EndGetRequestStream(ar);
+            }
+            catch (WebException ex)
+            {
+                asyncResult.Response = (HttpWebResponse) ex.Response;
+                asyncResult.ResponseStream = asyncResult.Response.GetResponseStream();
+                if (asyncResult.ResponseStream != null)
+                    asyncResult.InternalAsyncResult = asyncResult.ResponseStream.BeginRead(asyncResult.BufferRead, 0, asyncResult.BufferReadSize, BufferReadCallback, asyncResult);
+                else
+                    asyncResult.SetComplete();
+                return;
+            }
+            catch (Exception ex)
+            {
+                asyncResult.SetComplete();
+                return;
+            }
+            var buffer = Encoding.UTF8.GetBytes(asyncResult.RequestData.ToString());
+            asyncResult.InternalAsyncResult = asyncResult.RequestStream.BeginWrite(buffer, 0, buffer.Length, WriteRequestStreamCallback, asyncResult);
+        }
+
+        private static void WriteRequestStreamCallback(IAsyncResult ar)
+        {
+            if (ar == null || !(ar.AsyncState is HttpAsyncResult))
+                throw new NullReferenceException("Async result is null or async state is not of the expected type.");
+
+            var asyncResult = ar.AsyncState as HttpAsyncResult;
+            try
+            {
+                asyncResult.RequestStream.EndWrite(ar);
+            }
+            catch (Exception ex)
+            {
+                asyncResult.SetComplete();
+                return;
+            }
+            asyncResult.InternalAsyncResult = asyncResult.Request.BeginGetResponse(GetResponseCallback, asyncResult);
+        }
+
+        private static void GetResponseCallback(IAsyncResult ar)
         {
             if (ar == null || !(ar.AsyncState is HttpAsyncResult))
                 throw new NullReferenceException("Async result is null or async state is not of the expected type.");
@@ -140,6 +239,11 @@ namespace Biseth.Net.Settee.Http
             catch (WebException ex)
             {
                 asyncResult.Response = (HttpWebResponse) ex.Response;
+            }
+            catch (Exception ex)
+            {
+                asyncResult.SetComplete();
+                return;
             }
             asyncResult.ResponseStream = asyncResult.Response.GetResponseStream();
             if (asyncResult.ResponseStream != null)
