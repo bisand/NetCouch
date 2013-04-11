@@ -1,7 +1,7 @@
 ﻿using System;
-using Biseth.Net.Settee.Couch.Api.Elements;
+using Biseth.Net.Settee.CouchDb.Api.Elements;
 
-namespace Biseth.Net.Settee.Couch.Api.Extensions
+namespace Biseth.Net.Settee.CouchDb.Api.Extensions
 {
     public static class CouchApiDbExtensions
     {

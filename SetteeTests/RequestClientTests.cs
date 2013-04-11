@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
-using Biseth.Net.Settee.Couch.Api;
-using Biseth.Net.Settee.Couch.Api.Extensions;
+using Biseth.Net.Settee.CouchDb.Api;
+using Biseth.Net.Settee.CouchDb.Api.Extensions;
 using Biseth.Net.Settee.Http;
 using Biseth.Net.Settee.Models.Couch.Database;
 using NUnit.Framework;

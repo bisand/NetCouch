@@ -1,4 +1,4 @@
-﻿namespace Biseth.Net.Settee.Couch.Api
+﻿namespace Biseth.Net.Settee.CouchDb.Api
 {
     public interface ICouchApi
     {

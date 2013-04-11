@@ -1,6 +1,6 @@
 ﻿using Biseth.Net.Settee.Http;
 
-namespace Biseth.Net.Settee.Couch.Api.Elements
+namespace Biseth.Net.Settee.CouchDb.Api.Elements
 {
     public class CouchApiDesignDocCommand : CouchApiDesignDoc
     {

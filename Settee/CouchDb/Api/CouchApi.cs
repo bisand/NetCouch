@@ -1,7 +1,7 @@
-﻿using Biseth.Net.Settee.Couch.Api.Elements;
+﻿using Biseth.Net.Settee.CouchDb.Api.Elements;
 using Biseth.Net.Settee.Http;
 
-namespace Biseth.Net.Settee.Couch.Api
+namespace Biseth.Net.Settee.CouchDb.Api
 {
     public class CouchApi : ICouchApi
     {

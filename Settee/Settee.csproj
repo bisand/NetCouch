@@ -45,30 +45,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\CouchIndex.cs" />
-    <Compile Include="Couch\Api\CouchApi.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiRootCommand.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDesignDocCommandRewrite.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDesignDocCommandUpdate.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDesignDocCommandList.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDesignDocCommandShow.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDesignDocCommandView.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDesignDocCommand.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDesignDocAttachment.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDesignDoc.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiAttachment.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiConfigSection.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiConfig.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDb.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDbCommand.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiDoc.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiRoot.cs" />
-    <Compile Include="Couch\Api\Elements\CouchApiConfigSectionKey.cs" />
-    <Compile Include="Couch\Api\Extensions\CouchApiDesignDocumentExtensions.cs" />
-    <Compile Include="Couch\Api\Extensions\CouchApiDbExtensions.cs" />
-    <Compile Include="Couch\Api\Extensions\CouchApiConfigExtensions.cs" />
-    <Compile Include="Couch\Api\Extensions\CouchApiDocumentExtensions.cs" />
-    <Compile Include="Couch\Api\Extensions\CouchApiRootExtensions.cs" />
-    <Compile Include="Couch\Api\ICouchApi.cs" />
+    <Compile Include="CouchDb\Api\CouchApi.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiRootCommand.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDesignDocCommandRewrite.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDesignDocCommandUpdate.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDesignDocCommandList.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDesignDocCommandShow.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDesignDocCommandView.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDesignDocCommand.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDesignDocAttachment.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDesignDoc.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiAttachment.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiConfigSection.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiConfig.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDb.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDbCommand.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiDoc.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiRoot.cs" />
+    <Compile Include="CouchDb\Api\Elements\CouchApiConfigSectionKey.cs" />
+    <Compile Include="CouchDb\Api\Extensions\CouchApiDesignDocumentExtensions.cs" />
+    <Compile Include="CouchDb\Api\Extensions\CouchApiDbExtensions.cs" />
+    <Compile Include="CouchDb\Api\Extensions\CouchApiConfigExtensions.cs" />
+    <Compile Include="CouchDb\Api\Extensions\CouchApiDocumentExtensions.cs" />
+    <Compile Include="CouchDb\Api\Extensions\CouchApiRootExtensions.cs" />
+    <Compile Include="CouchDb\Api\ICouchApi.cs" />
     <Compile Include="Http\HttpClient.cs" />
     <Compile Include="Http\HttpMethod.cs" />
     <Compile Include="Http\HttpRequestData.cs" />
@@ -91,7 +91,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Couch\Helpers\" />
+    <Folder Include="CouchDb\Helpers\" />
+    <Folder Include="Linq\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
