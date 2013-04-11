@@ -5,6 +5,78 @@ namespace Biseth.Net.Settee.Couch.Api.Extensions
 {
     public static class CouchApiRootExtensions
     {
+        public static CouchApiRootCommand ActiveTasks(this CouchApiRoot element)
+        {
+            var result = new CouchApiRootCommand(element.RequestClient) {
+                PathElement = element.PathElement + "_active_tasks/"
+            };
+            return result;
+        }
+
+        public static CouchApiRootCommand AllDbs(this CouchApiRoot element)
+        {
+            var result = new CouchApiRootCommand(element.RequestClient) {
+                PathElement = element.PathElement + "_all_dbs/"
+            };
+            return result;
+        }
+
+        public static CouchApiRootCommand Log(this CouchApiRoot element)
+        {
+            var result = new CouchApiRootCommand(element.RequestClient) {
+                PathElement = element.PathElement + "_log/"
+            };
+            return result;
+        }
+
+        public static CouchApiRootCommand Replicate(this CouchApiRoot element)
+        {
+            var result = new CouchApiRootCommand(element.RequestClient) {
+                PathElement = element.PathElement + "_replicate/"
+            };
+            return result;
+        }
+
+        public static CouchApiRootCommand Restart(this CouchApiRoot element)
+        {
+            var result = new CouchApiRootCommand(element.RequestClient) {
+                PathElement = element.PathElement + "_restart/"
+            };
+            return result;
+        }
+
+        public static CouchApiRootCommand Stats(this CouchApiRoot element)
+        {
+            var result = new CouchApiRootCommand(element.RequestClient) {
+                PathElement = element.PathElement + "_stats/"
+            };
+            return result;
+        }
+
+        public static CouchApiRootCommand Utils(this CouchApiRoot element)
+        {
+            var result = new CouchApiRootCommand(element.RequestClient) {
+                PathElement = element.PathElement + "_utils/"
+            };
+            return result;
+        }
+
+        public static CouchApiRootCommand UuIds(this CouchApiRoot element)
+        {
+            var result = new CouchApiRootCommand(element.RequestClient) {
+                PathElement = element.PathElement + "_uuids/"
+            };
+            return result;
+        }
+
+        public static CouchApiRootCommand Favicon(this CouchApiRoot element)
+        {
+            var result = new CouchApiRootCommand(element.RequestClient) {
+                PathElement = element.PathElement + "_favicon.ico/"
+            };
+            return result;
+        }
+
         public static ResponseData<T> Get<T>(this CouchApiRoot element)
         {
             var responseData = element.RequestClient.Get<T>(element.PathElement);

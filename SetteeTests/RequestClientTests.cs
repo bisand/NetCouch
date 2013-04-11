@@ -17,6 +17,8 @@ namespace SetteeTests
             var client = new RequestClient("http://localhost:5984/");
             var api = new CouchApi(client);
 
+            var responseData = api.Root().Stats().Get<dynamic>();
+
             var rootData = api.Root().Get<HttpGetRoot>();
             Assert.IsNotNull(rootData);
 
