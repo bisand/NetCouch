@@ -78,7 +78,16 @@
     <Compile Include="Http\RequestData.cs" />
     <Compile Include="Http\ResponseData.cs" />
     <Compile Include="Linq\CouchDbQuery.cs" />
+    <Compile Include="Linq\CouchDbQueryContext.cs" />
     <Compile Include="Linq\CouchDbQueryProvider.cs" />
+    <Compile Include="Linq\Evaluator.cs" />
+    <Compile Include="Linq\ExpressionTreeHelpers.cs" />
+    <Compile Include="Linq\ExpressionTreeModifier.cs" />
+    <Compile Include="Linq\InnermostWhereFinder.cs" />
+    <Compile Include="Linq\InvalidQueryException.cs" />
+    <Compile Include="Linq\LocationFinder.cs" />
+    <Compile Include="Linq\Place.cs" />
+    <Compile Include="Linq\PlaceType.cs" />
     <Compile Include="Linq\TypeSystem.cs" />
     <Compile Include="Models\Couch\Database\DatabaseVendor.cs" />
     <Compile Include="Models\Couch\Database\HttpGetRoot.cs" />

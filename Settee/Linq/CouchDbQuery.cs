@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Biseth.Net.Settee.CouchDb.Api;
 
 namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbQuery<T> : IOrderedQueryable<T>
     {
+        private readonly ICouchApi _couchApi;
+
         public CouchDbQuery(IQueryProvider provider, Expression expression)
         {
             if (provider == null)
@@ -29,10 +32,11 @@ namespace Biseth.Net.Settee.Linq
             Expression = expression;
         }
 
-        public CouchDbQuery()
+        public CouchDbQuery(ICouchApi couchApi)
         {
+            _couchApi = couchApi;
             Expression = Expression.Constant(this);
-            Provider = new CouchDbQueryProvider();
+            Provider = new CouchDbQueryProvider(couchApi);
         }
 
         public IEnumerator<T> GetEnumerator()

@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using Biseth.Net.Settee.CouchDb.Api;
 
 namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbQueryProvider : IQueryProvider
     {
+        private readonly ICouchApi _couchApi;
+
+        public CouchDbQueryProvider(ICouchApi couchApi)
+        {
+            _couchApi = couchApi;
+        }
+
         public IQueryable CreateQuery(Expression expression)
         {
             var elementType = TypeSystem.GetElementType(expression.Type);
@@ -26,22 +34,14 @@ namespace Biseth.Net.Settee.Linq
 
         public object Execute(Expression expression)
         {
-            return TerraServerQueryContext.Execute(expression, false);
+            return CouchDbQueryContext.Execute(_couchApi, expression, false);
         }
 
         public TResult Execute<TResult>(Expression expression)
         {
             bool IsEnumerable = (typeof(TResult).Name == "IEnumerable`1");
 
-            return (TResult)TerraServerQueryContext.Execute(expression, IsEnumerable);
-        }
-    }
-
-    public class TerraServerQueryContext
-    {
-        public static object Execute(Expression expression, bool b)
-        {
-            throw new NotImplementedException();
+            return (TResult)CouchDbQueryContext.Execute(_couchApi, expression, IsEnumerable);
         }
     }
 }
