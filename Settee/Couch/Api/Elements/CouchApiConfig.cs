@@ -4,7 +4,7 @@ namespace Biseth.Net.Settee.Couch.Api.Elements
 {
     public class CouchApiConfig : CouchApiRoot
     {
-        public CouchApiConfig(RequestClient requestClient)
+        public CouchApiConfig(IRequestClient requestClient)
             : base(requestClient)
         {
         }

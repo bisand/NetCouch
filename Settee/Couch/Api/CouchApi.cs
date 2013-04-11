@@ -5,9 +5,9 @@ namespace Biseth.Net.Settee.Couch.Api
 {
     public class CouchApi : ICouchApi
     {
-        protected readonly RequestClient RequestClient;
+        protected readonly IRequestClient RequestClient;
 
-        public CouchApi(RequestClient requestClient)
+        public CouchApi(IRequestClient requestClient)
         {
             RequestClient = requestClient;
         }

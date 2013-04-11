@@ -4,7 +4,7 @@ namespace Biseth.Net.Settee.Couch.Api.Elements
 {
     public class CouchApiDesignDocAttachment : CouchApiDesignDoc
     {
-        public CouchApiDesignDocAttachment(RequestClient requestClient)
+        public CouchApiDesignDocAttachment(IRequestClient requestClient)
             : base(requestClient)
         {
         }
