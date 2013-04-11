@@ -77,6 +77,9 @@
     <Compile Include="Http\IRequestClient.cs" />
     <Compile Include="Http\RequestData.cs" />
     <Compile Include="Http\ResponseData.cs" />
+    <Compile Include="Linq\CouchDbQuery.cs" />
+    <Compile Include="Linq\CouchDbQueryProvider.cs" />
+    <Compile Include="Linq\TypeSystem.cs" />
     <Compile Include="Models\Couch\Database\DatabaseVendor.cs" />
     <Compile Include="Models\Couch\Database\HttpGetRoot.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
@@ -92,7 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CouchDb\Helpers\" />
-    <Folder Include="Linq\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
