@@ -39,9 +39,8 @@ namespace Biseth.Net.Settee.Linq
 
         public TResult Execute<TResult>(Expression expression)
         {
-            bool IsEnumerable = (typeof(TResult).Name == "IEnumerable`1");
-
-            return (TResult)CouchDbQueryContext.Execute(_couchApi, expression, IsEnumerable);
+            var execute = Execute(expression);
+            return (TResult) execute;
         }
     }
 }
