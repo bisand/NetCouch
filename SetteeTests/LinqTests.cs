@@ -13,12 +13,10 @@ namespace SetteeTests
         public void TestingSomeLinq()
         {
             var client = new RequestClient("http://localhost:5984/");
-            var api = new CouchApi(client);
+            var api = new CouchApi(client, "trivial");
 
-            var query = new CouchDbQuery<Person>(api);
-            var persons = (from p in query
-                            where p.LastName == "Biseth"
-                            select p).ToList();
+            var query = new CouchDbQuery<Person>(new CouchDbQueryProvider<Person>(api));
+            var persons = query.Where(p => p.FirstName == "André" && p.LastName == "Biseth" && p.Weight == 78).ToList();
             Assert.That(persons != null);
         }
     }

@@ -1,61 +1,17 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using Biseth.Net.Settee.CouchDb.Api;
+﻿using System.Linq.Expressions;
 
 namespace Biseth.Net.Settee.Linq
 {
-    public class CouchDbQuery<T> : IOrderedQueryable<T>
+    public class CouchDbQuery<T> : Query<T>
     {
-        private readonly ICouchApi _couchApi;
-
-        public CouchDbQuery(IQueryProvider provider, Expression expression)
+        public CouchDbQuery(CouchDbQueryProvider<T> provider)
+            : base(provider)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException("provider");
-            }
-
-            if (expression == null)
-            {
-                throw new ArgumentNullException("expression");
-            }
-
-            if (!typeof (IQueryable<T>).IsAssignableFrom(expression.Type))
-            {
-                throw new ArgumentOutOfRangeException("expression");
-            }
-
-            Provider = provider;
-            Expression = expression;
         }
 
-        public CouchDbQuery(ICouchApi couchApi)
+        public CouchDbQuery(CouchDbQueryProvider<T> provider, Expression expression)
+            : base(provider, expression)
         {
-            _couchApi = couchApi;
-            Expression = Expression.Constant(this);
-            Provider = new CouchDbQueryProvider(couchApi);
         }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return (Provider.Execute<IEnumerable<T>>(Expression)).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (Provider.Execute<IEnumerable>(Expression)).GetEnumerator();
-        }
-
-        public Expression Expression { get; private set; }
-
-        public Type ElementType
-        {
-            get { return typeof (T); }
-        }
-
-        public IQueryProvider Provider { get; private set; }
     }
 }

@@ -1,28 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
+using Biseth.Net.Settee.Linq.TestModels;
 
 namespace Biseth.Net.Settee.Linq
 {
     internal class LocationFinder : ExpressionVisitor
     {
-        private Expression expression;
-        private List<string> locations;
+        private readonly Expression _expression;
+        private List<string> _locations;
 
         public LocationFinder(Expression exp)
         {
-            this.expression = exp;
+            _expression = exp;
         }
 
         public List<string> Locations
         {
             get
             {
-                if (locations == null)
+                if (_locations == null)
                 {
-                    locations = new List<string>();
-                    this.Visit(this.expression);
+                    _locations = new List<string>();
+                    Visit(_expression);
                 }
-                return this.locations;
+                return _locations;
             }
         }
 
@@ -30,21 +31,19 @@ namespace Biseth.Net.Settee.Linq
         {
             if (be.NodeType == ExpressionType.Equal)
             {
-                if (ExpressionTreeHelpers.IsMemberEqualsValueExpression(be, typeof(Place), "Name"))
+                if (ExpressionTreeHelpers.IsMemberEqualsValueExpression(be, typeof (Place), "Name"))
                 {
-                    locations.Add(ExpressionTreeHelpers.GetValueFromEqualsExpression(be, typeof(Place), "Name"));
+                    _locations.Add(ExpressionTreeHelpers.GetValueFromEqualsExpression(be, typeof (Place), "Name"));
                     return be;
                 }
-                else if (ExpressionTreeHelpers.IsMemberEqualsValueExpression(be, typeof(Place), "State"))
+                if (ExpressionTreeHelpers.IsMemberEqualsValueExpression(be, typeof (Place), "State"))
                 {
-                    locations.Add(ExpressionTreeHelpers.GetValueFromEqualsExpression(be, typeof(Place), "State"));
+                    _locations.Add(ExpressionTreeHelpers.GetValueFromEqualsExpression(be, typeof (Place), "State"));
                     return be;
                 }
-                else
-                    return base.VisitBinary(be);
-            }
-            else
                 return base.VisitBinary(be);
+            }
+            return base.VisitBinary(be);
         }
     }
 }

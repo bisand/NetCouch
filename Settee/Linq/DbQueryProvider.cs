@@ -1,18 +1,17 @@
 ﻿using System;
+using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
-using Biseth.Net.Settee.CouchDb.Api;
-using Biseth.Net.Settee.CouchDb.Api.Extensions;
 
 namespace Biseth.Net.Settee.Linq
 {
-    public class CouchDbQueryProvider<T> : QueryProvider
+    public class DbQueryProvider : QueryProvider
     {
-        private readonly ICouchApi _couchApi;
+        private readonly DbConnection _connection;
 
-        public CouchDbQueryProvider(ICouchApi couchApi)
+        public DbQueryProvider(DbConnection connection)
         {
-            _couchApi = couchApi;
+            _connection = connection;
         }
 
         public override string GetQueryText(Expression expression)
@@ -25,7 +24,9 @@ namespace Biseth.Net.Settee.Linq
             var result = Translate(expression);
             var projector = result.Projector.Compile();
 
-            var reader = _couchApi.Root().Db(_couchApi.DefaultDatabase).Get<T>();
+            var cmd = _connection.CreateCommand();
+            cmd.CommandText = result.CommandText;
+            var reader = cmd.ExecuteReader();
 
             var elementType = TypeSystem.GetElementType(expression.Type);
             return Activator.CreateInstance(

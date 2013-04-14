@@ -1,4 +1,4 @@
-﻿namespace Biseth.Net.Settee.Linq
+﻿namespace Biseth.Net.Settee.Linq.TestModels
 {
     public enum PlaceType
     {

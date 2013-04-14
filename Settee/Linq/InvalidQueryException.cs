@@ -1,20 +1,17 @@
 ﻿namespace Biseth.Net.Settee.Linq
 {
-    class InvalidQueryException : System.Exception
+    internal class InvalidQueryException : System.Exception
     {
-        private string message;
+        private readonly string _message;
 
         public InvalidQueryException(string message)
         {
-            this.message = message + " ";
+            _message = message + " ";
         }
 
         public override string Message
         {
-            get
-            {
-                return "The client query is invalid: " + message;
-            }
+            get { return "The client query is invalid: " + _message; }
         }
     }
 }

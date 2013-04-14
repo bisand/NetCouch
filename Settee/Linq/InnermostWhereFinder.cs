@@ -4,18 +4,18 @@ namespace Biseth.Net.Settee.Linq
 {
     internal class InnermostWhereFinder : ExpressionVisitor
     {
-        private MethodCallExpression innermostWhereExpression;
+        private MethodCallExpression _innermostWhereExpression;
 
         public MethodCallExpression GetInnermostWhere(Expression expression)
         {
             Visit(expression);
-            return innermostWhereExpression;
+            return _innermostWhereExpression;
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression expression)
         {
             if (expression.Method.Name == "Where")
-                innermostWhereExpression = expression;
+                _innermostWhereExpression = expression;
 
             Visit(expression.Arguments[0]);
 

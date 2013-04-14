@@ -1,24 +1,22 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
+using Biseth.Net.Settee.Linq.TestModels;
 
 namespace Biseth.Net.Settee.Linq
 {
     internal class ExpressionTreeModifier : ExpressionVisitor
     {
-        private IQueryable<Place> queryablePlaces;
+        private readonly IQueryable<Place> _queryablePlaces;
 
         internal ExpressionTreeModifier(IQueryable<Place> places)
         {
-            this.queryablePlaces = places;
+            _queryablePlaces = places;
         }
 
         protected override Expression VisitConstant(ConstantExpression c)
         {
             // Replace the constant QueryableTerraServerData arg with the queryable Place collection. 
-            if (c.Type == typeof(CouchDbQuery<Place>))
-                return Expression.Constant(this.queryablePlaces);
-            else
-                return c;
+            return c.Type == typeof (CouchDbQuery<Place>) ? Expression.Constant(_queryablePlaces) : c;
         }
     }
 }
