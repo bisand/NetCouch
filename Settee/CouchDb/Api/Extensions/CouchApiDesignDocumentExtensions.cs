@@ -33,12 +33,13 @@ namespace Biseth.Net.Settee.CouchDb.Api.Extensions
             return result;
         }
 
-        public static CouchApiDesignDocCommandView View(this CouchApiDesignDoc element, string name)
+        public static CouchApiDesignDocCommandView View(this CouchApiDesignDoc element, string name, string parameters = null)
         {
             var result = new CouchApiDesignDocCommandView(element.RequestClient)
                 {
                     PathElement = element.PathElement + "_view/" +
-                                  (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "")
+                                  (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "") +
+                                  (!string.IsNullOrWhiteSpace(parameters) ? ("?" + parameters + "/") : "")
                 };
             return result;
         }

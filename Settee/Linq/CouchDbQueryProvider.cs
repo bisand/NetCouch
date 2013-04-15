@@ -25,7 +25,7 @@ namespace Biseth.Net.Settee.Linq
             var result = Translate(expression);
             var projector = result.Projector.Compile();
 
-            var reader = _couchApi.Root().Db(_couchApi.DefaultDatabase).Get<T>();
+            var reader = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc("test").View("test").Get<T>();
 
             var elementType = TypeSystem.GetElementType(expression.Type);
             return Activator.CreateInstance(
