@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -101,6 +102,8 @@
     <Compile Include="Linq\TypeSystem.cs" />
     <Compile Include="Models\Couch\Database\DatabaseVendor.cs" />
     <Compile Include="Models\Couch\Database\HttpGetRoot.cs" />
+    <Compile Include="Models\Couch\DesignDoc\ViewResponse.cs" />
+    <Compile Include="Models\Couch\DesignDoc\ViewRow.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Http\RequestClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

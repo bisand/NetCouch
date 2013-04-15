@@ -39,7 +39,7 @@ namespace Biseth.Net.Settee.CouchDb.Api.Extensions
                 {
                     PathElement = element.PathElement + "_view/" +
                                   (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "") +
-                                  (!string.IsNullOrWhiteSpace(parameters) ? ("?" + parameters + "/") : "")
+                                  (!string.IsNullOrWhiteSpace(parameters) ? ("?" + parameters) : "")
                 };
             return result;
         }

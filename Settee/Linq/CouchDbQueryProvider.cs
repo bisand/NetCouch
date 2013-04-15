@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Biseth.Net.Settee.CouchDb.Api;
 using Biseth.Net.Settee.CouchDb.Api.Extensions;
+using Biseth.Net.Settee.Models.Couch.DesignDoc;
 
 namespace Biseth.Net.Settee.Linq
 {
@@ -25,7 +26,7 @@ namespace Biseth.Net.Settee.Linq
             var result = Translate(expression);
             var projector = result.Projector.Compile();
 
-            var reader = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc("test").View("test").Get<T>();
+            var reader = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc("car").View("Make_Model_HorsePowers", "key=[\"Saab\",\"93\",1337]&include_docs=true").Get<ViewResponse<T>>();
 
             var elementType = TypeSystem.GetElementType(expression.Type);
             return Activator.CreateInstance(
