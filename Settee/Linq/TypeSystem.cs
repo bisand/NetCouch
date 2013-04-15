@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Biseth.Net.Settee.Linq
@@ -47,8 +48,7 @@ namespace Biseth.Net.Settee.Linq
         internal static Type GetElementType(Type seqType)
         {
             var ienum = FindIEnumerable(seqType);
-            if (ienum == null) return seqType;
-            return ienum.GetGenericArguments()[0];
+            return ienum == null ? seqType : ienum.GetGenericArguments().FirstOrDefault();
         }
 
         internal static bool IsNullableType(Type type)
