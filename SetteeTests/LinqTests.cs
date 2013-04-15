@@ -15,8 +15,8 @@ namespace SetteeTests
             var client = new RequestClient("http://localhost:5984/");
             var api = new CouchApi(client, "trivial");
 
-            var query = new CouchDbQuery<Person>(new CouchDbQueryProvider<Person>(api));
-            var persons = query.Where(p => p.FirstName == "André" && p.LastName == "Biseth" && p.Weight == 78).ToList();
+            var query = new CouchDbQuery<Car>(new CouchDbQueryProvider<Car>(api));
+            var persons = query.Where(p => p.Make == "Saab" && p.Model == "1337").ToList();
             Assert.That(persons != null);
         }
     }

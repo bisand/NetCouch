@@ -18,6 +18,7 @@ namespace Biseth.Net.Settee.Models.Couch.DesignDoc
         [DataMember(Name = "offset")]
         public int Offset { get; set; }
 
+        [DataMember(Name = "rows")]
         public List<ViewRow<T>> Rows { get; set; }
     }
 }

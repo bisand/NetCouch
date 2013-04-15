@@ -139,8 +139,8 @@ namespace Biseth.Net.Settee.Http
 
         private IAsyncResult StartProcessing(HttpRequestData requestData, AsyncCallback callback, object state)
         {
-            var builder = new UriBuilder(BaseUri) {Path = requestData.Path};
-            var asyncResult = new HttpAsyncResult(callback, state) {Request = (HttpWebRequest) WebRequest.Create(builder.Uri)};
+            var uri = new Uri(BaseUri, requestData.Path);
+            var asyncResult = new HttpAsyncResult(callback, state) {Request = (HttpWebRequest) WebRequest.Create(uri)};
             asyncResult.Request.Method = requestData.Method;
             if (requestData.ContentType != null)
                 asyncResult.Request.ContentType = requestData.ContentType;
