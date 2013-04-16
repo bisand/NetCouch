@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -11,6 +12,8 @@ namespace Biseth.Net.Settee.Linq
         private StringBuilder _query;
         private string _designDocName;
         private string _viewName;
+        private List<string> _queryProperties;
+        private List<string> _queryValues;
 
         internal QueryFormatter()
         {
@@ -25,6 +28,8 @@ namespace Biseth.Net.Settee.Linq
         internal TranslateResult Format(Expression expression)
         {
             _query = new StringBuilder();
+            _queryProperties = new List<string>();
+            _queryValues = new List<string>();
             Visit(expression);
             var result = new TranslateResult();
             result.QueryText = _query.ToString();
@@ -33,7 +38,7 @@ namespace Biseth.Net.Settee.Linq
 
         private void AppendNewLine(Identation style)
         {
-            _query.AppendLine();
+            //_query.AppendLine();
             if (style == Identation.Inner)
             {
                 _depth++;
@@ -45,7 +50,7 @@ namespace Biseth.Net.Settee.Linq
             }
             for (int i = 0, n = _depth*_indent; i < n; i++)
             {
-                _query.Append(" ");
+                //_query.Append(" ");
             }
         }
 
@@ -59,7 +64,7 @@ namespace Biseth.Net.Settee.Linq
             switch (u.NodeType)
             {
                 case ExpressionType.Not:
-                    _query.Append(" NOT ");
+                    //_query.Append(" NOT ");
                     Visit(u.Operand);
                     break;
                 default:
@@ -71,45 +76,50 @@ namespace Biseth.Net.Settee.Linq
 
         protected override Expression VisitBinary(BinaryExpression b)
         {
-            _query.Append("(");
+            //_query.Append("(");
+            if (b.Left is ColumnExpression)
+            {
+                var columnExpression = b.Left as ColumnExpression;
+                if (columnExpression != null) 
+                    _queryProperties.Add(columnExpression.Name);
+            }
+            else if (!(b.Left is BinaryExpression))
+            {
+            }
             Visit(b.Left);
             switch (b.NodeType)
             {
                 case ExpressionType.And:
-                    _query.Append(" AND ");
                     break;
                 case ExpressionType.AndAlso:
-                    _query.Append(" AND ");
                     break;
                 case ExpressionType.Or:
-                    _query.Append(" OR");
                     break;
                 case ExpressionType.OrElse:
-                    _query.Append(" OR");
                     break;
                 case ExpressionType.Equal:
-                    _query.Append(" = ");
                     break;
                 case ExpressionType.NotEqual:
-                    _query.Append(" <> ");
                     break;
                 case ExpressionType.LessThan:
-                    _query.Append(" < ");
                     break;
                 case ExpressionType.LessThanOrEqual:
-                    _query.Append(" <= ");
                     break;
                 case ExpressionType.GreaterThan:
-                    _query.Append(" > ");
                     break;
                 case ExpressionType.GreaterThanOrEqual:
-                    _query.Append(" >= ");
                     break;
                 default:
                     throw new NotSupportedException(string.Format("The binary operator '{0}' is not supported", b.NodeType));
             }
+            if (b.Right is ColumnExpression)
+            {
+            }
+            else if (!(b.Right is BinaryExpression))
+            {
+            }
             Visit(b.Right);
-            _query.Append(")");
+            //_query.Append(")");
             return b;
         }
 
@@ -117,24 +127,24 @@ namespace Biseth.Net.Settee.Linq
         {
             if (c.Value == null)
             {
-                _query.Append("NULL");
+                //_query.Append("NULL");
             }
             else
             {
                 switch (Type.GetTypeCode(c.Value.GetType()))
                 {
                     case TypeCode.Boolean:
-                        _query.Append(((bool) c.Value) ? 1 : 0);
+                        //_query.Append(((bool) c.Value) ? 1 : 0);
                         break;
                     case TypeCode.String:
-                        _query.Append("'");
-                        _query.Append(c.Value);
-                        _query.Append("'");
+                        //_query.Append("'");
+                        //_query.Append(c.Value);
+                        //_query.Append("'");
                         break;
                     case TypeCode.Object:
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", c.Value));
                     default:
-                        _query.Append(c.Value);
+                        //_query.Append(c.Value);
                         break;
                 }
             }
