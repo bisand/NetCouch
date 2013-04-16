@@ -6,9 +6,11 @@ namespace Biseth.Net.Settee.Linq
 {
     internal class QueryFormatter : DbExpressionVisitor
     {
-        private int depth;
-        private int indent = 2;
-        private StringBuilder sb;
+        private int _depth;
+        private int _indent = 2;
+        private StringBuilder _query;
+        private string _designDocName;
+        private string _viewName;
 
         internal QueryFormatter()
         {
@@ -16,32 +18,34 @@ namespace Biseth.Net.Settee.Linq
 
         internal int IdentationWidth
         {
-            get { return indent; }
-            set { indent = value; }
+            get { return _indent; }
+            set { _indent = value; }
         }
 
-        internal string Format(Expression expression)
+        internal TranslateResult Format(Expression expression)
         {
-            sb = new StringBuilder();
+            _query = new StringBuilder();
             Visit(expression);
-            return sb.ToString();
+            var result = new TranslateResult();
+            result.QueryText = _query.ToString();
+            return result;
         }
 
         private void AppendNewLine(Identation style)
         {
-            sb.AppendLine();
+            _query.AppendLine();
             if (style == Identation.Inner)
             {
-                depth++;
+                _depth++;
             }
             else if (style == Identation.Outer)
             {
-                depth--;
-                System.Diagnostics.Debug.Assert(depth >= 0);
+                _depth--;
+                System.Diagnostics.Debug.Assert(_depth >= 0);
             }
-            for (int i = 0, n = depth*indent; i < n; i++)
+            for (int i = 0, n = _depth*_indent; i < n; i++)
             {
-                sb.Append(" ");
+                _query.Append(" ");
             }
         }
 
@@ -55,7 +59,7 @@ namespace Biseth.Net.Settee.Linq
             switch (u.NodeType)
             {
                 case ExpressionType.Not:
-                    sb.Append(" NOT ");
+                    _query.Append(" NOT ");
                     Visit(u.Operand);
                     break;
                 default:
@@ -67,43 +71,45 @@ namespace Biseth.Net.Settee.Linq
 
         protected override Expression VisitBinary(BinaryExpression b)
         {
-            sb.Append("(");
+            _query.Append("(");
             Visit(b.Left);
             switch (b.NodeType)
             {
                 case ExpressionType.And:
-                    sb.Append(" AND ");
+                    _query.Append(" AND ");
                     break;
                 case ExpressionType.AndAlso:
-                    sb.Append(" AND ");
+                    _query.Append(" AND ");
                     break;
                 case ExpressionType.Or:
-                    sb.Append(" OR");
+                    _query.Append(" OR");
+                    break;
+                case ExpressionType.OrElse:
+                    _query.Append(" OR");
                     break;
                 case ExpressionType.Equal:
-                    sb.Append(" = ");
+                    _query.Append(" = ");
                     break;
                 case ExpressionType.NotEqual:
-                    sb.Append(" <> ");
+                    _query.Append(" <> ");
                     break;
                 case ExpressionType.LessThan:
-                    sb.Append(" < ");
+                    _query.Append(" < ");
                     break;
                 case ExpressionType.LessThanOrEqual:
-                    sb.Append(" <= ");
+                    _query.Append(" <= ");
                     break;
                 case ExpressionType.GreaterThan:
-                    sb.Append(" > ");
+                    _query.Append(" > ");
                     break;
                 case ExpressionType.GreaterThanOrEqual:
-                    sb.Append(" >= ");
+                    _query.Append(" >= ");
                     break;
                 default:
-                    throw new NotSupportedException(string.Format("The binary operator '{0}' is not supported",
-                                                                  b.NodeType));
+                    throw new NotSupportedException(string.Format("The binary operator '{0}' is not supported", b.NodeType));
             }
             Visit(b.Right);
-            sb.Append(")");
+            _query.Append(")");
             return b;
         }
 
@@ -111,24 +117,24 @@ namespace Biseth.Net.Settee.Linq
         {
             if (c.Value == null)
             {
-                sb.Append("NULL");
+                _query.Append("NULL");
             }
             else
             {
                 switch (Type.GetTypeCode(c.Value.GetType()))
                 {
                     case TypeCode.Boolean:
-                        sb.Append(((bool) c.Value) ? 1 : 0);
+                        _query.Append(((bool) c.Value) ? 1 : 0);
                         break;
                     case TypeCode.String:
-                        sb.Append("'");
-                        sb.Append(c.Value);
-                        sb.Append("'");
+                        _query.Append("'");
+                        _query.Append(c.Value);
+                        _query.Append("'");
                         break;
                     case TypeCode.Object:
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", c.Value));
                     default:
-                        sb.Append(c.Value);
+                        _query.Append(c.Value);
                         break;
                 }
             }
@@ -139,40 +145,42 @@ namespace Biseth.Net.Settee.Linq
         {
             if (!string.IsNullOrEmpty(column.Alias))
             {
-                sb.Append(column.Alias);
-                sb.Append(".");
+                //_query.Append(column.Alias);
+                //_query.Append(".");
             }
-            sb.Append(column.Name);
+            //_query.Append(column.Name);
+            _designDocName = _designDocName == null ? column.Name : _designDocName + "_" + column.Name;
             return column;
         }
 
         protected override Expression VisitSelect(SelectExpression select)
         {
-            sb.Append("SELECT ");
+            _query.Append("keys=");
             for (int i = 0, n = select.Columns.Count; i < n; i++)
             {
-                var column = select.Columns[i];
-                if (i > 0)
-                {
-                    sb.Append(", ");
-                }
-                var c = Visit(column.Expression) as ColumnExpression;
-                if (c == null || c.Name != select.Columns[i].Name)
-                {
-                    sb.Append(" AS ");
-                    sb.Append(column.Name);
-                }
+                //var column = select.Columns[i];
+                //if (i > 0)
+                //{
+                //    sb.Append(", ");
+                //}
+                //var c = Visit(column.Expression) as ColumnExpression;
+                //if (c == null || c.Name != select.Columns[i].Name)
+                //{
+                //    sb.Append(" AS ");
+                //    sb.Append(column.Name);
+                //}
             }
             if (select.From != null)
             {
                 AppendNewLine(Identation.Same);
-                sb.Append("FROM ");
+                //_query.Append("FROM ");
+                
                 VisitSource(select.From);
             }
             if (select.Where != null)
             {
                 AppendNewLine(Identation.Same);
-                sb.Append("WHERE ");
+                //_query.Append("WHERE ");
                 Visit(select.Where);
             }
             return select;
@@ -184,19 +192,20 @@ namespace Biseth.Net.Settee.Linq
             {
                 case DbExpressionType.Table:
                     var table = (TableExpression) source;
-                    sb.Append(table.Name);
-                    sb.Append(" AS ");
-                    sb.Append(table.Alias);
+                    _designDocName = table.Name.ToLower();
+                    //_query.Append(table.Name);
+                    //_query.Append(" AS ");
+                    //_query.Append(table.Alias);
                     break;
                 case DbExpressionType.Select:
                     var select = (SelectExpression) source;
-                    sb.Append("(");
-                    AppendNewLine(Identation.Inner);
-                    Visit(select);
-                    AppendNewLine(Identation.Outer);
-                    sb.Append(")");
-                    sb.Append(" AS ");
-                    sb.Append(select.Alias);
+                    //_query.Append("(");
+                    //AppendNewLine(Identation.Inner);
+                    //Visit(select);
+                    //AppendNewLine(Identation.Outer);
+                    //_query.Append(")");
+                    //_query.Append(" AS ");
+                    //_query.Append(select.Alias);
                     break;
                 default:
                     throw new InvalidOperationException("Select source is not valid type");
@@ -211,4 +220,13 @@ namespace Biseth.Net.Settee.Linq
             Outer
         }
     }
+
+    internal class TranslateResult
+    {
+        internal string QueryText;
+        internal string DesignDocName;
+        internal string ViewName;
+        internal LambdaExpression Projector;
+    }
+
 }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Biseth.Net.Settee.CouchDb.Api;
@@ -18,7 +21,7 @@ namespace Biseth.Net.Settee.Linq
 
         public override string GetQueryText(Expression expression)
         {
-            return Translate(expression).CommandText;
+            return Translate(expression).QueryText;
         }
 
         public override object Execute(Expression expression)
@@ -27,30 +30,27 @@ namespace Biseth.Net.Settee.Linq
             var projector = result.Projector.Compile();
 
             var queryString = "key=" + Uri.EscapeDataString("[\"Saab\",\"1337\"]") + "&include_docs=true";
-            var reader = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc("car").View("Make_Model", queryString).Get<ViewResponse<T>>();
+            var queryResult = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc("car").View("Make_Model", queryString).Get<ViewResponse<T>>();
 
             var elementType = TypeSystem.GetElementType(expression.Type);
-            return Activator.CreateInstance(
-                typeof (ProjectionReader<>).MakeGenericType(elementType),
-                BindingFlags.Instance | BindingFlags.NonPublic, null,
-                new object[] {reader, projector},
-                null
-                );
+            return (queryResult.DataDeserialized.Rows ?? new List<ViewRow<T>>()).Select(x=>x.Doc);
+            //return Activator.CreateInstance(
+            //    typeof (ProjectionReader<>).MakeGenericType(elementType),
+            //    BindingFlags.Instance | BindingFlags.NonPublic, null,
+            //    new object[] {reader, projector},
+            //    null
+            //    );
         }
 
         private static TranslateResult Translate(Expression expression)
         {
             expression = Evaluator.PartialEval(expression);
             var proj = (ProjectionExpression) new QueryBinder().Bind(expression);
-            var commandText = new QueryFormatter().Format(proj.Source);
+            var result = new QueryFormatter().Format(proj.Source);
             var projector = new ProjectionBuilder().Build(proj.Projector);
-            return new TranslateResult {CommandText = commandText, Projector = projector};
+            result.Projector = projector;
+            return result;
         }
 
-        internal class TranslateResult
-        {
-            internal string CommandText;
-            internal LambdaExpression Projector;
-        }
     }
 }

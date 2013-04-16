@@ -24,7 +24,7 @@ namespace Biseth.Net.Settee.Linq
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         public static Expression PartialEval(Expression expression)
         {
-            return PartialEval(expression, Evaluator.CanBeEvaluatedLocally);
+            return PartialEval(expression, CanBeEvaluatedLocally);
         }
 
         private static bool CanBeEvaluatedLocally(Expression expression)
@@ -38,41 +38,41 @@ namespace Biseth.Net.Settee.Linq
         /// </summary>
         private class Nominator : ExpressionVisitor
         {
-            private HashSet<Expression> candidates;
-            private bool cannotBeEvaluated;
-            private Func<Expression, bool> fnCanBeEvaluated;
+            private readonly Func<Expression, bool> _fnCanBeEvaluated;
+            private HashSet<Expression> _candidates;
+            private bool _cannotBeEvaluated;
 
             internal Nominator(Func<Expression, bool> fnCanBeEvaluated)
             {
-                this.fnCanBeEvaluated = fnCanBeEvaluated;
+                _fnCanBeEvaluated = fnCanBeEvaluated;
             }
 
             internal HashSet<Expression> Nominate(Expression expression)
             {
-                candidates = new HashSet<Expression>();
+                _candidates = new HashSet<Expression>();
                 Visit(expression);
-                return candidates;
+                return _candidates;
             }
 
             protected override Expression Visit(Expression expression)
             {
                 if (expression != null)
                 {
-                    var saveCannotBeEvaluated = cannotBeEvaluated;
-                    cannotBeEvaluated = false;
+                    var saveCannotBeEvaluated = _cannotBeEvaluated;
+                    _cannotBeEvaluated = false;
                     base.Visit(expression);
-                    if (!cannotBeEvaluated)
+                    if (!_cannotBeEvaluated)
                     {
-                        if (fnCanBeEvaluated(expression))
+                        if (_fnCanBeEvaluated(expression))
                         {
-                            candidates.Add(expression);
+                            _candidates.Add(expression);
                         }
                         else
                         {
-                            cannotBeEvaluated = true;
+                            _cannotBeEvaluated = true;
                         }
                     }
-                    cannotBeEvaluated |= saveCannotBeEvaluated;
+                    _cannotBeEvaluated |= saveCannotBeEvaluated;
                 }
                 return expression;
             }
@@ -83,7 +83,7 @@ namespace Biseth.Net.Settee.Linq
         /// </summary>
         private class SubtreeEvaluator : ExpressionVisitor
         {
-            private HashSet<Expression> candidates;
+            private readonly HashSet<Expression> candidates;
 
             internal SubtreeEvaluator(HashSet<Expression> candidates)
             {

@@ -16,141 +16,141 @@ namespace Biseth.Net.Settee.Linq
 
     internal class TableExpression : Expression
     {
-        private string alias;
-        private string name;
+        private readonly string _alias;
+        private readonly string _name;
 
         internal TableExpression(Type type, string alias, string name)
             : base((ExpressionType) DbExpressionType.Table, type)
         {
-            this.alias = alias;
-            this.name = name;
+            _alias = alias;
+            _name = name;
         }
 
         internal string Alias
         {
-            get { return alias; }
+            get { return _alias; }
         }
 
         internal string Name
         {
-            get { return name; }
+            get { return _name; }
         }
     }
 
     internal class ColumnExpression : Expression
     {
-        private string alias;
-        private string name;
-        private int ordinal;
+        private readonly string _alias;
+        private readonly string _name;
+        private readonly int _ordinal;
 
         internal ColumnExpression(Type type, string alias, string name, int ordinal)
             : base((ExpressionType) DbExpressionType.Column, type)
         {
-            this.alias = alias;
-            this.name = name;
-            this.ordinal = ordinal;
+            _alias = alias;
+            _name = name;
+            _ordinal = ordinal;
         }
 
         internal string Alias
         {
-            get { return alias; }
+            get { return _alias; }
         }
 
         internal string Name
         {
-            get { return name; }
+            get { return _name; }
         }
 
         internal int Ordinal
         {
-            get { return ordinal; }
+            get { return _ordinal; }
         }
     }
 
     internal class ColumnDeclaration
     {
-        private Expression expression;
-        private string name;
+        private readonly Expression _expression;
+        private readonly string _name;
 
         internal ColumnDeclaration(string name, Expression expression)
         {
-            this.name = name;
-            this.expression = expression;
+            _name = name;
+            _expression = expression;
         }
 
         internal string Name
         {
-            get { return name; }
+            get { return _name; }
         }
 
         internal Expression Expression
         {
-            get { return expression; }
+            get { return _expression; }
         }
     }
 
     internal class SelectExpression : Expression
     {
-        private string alias;
-        private ReadOnlyCollection<ColumnDeclaration> columns;
-        private Expression from;
-        private Expression where;
+        private readonly string _alias;
+        private readonly ReadOnlyCollection<ColumnDeclaration> _columns;
+        private readonly Expression _from;
+        private readonly Expression _where;
 
         internal SelectExpression(Type type, string alias, IEnumerable<ColumnDeclaration> columns, Expression from,
                                   Expression where)
             : base((ExpressionType) DbExpressionType.Select, type)
         {
-            this.alias = alias;
-            this.columns = columns as ReadOnlyCollection<ColumnDeclaration>;
-            if (this.columns == null)
+            _alias = alias;
+            _columns = columns as ReadOnlyCollection<ColumnDeclaration>;
+            if (_columns == null)
             {
-                this.columns = new List<ColumnDeclaration>(columns).AsReadOnly();
+                _columns = new List<ColumnDeclaration>(columns).AsReadOnly();
             }
-            this.from = from;
-            this.where = where;
+            _from = from;
+            _where = where;
         }
 
         internal string Alias
         {
-            get { return alias; }
+            get { return _alias; }
         }
 
         internal ReadOnlyCollection<ColumnDeclaration> Columns
         {
-            get { return columns; }
+            get { return _columns; }
         }
 
         internal Expression From
         {
-            get { return @from; }
+            get { return _from; }
         }
 
         internal Expression Where
         {
-            get { return @where; }
+            get { return _where; }
         }
     }
 
     internal class ProjectionExpression : Expression
     {
-        private Expression projector;
-        private SelectExpression source;
+        private readonly Expression _projector;
+        private readonly SelectExpression _source;
 
         internal ProjectionExpression(SelectExpression source, Expression projector)
             : base((ExpressionType) DbExpressionType.Projection, projector.Type)
         {
-            this.source = source;
-            this.projector = projector;
+            _source = source;
+            _projector = projector;
         }
 
         internal SelectExpression Source
         {
-            get { return source; }
+            get { return _source; }
         }
 
         internal Expression Projector
         {
-            get { return projector; }
+            get { return _projector; }
         }
     }
 

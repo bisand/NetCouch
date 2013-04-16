@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -16,7 +17,7 @@ namespace Biseth.Net.Settee.Linq
 
         public override string GetQueryText(Expression expression)
         {
-            return Translate(expression).CommandText;
+            return Translate(expression).QueryText;
         }
 
         public override object Execute(Expression expression)
@@ -25,14 +26,14 @@ namespace Biseth.Net.Settee.Linq
             var projector = result.Projector.Compile();
 
             var cmd = _connection.CreateCommand();
-            cmd.CommandText = result.CommandText;
+            cmd.CommandText = result.QueryText;
             var reader = cmd.ExecuteReader();
 
             var elementType = TypeSystem.GetElementType(expression.Type);
             return Activator.CreateInstance(
-                typeof (ProjectionReader<>).MakeGenericType(elementType),
+                typeof(ProjectionReader<>).MakeGenericType(elementType),
                 BindingFlags.Instance | BindingFlags.NonPublic, null,
-                new object[] {reader, projector},
+                new object[] { reader, projector },
                 null
                 );
         }
@@ -41,15 +42,10 @@ namespace Biseth.Net.Settee.Linq
         {
             expression = Evaluator.PartialEval(expression);
             var proj = (ProjectionExpression) new QueryBinder().Bind(expression);
-            var commandText = new QueryFormatter().Format(proj.Source);
+            var result = new QueryFormatter().Format(proj.Source);
             var projector = new ProjectionBuilder().Build(proj.Projector);
-            return new TranslateResult {CommandText = commandText, Projector = projector};
-        }
-
-        internal class TranslateResult
-        {
-            internal string CommandText;
-            internal LambdaExpression Projector;
+            result.Projector = projector;
+            return result;
         }
     }
 }
