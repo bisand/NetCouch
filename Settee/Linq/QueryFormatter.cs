@@ -7,55 +7,31 @@ namespace Biseth.Net.Settee.Linq
 {
     internal class QueryFormatter : DbExpressionVisitor
     {
-        private int _depth;
-        private int _indent = 2;
         private StringBuilder _query;
         private string _designDocName;
         private string _viewName;
         private List<string> _queryProperties;
         private List<string> _queryValues;
 
-        internal QueryFormatter()
-        {
-        }
-
-        internal int IdentationWidth
-        {
-            get { return _indent; }
-            set { _indent = value; }
-        }
-
         internal TranslateResult Format(Expression expression)
         {
             _query = new StringBuilder();
             _queryProperties = new List<string>();
             _queryValues = new List<string>();
+            
+            // Start parsing the expression tree.
             Visit(expression);
-            var result = new TranslateResult();
-            result.QueryText = _query.ToString();
-            result.QueryProperties = _queryProperties;
-            result.QueryValues = _queryValues;
-            result.DesignDocName = (_designDocName ?? "").ToLower();
-            result.ViewName = _viewName;
-            return result;
-        }
 
-        private void AppendNewLine(Identation style)
-        {
-            //_query.AppendLine();
-            if (style == Identation.Inner)
-            {
-                _depth++;
-            }
-            else if (style == Identation.Outer)
-            {
-                _depth--;
-                System.Diagnostics.Debug.Assert(_depth >= 0);
-            }
-            for (int i = 0, n = _depth*_indent; i < n; i++)
-            {
-                //_query.Append(" ");
-            }
+            // Return the result.
+            var result = new TranslateResult
+                {
+                    QueryText = _query.ToString(),
+                    QueryProperties = _queryProperties,
+                    QueryValues = _queryValues,
+                    DesignDocName = (_designDocName ?? "").ToLower(),
+                    ViewName = _viewName
+                };
+            return result;
         }
 
         protected override Expression VisitMethodCall(MethodCallExpression m)
@@ -68,7 +44,6 @@ namespace Biseth.Net.Settee.Linq
             switch (u.NodeType)
             {
                 case ExpressionType.Not:
-                    //_query.Append(" NOT ");
                     Visit(u.Operand);
                     break;
                 default:
@@ -114,9 +89,17 @@ namespace Biseth.Net.Settee.Linq
                     _queryValues.Add("{!=}");
                     _viewName += "Not";
                     if (b.Left is ConstantExpression)
-                        _viewName += (b.Left as ConstantExpression).Value;
+                    {
+                        var leftExpression = b.Left as ConstantExpression;
+                        if (leftExpression != null) 
+                            _viewName += leftExpression.Value;
+                    }
                     if (b.Right is ConstantExpression)
-                        _viewName += (b.Right as ConstantExpression).Value;
+                    {
+                        var rightExpression = b.Right as ConstantExpression;
+                        if (rightExpression != null) 
+                            _viewName += rightExpression.Value;
+                    }
                     break;
                 case ExpressionType.LessThan:
                     _queryProperties.Add("{<}");
@@ -147,7 +130,6 @@ namespace Biseth.Net.Settee.Linq
         {
             if (c.Value == null)
             {
-                //_query.Append("NULL");
             }
             else
             {
@@ -170,10 +152,7 @@ namespace Biseth.Net.Settee.Linq
         {
             if (!string.IsNullOrEmpty(column.Alias))
             {
-                //_query.Append(column.Alias);
-                //_query.Append(".");
             }
-            //_query.Append(column.Name);
             _viewName = _viewName == null ? column.Name : _viewName + column.Name;
             _queryProperties.Add(column.Name);
             return column;
@@ -181,32 +160,12 @@ namespace Biseth.Net.Settee.Linq
 
         protected override Expression VisitSelect(SelectExpression select)
         {
-            _query.Append("keys=");
-            for (int i = 0, n = select.Columns.Count; i < n; i++)
-            {
-                //var column = select.Columns[i];
-                //if (i > 0)
-                //{
-                //    sb.Append(", ");
-                //}
-                //var c = Visit(column.Expression) as ColumnExpression;
-                //if (c == null || c.Name != select.Columns[i].Name)
-                //{
-                //    sb.Append(" AS ");
-                //    sb.Append(column.Name);
-                //}
-            }
             if (select.From != null)
             {
-                AppendNewLine(Identation.Same);
-                //_query.Append("FROM ");
-                
                 VisitSource(select.From);
             }
             if (select.Where != null)
             {
-                AppendNewLine(Identation.Same);
-                //_query.Append("WHERE ");
                 Visit(select.Where);
             }
             return select;
@@ -222,7 +181,9 @@ namespace Biseth.Net.Settee.Linq
                     break;
                 case DbExpressionType.Select:
                     var select = (SelectExpression) source;
-                    _designDocName = (select.From as TableExpression).Name;
+                    var tableExpression = @select.From as TableExpression;
+                    if (tableExpression != null)
+                        _designDocName = tableExpression.Name;
                     break;
                 default:
                     throw new InvalidOperationException("Select source is not valid type");
