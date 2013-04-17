@@ -33,6 +33,10 @@ namespace Biseth.Net.Settee.Linq
             Visit(expression);
             var result = new TranslateResult();
             result.QueryText = _query.ToString();
+            result.QueryProperties = _queryProperties;
+            result.QueryValues = _queryValues;
+            result.DesignDocName = (_designDocName ?? "").ToLower();
+            result.ViewName = _viewName;
             return result;
         }
 
@@ -76,50 +80,66 @@ namespace Biseth.Net.Settee.Linq
 
         protected override Expression VisitBinary(BinaryExpression b)
         {
-            //_query.Append("(");
-            if (b.Left is ColumnExpression)
-            {
-                var columnExpression = b.Left as ColumnExpression;
-                if (columnExpression != null) 
-                    _queryProperties.Add(columnExpression.Name);
-            }
-            else if (!(b.Left is BinaryExpression))
-            {
-            }
+            _queryProperties.Add("(");
+            _queryValues.Add("(");
             Visit(b.Left);
             switch (b.NodeType)
             {
                 case ExpressionType.And:
+                    _queryProperties.Add("{AND}");
+                    _queryValues.Add("{AND}");
+                    _viewName += "And";
                     break;
                 case ExpressionType.AndAlso:
+                    _queryProperties.Add("{AND}");
+                    _queryValues.Add("{AND}");
+                    _viewName += "And";
                     break;
                 case ExpressionType.Or:
+                    _queryProperties.Add("{OR}");
+                    _queryValues.Add("{OR}");
+                    _viewName += "Or";
                     break;
                 case ExpressionType.OrElse:
+                    _queryProperties.Add("{OR}");
+                    _queryValues.Add("{OR}");
+                    _viewName += "Or";
                     break;
                 case ExpressionType.Equal:
+                    _queryProperties.Add("{=}");
+                    _queryValues.Add("{=}");
                     break;
                 case ExpressionType.NotEqual:
+                    _queryProperties.Add("{!=}");
+                    _queryValues.Add("{!=}");
+                    _viewName += "Not";
+                    if (b.Left is ConstantExpression)
+                        _viewName += (b.Left as ConstantExpression).Value;
+                    if (b.Right is ConstantExpression)
+                        _viewName += (b.Right as ConstantExpression).Value;
                     break;
                 case ExpressionType.LessThan:
+                    _queryProperties.Add("{<}");
+                    _queryValues.Add("{<}");
                     break;
                 case ExpressionType.LessThanOrEqual:
+                    _queryProperties.Add("{<=}");
+                    _queryValues.Add("{<=}");
                     break;
                 case ExpressionType.GreaterThan:
+                    _queryProperties.Add("{>}");
+                    _queryValues.Add("{>}");
                     break;
                 case ExpressionType.GreaterThanOrEqual:
+                    _queryProperties.Add("{>=}");
+                    _queryValues.Add("{>=}");
                     break;
                 default:
                     throw new NotSupportedException(string.Format("The binary operator '{0}' is not supported", b.NodeType));
             }
-            if (b.Right is ColumnExpression)
-            {
-            }
-            else if (!(b.Right is BinaryExpression))
-            {
-            }
             Visit(b.Right);
-            //_query.Append(")");
+            _queryProperties.Add(")");
+            _queryValues.Add(")");
             return b;
         }
 
@@ -133,18 +153,13 @@ namespace Biseth.Net.Settee.Linq
             {
                 switch (Type.GetTypeCode(c.Value.GetType()))
                 {
-                    case TypeCode.Boolean:
-                        //_query.Append(((bool) c.Value) ? 1 : 0);
-                        break;
                     case TypeCode.String:
-                        //_query.Append("'");
-                        //_query.Append(c.Value);
-                        //_query.Append("'");
+                        _queryValues.Add("'" + c.Value + "'");
                         break;
                     case TypeCode.Object:
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", c.Value));
                     default:
-                        //_query.Append(c.Value);
+                        _queryValues.Add(c.Value.ToString());
                         break;
                 }
             }
@@ -159,7 +174,8 @@ namespace Biseth.Net.Settee.Linq
                 //_query.Append(".");
             }
             //_query.Append(column.Name);
-            _designDocName = _designDocName == null ? column.Name : _designDocName + "_" + column.Name;
+            _viewName = _viewName == null ? column.Name : _viewName + column.Name;
+            _queryProperties.Add(column.Name);
             return column;
         }
 
@@ -203,19 +219,10 @@ namespace Biseth.Net.Settee.Linq
                 case DbExpressionType.Table:
                     var table = (TableExpression) source;
                     _designDocName = table.Name.ToLower();
-                    //_query.Append(table.Name);
-                    //_query.Append(" AS ");
-                    //_query.Append(table.Alias);
                     break;
                 case DbExpressionType.Select:
                     var select = (SelectExpression) source;
-                    //_query.Append("(");
-                    //AppendNewLine(Identation.Inner);
-                    //Visit(select);
-                    //AppendNewLine(Identation.Outer);
-                    //_query.Append(")");
-                    //_query.Append(" AS ");
-                    //_query.Append(select.Alias);
+                    _designDocName = (select.From as TableExpression).Name;
                     break;
                 default:
                     throw new InvalidOperationException("Select source is not valid type");
@@ -237,6 +244,8 @@ namespace Biseth.Net.Settee.Linq
         internal string DesignDocName;
         internal string ViewName;
         internal LambdaExpression Projector;
+        public List<string> QueryProperties { get; set; }
+        public List<string> QueryValues { get; set; }
     }
 
 }

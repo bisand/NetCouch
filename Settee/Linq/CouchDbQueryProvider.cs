@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Reflection;
 using Biseth.Net.Settee.CouchDb.Api;
 using Biseth.Net.Settee.CouchDb.Api.Extensions;
@@ -29,8 +30,13 @@ namespace Biseth.Net.Settee.Linq
             var result = Translate(expression);
             var projector = result.Projector.Compile();
 
-            var queryString = "key=" + Uri.EscapeDataString("[\"Saab\",\"1337\"]") + "&include_docs=true";
-            var queryResult = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc("car").View("Make_Model", queryString).Get<ViewResponse<T>>();
+            var queryString = "keys=" + Uri.EscapeDataString("[[\"Saab\",\"1337\"]]") + "&include_docs=true";
+            var headResult = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).View(result.ViewName, queryString).Head();
+            if (headResult != null && headResult.StatusCode == HttpStatusCode.NotFound)
+            {
+                //CreateView
+            }
+            var queryResult = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).View(result.ViewName, queryString).Get<ViewResponse<T>>();
 
             var elementType = TypeSystem.GetElementType(expression.Type);
             return (queryResult.DataDeserialized.Rows ?? new List<ViewRow<T>>()).Select(x=>x.Doc);

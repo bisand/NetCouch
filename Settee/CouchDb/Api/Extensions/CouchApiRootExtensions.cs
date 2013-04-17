@@ -79,6 +79,12 @@ namespace Biseth.Net.Settee.CouchDb.Api.Extensions
             return result;
         }
 
+        public static ResponseData<object> Head(this CouchApiRoot element)
+        {
+            var responseData = element.RequestClient.Get<object>(element.PathElement);
+            return responseData;
+        }
+
         public static ResponseData<T> Get<T>(this CouchApiRoot element)
         {
             var responseData = element.RequestClient.Get<T>(element.PathElement);
