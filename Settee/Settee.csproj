@@ -85,16 +85,12 @@
     <Compile Include="Linq\CouchDbQueryContext.cs" />
     <Compile Include="Linq\CouchDbQueryProvider.cs" />
     <Compile Include="Linq\DbExpressions.cs" />
-    <Compile Include="Linq\DbQueryProvider.cs" />
     <Compile Include="Linq\Evaluator.cs" />
     <Compile Include="Linq\ExpressionTreeHelpers.cs" />
     <Compile Include="Linq\ExpressionTreeModifier.cs" />
     <Compile Include="Linq\ExpressionVisitor.cs" />
     <Compile Include="Linq\InnermostWhereFinder.cs" />
     <Compile Include="Linq\InvalidQueryException.cs" />
-    <Compile Include="Linq\LocationFinder.cs" />
-    <Compile Include="Linq\Program.cs" />
-    <Compile Include="Linq\ProjectionReader.cs" />
     <Compile Include="Linq\Query.cs" />
     <Compile Include="Linq\QueryBinder.cs" />
     <Compile Include="Linq\QueryFormatter.cs" />

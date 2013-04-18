@@ -12,13 +12,16 @@ namespace Biseth.Net.Settee.Linq
         private string _viewName;
         private List<string> _queryProperties;
         private List<string> _queryValues;
+        private List<Statement> _statements;
+        private int _level;
 
         internal TranslateResult Format(Expression expression)
         {
             _query = new StringBuilder();
             _queryProperties = new List<string>();
             _queryValues = new List<string>();
-            
+            _statements = new List<Statement>();
+            _level = 0;
             // Start parsing the expression tree.
             Visit(expression);
 
@@ -29,7 +32,8 @@ namespace Biseth.Net.Settee.Linq
                     QueryProperties = _queryProperties,
                     QueryValues = _queryValues,
                     DesignDocName = (_designDocName ?? "").ToLower(),
-                    ViewName = _viewName
+                    ViewName = _viewName,
+                    Statements = _statements,
                 };
             return result;
         }
@@ -55,38 +59,28 @@ namespace Biseth.Net.Settee.Linq
 
         protected override Expression VisitBinary(BinaryExpression b)
         {
-            _queryProperties.Add("(");
-            _queryValues.Add("(");
+            _level++;
             Visit(b.Left);
             switch (b.NodeType)
             {
                 case ExpressionType.And:
-                    _queryProperties.Add("{AND}");
-                    _queryValues.Add("{AND}");
                     _viewName += "And";
                     break;
                 case ExpressionType.AndAlso:
-                    _queryProperties.Add("{AND}");
-                    _queryValues.Add("{AND}");
                     _viewName += "And";
                     break;
                 case ExpressionType.Or:
-                    _queryProperties.Add("{OR}");
-                    _queryValues.Add("{OR}");
                     _viewName += "Or";
                     break;
                 case ExpressionType.OrElse:
-                    _queryProperties.Add("{OR}");
-                    _queryValues.Add("{OR}");
                     _viewName += "Or";
                     break;
+
                 case ExpressionType.Equal:
-                    _queryProperties.Add("{=}");
-                    _queryValues.Add("{=}");
+                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
                     break;
                 case ExpressionType.NotEqual:
-                    _queryProperties.Add("{!=}");
-                    _queryValues.Add("{!=}");
+                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
                     _viewName += "Not";
                     if (b.Left is ConstantExpression)
                     {
@@ -102,27 +96,22 @@ namespace Biseth.Net.Settee.Linq
                     }
                     break;
                 case ExpressionType.LessThan:
-                    _queryProperties.Add("{<}");
-                    _queryValues.Add("{<}");
+                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
                     break;
                 case ExpressionType.LessThanOrEqual:
-                    _queryProperties.Add("{<=}");
-                    _queryValues.Add("{<=}");
+                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
                     break;
                 case ExpressionType.GreaterThan:
-                    _queryProperties.Add("{>}");
-                    _queryValues.Add("{>}");
+                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
                     break;
                 case ExpressionType.GreaterThanOrEqual:
-                    _queryProperties.Add("{>=}");
-                    _queryValues.Add("{>=}");
+                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
                     break;
                 default:
                     throw new NotSupportedException(string.Format("The binary operator '{0}' is not supported", b.NodeType));
             }
             Visit(b.Right);
-            _queryProperties.Add(")");
-            _queryValues.Add(")");
+            _level--;
             return b;
         }
 
@@ -199,14 +188,50 @@ namespace Biseth.Net.Settee.Linq
         }
     }
 
-    internal class TranslateResult
+    public class Statement
+    {
+        private readonly int _level;
+        private readonly Expression _left;
+        private readonly ExpressionType _nodeType;
+        private readonly Expression _right;
+
+        public Statement(int level, Expression left, ExpressionType nodeType, Expression right)
+        {
+            _level = level;
+            _left = left;
+            _nodeType = nodeType;
+            _right = right;
+        }
+
+        public int Level
+        {
+            get { return _level; }
+        }
+
+        public Expression Left
+        {
+            get { return _left; }
+        }
+
+        public ExpressionType NodeType
+        {
+            get { return _nodeType; }
+        }
+
+        public Expression Right
+        {
+            get { return _right; }
+        }
+    }
+
+    public class TranslateResult
     {
         internal string QueryText;
         internal string DesignDocName;
         internal string ViewName;
-        internal LambdaExpression Projector;
         public List<string> QueryProperties { get; set; }
         public List<string> QueryValues { get; set; }
+        public List<Statement> Statements { get; set; }
     }
 
 }
