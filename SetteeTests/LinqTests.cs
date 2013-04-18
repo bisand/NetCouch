@@ -16,7 +16,7 @@ namespace SetteeTests
             var api = new CouchApi(client, "trivial");
 
             var query = new CouchDbQuery<Car>(new CouchDbQueryProvider<Car>(api));
-            var persons = query.Where(p => (((p.Make == "Saab" && p.Model == "1337") || p.Make != "Volvo") && p.Model != "2013")).ToList();
+            var persons = query.Where(p => (((p.Make == "Saab" && p.Model == "1337" && p.HorsePowers == 200) || p.Make != "Volvo") && p.Model != "2013")).ToList();
             Assert.That(persons != null);
         }
     }

@@ -72,24 +72,69 @@ namespace Biseth.Net.Settee.Linq
 
         public void Build(TranslateResult result)
         {
-            var notEquals = result.Statements.Where(x => x.NodeType == ExpressionType.NotEqual);
+            var notEquals = result.Statements.Where(x => x.NodeType == ExpressionType.NotEqual).ToList();
+            var equals = result.Statements.Where(x => x.NodeType == ExpressionType.Equal).ToList();
+            var equalGroups = @equals.Select(x=>x.Level).GroupBy(g=>g).ToList();
+           
             _view.Append(result.DesignDocName);
             _view.Append("') { ");
             // emit operatins goes here
-            foreach (var statement in notEquals)
+
+            var count = notEquals.Count();
+            if (count > 0)
             {
                 _view.Append("if (");
-                if (statement.Left.NodeType is ColumnExpression)
+
+                foreach (var statement in notEquals)
                 {
-                    _view.Append("");
+                    if (statement.Left is ColumnExpression && statement.Right is ConstantExpression)
+                    {
+                        _view.Append("doc." + (statement.Left as ColumnExpression).Name + " != ");
+                        _view.Append("'" + (statement.Right as ConstantExpression).Value + "' && ");
+                    }
+                    else if (statement.Left is ConstantExpression && statement.Right is ColumnExpression)
+                    {
+                        _view.Append("doc." + (statement.Right as ColumnExpression).Name + " != ");
+                        _view.Append("'" + (statement.Left as ConstantExpression).Value + "' && ");
+                    }
                 }
-                else
-                {
-                    
-                }
+                _view.Remove(_view.Length - 4, 4);
+                _view.Append(") { ");
             }
+
+            foreach (var equalGroup in equalGroups)
+            {
+                var statements = @equals.Where(x => x.Level == equalGroup.Key).ToList();
+                if (statements.Count > 1)
+                {
+                    _view.Append("emit([");
+                    foreach (var statement in statements)
+                    {
+                        if (statement.Right is ConstantExpression && (statement.Right as ConstantExpression).Value is string)
+                            _view.Append("'" + (statement.Right as ConstantExpression).Value + "',");
+                        else if (statement.Right is ConstantExpression)
+                            _view.Append((statement.Right as ConstantExpression).Value + ",");
+                    }
+                    _view.Remove(_view.Length-1, 1);
+                    _view.Append("],null);");
+                }
+                else if (statements.Count > 0)
+                {
+                    _view.Append("emit(");
+                    if (statements[0].Right is ConstantExpression && (statements[0].Right as ConstantExpression).Value is string)
+                        _view.Append("'" + (statements[0].Right as ConstantExpression).Value + "'");
+                    else if (statements[0].Right is ConstantExpression)
+                        _view.Append((statements[0].Right as ConstantExpression).Value);
+                    _view.Append(",null);");
+                }
+
+            }
+            
+            if (count > 0)
+                _view.Append(" } ");
+
             _view.Append(" } ");
-            _view.Append(" } ");
+            _view.Append(" }");
         }
     }
 }
