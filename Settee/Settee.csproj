@@ -84,6 +84,7 @@
     <Compile Include="Linq\CouchDbQuery.cs" />
     <Compile Include="Linq\CouchDbQueryContext.cs" />
     <Compile Include="Linq\CouchDbQueryProvider.cs" />
+    <Compile Include="Linq\CouchDbViewQueryBuilder.cs" />
     <Compile Include="Linq\DbExpressions.cs" />
     <Compile Include="Linq\Evaluator.cs" />
     <Compile Include="Linq\ExpressionTreeHelpers.cs" />

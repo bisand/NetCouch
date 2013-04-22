@@ -48,12 +48,13 @@ namespace Biseth.Net.Settee.Linq
                 _view.Append(") { ");
             }
 
+            _query.Append("keys=[");
             foreach (var equalGroup in equalGroups)
             {
                 var statements = @equals.Where(x => x.Level == equalGroup.Key).ToList();
                 if (statements.Count > 1)
                 {
-                    _query.Append("keys=[");
+                    _query.Append("[");
                     _view.Append("emit([");
                     foreach (var statement in statements)
                     {
@@ -63,7 +64,7 @@ namespace Biseth.Net.Settee.Linq
                             if ((statement.Right as ConstantExpression).Value is string)
                                 _query.Append("\"" + (statement.Right as ConstantExpression).Value + "\",");
                             else
-                                _query.Append("" + (statement.Right as ConstantExpression).Value + ",");
+                                _query.Append((statement.Right as ConstantExpression).Value + ",");
                         }
                         else if (statement.Left is ConstantExpression && statement.Right is ColumnExpression)
                         {
@@ -71,13 +72,13 @@ namespace Biseth.Net.Settee.Linq
                             if ((statement.Left as ConstantExpression).Value is string)
                                 _query.Append("\"" + (statement.Left as ConstantExpression).Value + "\",");
                             else
-                                _query.Append("" + (statement.Left as ConstantExpression).Value + ",");
+                                _query.Append((statement.Left as ConstantExpression).Value + ",");
                         }
                     }
                     _view.Remove(_view.Length - 1, 1);
-                    _query.Remove(_query.Length -2, 2);
                     _view.Append("],null);");
-                    _query.Append("]]");
+                    _query.Remove(_query.Length - 1, 1);
+                    _query.Append("],");
                 }
                 else if (statements.Count > 0)
                 {
@@ -85,16 +86,27 @@ namespace Biseth.Net.Settee.Linq
                     if (statements[0].Right is ConstantExpression && statements[0].Left is ColumnExpression)
                     {
                         _view.Append("doc." + (statements[0].Left as ColumnExpression).Name);
+                        if ((statements[0].Right as ConstantExpression).Value is string)
+                            _query.Append("\"" + (statements[0].Right as ConstantExpression).Value + "\"");
+                        else
+                            _query.Append((statements[0].Right as ConstantExpression).Value);
                     }
                     else if (statements[0].Left is ConstantExpression && statements[0].Right is ColumnExpression)
                     {
                         _view.Append("doc." + (statements[0].Right as ColumnExpression).Name);
+                        if ((statements[0].Left as ConstantExpression).Value is string)
+                            _query.Append("\"" + (statements[0].Left as ConstantExpression).Value + "\"");
+                        else
+                            _query.Append((statements[0].Left as ConstantExpression).Value);
                     }
                     _view.Append(",null);");
+                    _query.Append(",");
                 }
 
             }
-            
+
+            _query.Remove(_query.Length - 1, 1);
+            _query.Append("]");
             if (count > 0)
                 _view.Append(" } ");
 

@@ -14,6 +14,7 @@ namespace Biseth.Net.Settee.Linq
         private List<string> _queryValues;
         private List<Statement> _statements;
         private int _level;
+        private ExpressionType _lastExpressionType;
 
         internal TranslateResult Format(Expression expression)
         {
@@ -65,22 +66,26 @@ namespace Biseth.Net.Settee.Linq
             {
                 case ExpressionType.And:
                     _viewName += "And";
+                    _lastExpressionType = ExpressionType.And;
                     break;
                 case ExpressionType.AndAlso:
                     _viewName += "And";
+                    _lastExpressionType = ExpressionType.And;
                     break;
                 case ExpressionType.Or:
                     _viewName += "Or";
+                    _lastExpressionType = ExpressionType.Or;
                     break;
                 case ExpressionType.OrElse:
                     _viewName += "Or";
+                    _lastExpressionType = ExpressionType.Or;
                     break;
 
                 case ExpressionType.Equal:
-                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
+                    _statements.Add(new Statement(_lastExpressionType, _level, b.Left, b.NodeType, b.Right));
                     break;
                 case ExpressionType.NotEqual:
-                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
+                    _statements.Add(new Statement(_lastExpressionType, _level, b.Left, b.NodeType, b.Right));
                     _viewName += "Not";
                     if (b.Left is ConstantExpression)
                     {
@@ -96,16 +101,16 @@ namespace Biseth.Net.Settee.Linq
                     }
                     break;
                 case ExpressionType.LessThan:
-                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
+                    _statements.Add(new Statement(_lastExpressionType, _level, b.Left, b.NodeType, b.Right));
                     break;
                 case ExpressionType.LessThanOrEqual:
-                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
+                    _statements.Add(new Statement(_lastExpressionType, _level, b.Left, b.NodeType, b.Right));
                     break;
                 case ExpressionType.GreaterThan:
-                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
+                    _statements.Add(new Statement(_lastExpressionType, _level, b.Left, b.NodeType, b.Right));
                     break;
                 case ExpressionType.GreaterThanOrEqual:
-                    _statements.Add(new Statement(_level, b.Left, b.NodeType, b.Right));
+                    _statements.Add(new Statement(_lastExpressionType, _level, b.Left, b.NodeType, b.Right));
                     break;
                 default:
                     throw new NotSupportedException(string.Format("The binary operator '{0}' is not supported", b.NodeType));
@@ -190,13 +195,15 @@ namespace Biseth.Net.Settee.Linq
 
     public class Statement
     {
+        private readonly ExpressionType _lastExpressionType;
         private readonly int _level;
         private readonly Expression _left;
         private readonly ExpressionType _nodeType;
         private readonly Expression _right;
 
-        public Statement(int level, Expression left, ExpressionType nodeType, Expression right)
+        public Statement(ExpressionType lastExpressionType, int level, Expression left, ExpressionType nodeType, Expression right)
         {
+            _lastExpressionType = lastExpressionType;
             _level = level;
             _left = left;
             _nodeType = nodeType;
@@ -221,6 +228,11 @@ namespace Biseth.Net.Settee.Linq
         public Expression Right
         {
             get { return _right; }
+        }
+
+        public ExpressionType LastExpressionType
+        {
+            get { return _lastExpressionType; }
         }
     }
 

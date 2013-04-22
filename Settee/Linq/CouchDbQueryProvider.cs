@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Biseth.Net.Settee.CouchDb.Api;
+﻿using Biseth.Net.Settee.CouchDb.Api;
 using Biseth.Net.Settee.CouchDb.Api.Extensions;
 using Biseth.Net.Settee.Models.Couch.DesignDoc;
 using System;
@@ -27,8 +26,7 @@ namespace Biseth.Net.Settee.Linq
         public override object Execute(Expression expression)
         {
             var result = Translate(expression);
-            new CouchDbViewBuilder().Build(result);
-            new CouchDbQueryBuilder().Build(result);
+            var view = new CouchDbViewQueryBuilder().Build(result);
 
             // p => (p.Make == "Saab" && p.Model == "1337" || p.Make != "Volvo" && p.Model != "2013")
             // The not equal operators should be put into an index. If a combined statement produce an empty query,
@@ -58,94 +56,6 @@ namespace Biseth.Net.Settee.Linq
             var proj = (ProjectionExpression)new QueryBinder().Bind(expression);
             var result = new QueryFormatter().Format(proj.Source);
             return result;
-        }
-    }
-
-    public class CouchDbViewBuilder
-    {
-        private readonly StringBuilder _view;
-
-        public CouchDbViewBuilder()
-        {
-            _view = new StringBuilder();
-            _view.Append("function(doc) { if (doc.doc_type && doc.doc_type == '");
-        }
-
-        public string Build(TranslateResult result)
-        {
-            var notEquals = result.Statements.Where(x => x.NodeType == ExpressionType.NotEqual).ToList();
-            var equals = result.Statements.Where(x => x.NodeType == ExpressionType.Equal).ToList();
-            var equalGroups = @equals.Select(x=>x.Level).GroupBy(g=>g).ToList();
-           
-            _view.Append(result.DesignDocName);
-            _view.Append("') { ");
-            // emit operatins goes here
-
-            var count = notEquals.Count();
-            if (count > 0)
-            {
-                _view.Append("if (");
-
-                foreach (var statement in notEquals)
-                {
-                    if (statement.Left is ColumnExpression && statement.Right is ConstantExpression)
-                    {
-                        _view.Append("doc." + (statement.Left as ColumnExpression).Name + " != ");
-                        _view.Append("'" + (statement.Right as ConstantExpression).Value + "' && ");
-                    }
-                    else if (statement.Left is ConstantExpression && statement.Right is ColumnExpression)
-                    {
-                        _view.Append("doc." + (statement.Right as ColumnExpression).Name + " != ");
-                        _view.Append("'" + (statement.Left as ConstantExpression).Value + "' && ");
-                    }
-                }
-                _view.Remove(_view.Length - 4, 4);
-                _view.Append(") { ");
-            }
-
-            foreach (var equalGroup in equalGroups)
-            {
-                var statements = @equals.Where(x => x.Level == equalGroup.Key).ToList();
-                if (statements.Count > 1)
-                {
-                    _view.Append("emit([");
-                    foreach (var statement in statements)
-                    {
-                        if (statement.Right is ConstantExpression && statement.Left is ColumnExpression)
-                        {
-                            _view.Append("doc." + (statement.Left as ColumnExpression).Name + ",");
-                        }
-                        else if (statement.Left is ConstantExpression && statement.Right is ColumnExpression)
-                        {
-                            _view.Append("doc." + (statement.Right as ColumnExpression).Name + ",");
-                        }
-                    }
-                    _view.Remove(_view.Length-1, 1);
-                    _view.Append("],null);");
-                }
-                else if (statements.Count > 0)
-                {
-                    _view.Append("emit(");
-                    if (statements[0].Right is ConstantExpression && statements[0].Left is ColumnExpression)
-                    {
-                        _view.Append("doc." + (statements[0].Left as ColumnExpression).Name);
-                    }
-                    else if (statements[0].Left is ConstantExpression && statements[0].Right is ColumnExpression)
-                    {
-                        _view.Append("doc." + (statements[0].Right as ColumnExpression).Name);
-                    }
-                    _view.Append(",null);");
-                }
-
-            }
-            
-            if (count > 0)
-                _view.Append(" } ");
-
-            _view.Append(" } ");
-            _view.Append(" }");
-
-            return _view.ToString();
         }
     }
 }
