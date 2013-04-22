@@ -51,6 +51,10 @@ namespace Biseth.Net.Settee.Linq
             _query.Append("keys=[");
             foreach (var equalGroup in equalGroups)
             {
+                // TODO: Check if the next statement is and or an or. If it's and then we emit them together.
+                // If or, we create a new group / emit
+                // The code below must be changed to comply with the specs.
+
                 var statements = @equals.Where(x => x.Level == equalGroup.Key).ToList();
                 if (statements.Count > 1)
                 {
