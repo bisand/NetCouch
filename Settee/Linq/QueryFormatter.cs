@@ -195,15 +195,15 @@ namespace Biseth.Net.Settee.Linq
 
     public class Statement
     {
-        private readonly ExpressionType _lastExpressionType;
+        private readonly ExpressionType _lastExprType;
         private readonly int _level;
         private readonly Expression _left;
         private readonly ExpressionType _nodeType;
         private readonly Expression _right;
 
-        public Statement(ExpressionType lastExpressionType, int level, Expression left, ExpressionType nodeType, Expression right)
+        public Statement(ExpressionType lastExprType, int level, Expression left, ExpressionType nodeType, Expression right)
         {
-            _lastExpressionType = lastExpressionType;
+            _lastExprType = lastExprType;
             _level = level;
             _left = left;
             _nodeType = nodeType;
@@ -230,9 +230,9 @@ namespace Biseth.Net.Settee.Linq
             get { return _right; }
         }
 
-        public ExpressionType LastExpressionType
+        public ExpressionType? LastExprType
         {
-            get { return _lastExpressionType; }
+            get { return _lastExprType; }
         }
     }
 

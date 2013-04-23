@@ -18,99 +18,80 @@ namespace Biseth.Net.Settee.Linq
 
         public ViewQuery Build(TranslateResult result)
         {
-            var notEquals = result.Statements.Where(x => x.NodeType == ExpressionType.NotEqual).ToList();
-            var equals = result.Statements.Where(x => x.NodeType == ExpressionType.Equal).ToList();
-            var equalGroups = @equals.Select(x=>x.Level).GroupBy(g=>g).ToList();
+            var notEqualStatements = result.Statements.Where(x => x.NodeType == ExpressionType.NotEqual).ToList();
+            var equalStatemens = result.Statements.Where(x => x.NodeType == ExpressionType.Equal).ToList();
+            var equalGroups = equalStatemens.Select(x=>x.Level).GroupBy(g=>g).ToList();
            
             _view.Append(result.DesignDocName);
             _view.Append("') { ");
             // emit operatins goes here
 
-            var count = notEquals.Count();
+            var count = notEqualStatements.Count();
             if (count > 0)
             {
                 _view.Append("if (");
-
-                foreach (var statement in notEquals)
+                var i = 0;
+                foreach (var statement in notEqualStatements)
                 {
+                    if (i > 0 && statement.LastExprType == ExpressionType.And)
+                        _view.Append(" && ");
+                    else if (i > 0 && statement.LastExprType == ExpressionType.Or)
+                        _view.Append(" || ");
+
                     if (statement.Left is ColumnExpression && statement.Right is ConstantExpression)
                     {
                         _view.Append("doc." + (statement.Left as ColumnExpression).Name + " != ");
-                        _view.Append("'" + (statement.Right as ConstantExpression).Value + "' && ");
+                        _view.Append("'" + (statement.Right as ConstantExpression).Value + "'");
                     }
                     else if (statement.Left is ConstantExpression && statement.Right is ColumnExpression)
                     {
                         _view.Append("doc." + (statement.Right as ColumnExpression).Name + " != ");
-                        _view.Append("'" + (statement.Left as ConstantExpression).Value + "' && ");
+                        _view.Append("'" + (statement.Left as ConstantExpression).Value + "'");
                     }
+                    i++;
                 }
-                _view.Remove(_view.Length - 4, 4);
                 _view.Append(") { ");
             }
 
             _query.Append("keys=[");
-            foreach (var equalGroup in equalGroups)
+            Statement prevExpr = null;
+            foreach (var eq in equalStatemens)
             {
-                // TODO: Check if the next statement is and or an or. If it's and then we emit them together.
-                // If or, we create a new group / emit
-                // The code below must be changed to comply with the specs.
-
-                var statements = @equals.Where(x => x.Level == equalGroup.Key).ToList();
-                if (statements.Count > 1)
+                if (prevExpr != null && eq.LastExprType == ExpressionType.Or)
                 {
-                    _query.Append("[");
-                    _view.Append("emit([");
-                    foreach (var statement in statements)
-                    {
-                        if (statement.Right is ConstantExpression && statement.Left is ColumnExpression)
-                        {
-                            _view.Append("doc." + (statement.Left as ColumnExpression).Name + ",");
-                            if ((statement.Right as ConstantExpression).Value is string)
-                                _query.Append("\"" + (statement.Right as ConstantExpression).Value + "\",");
-                            else
-                                _query.Append((statement.Right as ConstantExpression).Value + ",");
-                        }
-                        else if (statement.Left is ConstantExpression && statement.Right is ColumnExpression)
-                        {
-                            _view.Append("doc." + (statement.Right as ColumnExpression).Name + ",");
-                            if ((statement.Left as ConstantExpression).Value is string)
-                                _query.Append("\"" + (statement.Left as ConstantExpression).Value + "\",");
-                            else
-                                _query.Append((statement.Left as ConstantExpression).Value + ",");
-                        }
-                    }
                     _view.Remove(_view.Length - 1, 1);
                     _view.Append("],null);");
                     _query.Remove(_query.Length - 1, 1);
                     _query.Append("],");
                 }
-                else if (statements.Count > 0)
+                if (prevExpr == null || eq.LastExprType == ExpressionType.Or)
                 {
-                    _view.Append("emit(");
-                    if (statements[0].Right is ConstantExpression && statements[0].Left is ColumnExpression)
-                    {
-                        _view.Append("doc." + (statements[0].Left as ColumnExpression).Name);
-                        if ((statements[0].Right as ConstantExpression).Value is string)
-                            _query.Append("\"" + (statements[0].Right as ConstantExpression).Value + "\"");
-                        else
-                            _query.Append((statements[0].Right as ConstantExpression).Value);
-                    }
-                    else if (statements[0].Left is ConstantExpression && statements[0].Right is ColumnExpression)
-                    {
-                        _view.Append("doc." + (statements[0].Right as ColumnExpression).Name);
-                        if ((statements[0].Left as ConstantExpression).Value is string)
-                            _query.Append("\"" + (statements[0].Left as ConstantExpression).Value + "\"");
-                        else
-                            _query.Append((statements[0].Left as ConstantExpression).Value);
-                    }
-                    _view.Append(",null);");
-                    _query.Append(",");
+                    _query.Append("[");
+                    _view.Append("emit([");
                 }
-
+                if (eq.Left is ColumnExpression && eq.Right is ConstantExpression)
+                {
+                    _view.Append("doc." + (eq.Left as ColumnExpression).Name + ",");
+                    if ((eq.Right as ConstantExpression).Value is string)
+                        _query.Append("\"" + (eq.Right as ConstantExpression).Value + "\",");
+                    else
+                        _query.Append((eq.Right as ConstantExpression).Value + ",");
+                }
+                else if (eq.Left is ConstantExpression && eq.Right is ColumnExpression)
+                {
+                    _view.Append("doc." + (eq.Right as ColumnExpression).Name + ",");
+                    if ((eq.Left as ConstantExpression).Value is string)
+                        _query.Append("\"" + (eq.Left as ConstantExpression).Value + "\",");
+                    else
+                        _query.Append((eq.Left as ConstantExpression).Value + ",");
+                }
+                prevExpr = eq;
             }
 
+            _view.Remove(_view.Length - 1, 1);
+            _view.Append("],null);");
             _query.Remove(_query.Length - 1, 1);
-            _query.Append("]");
+            _query.Append("]]");
             if (count > 0)
                 _view.Append(" } ");
 
