@@ -142,6 +142,7 @@ namespace Biseth.Net.Settee.Http
             var uri = new Uri(BaseUri, requestData.Path);
             var asyncResult = new HttpAsyncResult(callback, state) {Request = (HttpWebRequest) WebRequest.Create(uri)};
             asyncResult.Request.Method = requestData.Method;
+            asyncResult.Request.Referer = BaseUri.ToString();
             if (requestData.ContentType != null)
                 asyncResult.Request.ContentType = requestData.ContentType;
             if (requestData.Data != null)

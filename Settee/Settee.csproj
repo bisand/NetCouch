@@ -101,6 +101,7 @@
     <Compile Include="Linq\TypeSystem.cs" />
     <Compile Include="Models\Couch\Database\DatabaseVendor.cs" />
     <Compile Include="Models\Couch\Database\HttpGetRoot.cs" />
+    <Compile Include="Models\Couch\DesignDoc\DesignDoc.cs" />
     <Compile Include="Models\Couch\DesignDoc\ViewResponse.cs" />
     <Compile Include="Models\Couch\DesignDoc\ViewRow.cs" />
     <Compile Include="Serialization\ISerializer.cs" />

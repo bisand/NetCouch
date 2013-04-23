@@ -252,11 +252,11 @@ namespace Biseth.Net.Settee.Http
             switch (asyncResult.Method)
             {
                 case HttpMethod.Put:
-                    var dataPut = new HttpRequestData(asyncResult.RequestData.Url, "application/json", HttpMethod.Put, data);
+                    var dataPut = new HttpRequestData(asyncResult.RequestData.Url, "", "multipart/form-data", HttpMethod.Put, data);
                     asyncResult.InternalAsyncResult = asyncResult.HttpClient.BeginPut(dataPut, RequestCallback<TIn, TOut>, asyncResult);
                     break;
                 case HttpMethod.Post:
-                    var dataPost = new HttpRequestData(asyncResult.RequestData.Url, "application/json", HttpMethod.Post, data);
+                    var dataPost = new HttpRequestData(asyncResult.RequestData.Url, "", "multipart/form-data", HttpMethod.Post, data);
                     asyncResult.InternalAsyncResult = asyncResult.HttpClient.BeginPost(dataPost, RequestCallback<TIn, TOut>, asyncResult);
                     break;
                 default:

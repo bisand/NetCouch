@@ -26,17 +26,20 @@ namespace Biseth.Net.Settee.Linq
         public override object Execute(Expression expression)
         {
             var result = Translate(expression);
-            var view = new CouchDbViewQueryBuilder().Build(result);
+            var viewQuery = new CouchDbViewQueryBuilder().Build(result);
 
             // p => (p.Make == "Saab" && p.Model == "1337" || p.Make != "Volvo" && p.Model != "2013")
             // The not equal operators should be put into an index. If a combined statement produce an empty query,
             // we probably would like to do another query with no keys...
 
-            var queryString = "keys=" + Uri.EscapeDataString("[[\"Saab\",\"1337\"]]") + "&include_docs=true";
+            var queryString = viewQuery.Query; //"keys=" + Uri.EscapeDataString("[[\"Saab\",\"1337\"]]") + "&include_docs=true";
             var headResult = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).View(result.ViewName, queryString).Head();
             if (headResult != null && headResult.StatusCode == HttpStatusCode.NotFound)
             {
-                //CreateView
+                var view = new View {Map = viewQuery.View};
+                var views = new Dictionary<string, View> {{result.ViewName, view}};
+                var designDoc = new DesignDoc {Views = views};
+                var responseData = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).Post<DesignDoc, object>(designDoc);
             }
             var queryResult = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).View(result.ViewName, queryString).Get<ViewResponse<T>>();
 
