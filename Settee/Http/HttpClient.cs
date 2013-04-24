@@ -239,6 +239,11 @@ namespace Biseth.Net.Settee.Http
             }
             catch (WebException ex)
             {
+                if (ex.Response == null)
+                {
+                    asyncResult.SetComplete();
+                    return;
+                }
                 asyncResult.Response = (HttpWebResponse) ex.Response;
             }
             catch (Exception ex)

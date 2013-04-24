@@ -36,11 +36,12 @@ namespace Biseth.Net.Settee.Linq
             var headResult = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).View(result.ViewName, queryString).Head();
             if (headResult != null && headResult.StatusCode == HttpStatusCode.NotFound)
             {
-                var view = new View {Map = viewQuery.View};
-                var views = new Dictionary<string, View> {{result.ViewName, view}};
-                var designDoc = new DesignDoc {Views = views};
-                var responseData = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).Post<DesignDoc, object>(designDoc);
+                var designDocResult = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).Get<DesignDoc>();
+                var designDoc = designDocResult.DataDeserialized;
+                designDoc.Views[result.ViewName] = new View{Map = viewQuery.View};
+                var responseData = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).Put<DesignDoc, object>(designDoc);
             }
+            queryString += "&include_docs=true";
             var queryResult = _couchApi.Root().Db(_couchApi.DefaultDatabase).DesignDoc(result.DesignDocName).View(result.ViewName, queryString).Get<ViewResponse<T>>();
 
             var elementType = TypeSystem.GetElementType(expression.Type);
