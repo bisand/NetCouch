@@ -81,7 +81,7 @@ namespace Biseth.Net.Settee.CouchDb.Api.Extensions
 
         public static ResponseData<object> Head(this CouchApiRoot element)
         {
-            var responseData = element.RequestClient.Get<object>(element.PathElement);
+            var responseData = element.RequestClient.Head<object>(element.PathElement);
             return responseData;
         }
 

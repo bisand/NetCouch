@@ -33,6 +33,7 @@ namespace Biseth.Net.Settee.Http
                     Method = HttpMethod.Get,
                 };
             var httpRequestData = new HttpRequestData(path);
+            httpRequestData.Method = HttpMethod.Get;
             asyncResult.InternalAsyncResult = asyncResult.HttpClient.BeginGet(httpRequestData, RequestCallback<TOut, TOut>, asyncResult);
 
             return asyncResult;
@@ -67,6 +68,7 @@ namespace Biseth.Net.Settee.Http
                 };
 
             var httpRequestData = new HttpRequestData(path);
+            httpRequestData.Method = HttpMethod.Head;
             asyncResult.InternalAsyncResult = asyncResult.HttpClient.BeginHead(httpRequestData, RequestCallback<TOut, TOut>, asyncResult);
 
             return asyncResult;
@@ -101,6 +103,7 @@ namespace Biseth.Net.Settee.Http
                 };
 
             var httpRequestData = new HttpRequestData(path);
+            httpRequestData.Method = HttpMethod.Options;
             asyncResult.InternalAsyncResult = asyncResult.HttpClient.BeginOptions(httpRequestData, RequestCallback<TOut, TOut>, asyncResult);
 
             return asyncResult;
@@ -135,6 +138,7 @@ namespace Biseth.Net.Settee.Http
                 };
 
             var httpRequestData = new HttpRequestData(path);
+            httpRequestData.Method = HttpMethod.Delete;
             asyncResult.InternalAsyncResult = asyncResult.HttpClient.BeginDelete(httpRequestData, RequestCallback<TOut, TOut>, asyncResult);
 
             return asyncResult;

@@ -16,6 +16,7 @@ namespace Biseth.Net.Settee.Models.Couch.DesignDoc
         public Dictionary<string, View> Views { get; set; }
     }
 
+    [DataContract]
     public class View
     {
         [DataMember(Name = "map", IsRequired = true)]
