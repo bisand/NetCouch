@@ -8,7 +8,6 @@ namespace Biseth.Net.Settee
     public class CouchDatabase : IDisposable
     {
         private bool _disposed;
-        private readonly Component _component = new Component();
         private readonly RequestClient _client;
         private CouchApi _api;
 
@@ -36,8 +35,10 @@ namespace Biseth.Net.Settee
             if (_disposed)
                 return;
             if (disposing)
-                _component.Dispose();
-
+            {
+                _client.Dispose();
+                //_api.Dispose();
+            }
             _disposed = true;
         }
 

@@ -7,6 +7,8 @@ namespace Biseth.Net.Settee.Http
 {
     public class HttpClient : IHttpClient
     {
+        private bool _disposed;
+
         public HttpClient(string baseUrl)
         {
             BaseUrl = baseUrl;
@@ -140,7 +142,10 @@ namespace Biseth.Net.Settee.Http
         private IAsyncResult StartProcessing(HttpRequestData requestData, AsyncCallback callback, object state)
         {
             var uri = new Uri(BaseUri, requestData.Path);
-            var asyncResult = new HttpAsyncResult(callback, state) {Request = (HttpWebRequest) WebRequest.Create(uri)};
+            var asyncResult = new HttpAsyncResult(callback, state)
+                {
+                    Request = (HttpWebRequest) WebRequest.Create(uri)
+                };
             asyncResult.Request.Method = requestData.Method;
             asyncResult.Request.Referer = BaseUri.ToString();
             if (requestData.ContentType != null)
@@ -277,5 +282,30 @@ namespace Biseth.Net.Settee.Http
                 asyncResult.SetComplete();
             }
         }
+
+        #region IDisposable members
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+            if (disposing)
+            {
+            }
+            _disposed = true;
+        }
+
+        ~HttpClient()
+        {
+            Dispose(false);
+        }
+
+        #endregion
     }
 }

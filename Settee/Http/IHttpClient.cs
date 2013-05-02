@@ -2,7 +2,7 @@
 
 namespace Biseth.Net.Settee.Http
 {
-    public interface IHttpClient
+    public interface IHttpClient : IDisposable
     {
         IAsyncResult BeginGet(HttpRequestData requestData, AsyncCallback callback, object state);
         HttpResponseData EndGet(IAsyncResult ar);

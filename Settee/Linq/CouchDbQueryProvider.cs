@@ -76,8 +76,17 @@ namespace Biseth.Net.Settee.Linq
 
             // Try to extract the result.
             if (queryResult != null)
-                return (queryResult.DataDeserialized.Rows ?? new List<ViewRow<T>>()).Select(x => x.Doc);
-            
+            {
+                if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count > 1)
+                {
+                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc);
+                }
+                if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count == 1)
+                {
+                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc).FirstOrDefault();
+                }
+                return new List<ViewRow<T>>();
+            }
             // Something bad happened. We just return an empty result.
             return new List<ViewRow<T>>();
         }

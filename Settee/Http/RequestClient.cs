@@ -4,14 +4,16 @@ using Biseth.Net.Settee.Threading;
 
 namespace Biseth.Net.Settee.Http
 {
-    public class RequestClient : IRequestClient
+    public class RequestClient : IRequestClient, IDisposable
     {
+        private bool _disposed;
         private readonly IHttpClient _httpClient;
         private string _url;
 
         public RequestClient(string url)
-            : this(url, new HttpClient(url))
         {
+            _url = url;
+            _httpClient = new HttpClient(url);
         }
 
         public RequestClient(string url, IHttpClient httpClient)
@@ -328,5 +330,30 @@ namespace Biseth.Net.Settee.Http
             asyncResult.ResponseData.DataDeserialized = asyncResult.Serializer.DeserializeFunc.EndInvoke(ar);
             asyncResult.SetComplete();
         }
+
+        #region IDisposable members
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+            if (disposing)
+            {
+            }
+            _disposed = true;
+        }
+
+        ~RequestClient()
+        {
+            Dispose(false);
+        }
+
+        #endregion
     }
 }

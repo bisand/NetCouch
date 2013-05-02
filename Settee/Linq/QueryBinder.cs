@@ -57,7 +57,11 @@ namespace Biseth.Net.Settee.Linq
                     case "Where":
                         return BindWhere(m.Type, m.Arguments[0], (LambdaExpression) StripQuotes(m.Arguments[1]));
                     case "Select":
-                        return BindSelect(m.Type, m.Arguments[0], (LambdaExpression) StripQuotes(m.Arguments[1]));
+                        return BindSelect(m.Type, m.Arguments[0], (LambdaExpression)StripQuotes(m.Arguments[1]));
+                    case "First":
+                        return BindFirst(m.Type, m.Arguments[0], (LambdaExpression)StripQuotes(m.Arguments[1]));
+                    case "FirstOrDefault":
+                        return BindFirstOrDefault(m.Type, m.Arguments[0], (LambdaExpression)StripQuotes(m.Arguments[1]));
                 }
                 throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
             }
@@ -66,7 +70,33 @@ namespace Biseth.Net.Settee.Linq
 
         private Expression BindWhere(Type resultType, Expression source, LambdaExpression predicate)
         {
-            var projection = (ProjectionExpression) Visit(source);
+            var projection = (ProjectionExpression)Visit(source);
+            _map[predicate.Parameters[0]] = projection.Projector;
+            var where = Visit(predicate.Body);
+            var alias = GetNextAlias();
+            var pc = ProjectColumns(projection.Projector, alias, GetExistingAlias(projection.Source));
+            return new ProjectionExpression(
+                new SelectExpression(resultType, alias, pc.Columns, projection.Source, where),
+                pc.Projector
+                );
+        }
+
+        private Expression BindFirst(Type resultType, Expression source, LambdaExpression predicate)
+        {
+            var projection = (ProjectionExpression)Visit(source);
+            _map[predicate.Parameters[0]] = projection.Projector;
+            var where = Visit(predicate.Body);
+            var alias = GetNextAlias();
+            var pc = ProjectColumns(projection.Projector, alias, GetExistingAlias(projection.Source));
+            return new ProjectionExpression(
+                new SelectExpression(resultType, alias, pc.Columns, projection.Source, where),
+                pc.Projector
+                );
+        }
+
+        private Expression BindFirstOrDefault(Type resultType, Expression source, LambdaExpression predicate)
+        {
+            var projection = (ProjectionExpression)Visit(source);
             _map[predicate.Parameters[0]] = projection.Projector;
             var where = Visit(predicate.Body);
             var alias = GetNextAlias();

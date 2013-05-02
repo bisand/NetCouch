@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Car.cs" />
+    <Compile Include="CouchDbSessionTests.cs" />
     <Compile Include="LinqTests.cs" />
     <Compile Include="Parson.cs" />
     <Compile Include="RequestClientTests.cs" />
