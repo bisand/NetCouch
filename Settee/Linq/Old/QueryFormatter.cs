@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Settee.Linq.Old
 {
     internal class QueryFormatter : DbExpressionVisitor
     {

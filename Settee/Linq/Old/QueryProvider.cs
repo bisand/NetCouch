@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Settee.Linq.Old
 {
     public abstract class QueryProvider : IQueryProvider
     {

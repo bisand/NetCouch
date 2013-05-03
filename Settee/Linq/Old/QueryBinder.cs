@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Settee.Linq.Old
 {
     internal class QueryBinder : ExpressionVisitor
     {
@@ -75,6 +75,19 @@ namespace Biseth.Net.Settee.Linq
             return base.VisitMethodCall(m);
         }
 
+        private Expression BindSelect(Type resultType, Expression source, LambdaExpression selector)
+        {
+            var projection = (ProjectionExpression) Visit(source);
+            _map[selector.Parameters[0]] = projection.Projector;
+            var expression = Visit(selector.Body);
+            var alias = GetNextAlias();
+            var pc = ProjectColumns(expression, alias, GetExistingAlias(projection.Source));
+            return new ProjectionExpression(
+                new SelectExpression(resultType, alias, pc.Columns, projection.Source, null),
+                pc.Projector
+                );
+        }
+
         private Expression BindWhere(Type resultType, Expression source, LambdaExpression predicate)
         {
             var projection = (ProjectionExpression)Visit(source);
@@ -110,19 +123,6 @@ namespace Biseth.Net.Settee.Linq
             var pc = ProjectColumns(projection.Projector, alias, GetExistingAlias(projection.Source));
             return new ProjectionExpression(
                 new SelectExpression(resultType, alias, pc.Columns, projection.Source, where),
-                pc.Projector
-                );
-        }
-
-        private Expression BindSelect(Type resultType, Expression source, LambdaExpression selector)
-        {
-            var projection = (ProjectionExpression) Visit(source);
-            _map[selector.Parameters[0]] = projection.Projector;
-            var expression = Visit(selector.Body);
-            var alias = GetNextAlias();
-            var pc = ProjectColumns(expression, alias, GetExistingAlias(projection.Source));
-            return new ProjectionExpression(
-                new SelectExpression(resultType, alias, pc.Columns, projection.Source, null),
                 pc.Projector
                 );
         }

@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using Biseth.Net.Settee.CouchDb.Api;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Settee.Linq.Old
 {
     public class CouchDbQueryContext
     {

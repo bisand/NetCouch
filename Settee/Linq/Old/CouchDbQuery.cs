@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Settee.Linq.Old
 {
     public class CouchDbQuery<T> : Query<T>
     {

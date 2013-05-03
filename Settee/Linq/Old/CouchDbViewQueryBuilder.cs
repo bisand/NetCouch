@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Settee.Linq.Old
 {
     public class CouchDbViewQueryBuilder
     {
