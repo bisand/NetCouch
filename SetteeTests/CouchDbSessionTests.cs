@@ -28,7 +28,7 @@ namespace SetteeTests
             {
                 using (var session = database.OpenSession("trivial"))
                 {
-                    var car = session.Query<Car>().FirstOrDefault(x => x.HorsePowers == 1337);
+                    var car = session.Query<Car>().Where(x => x.HorsePowers == 1337).FirstOrDefault();
                     Assert.That(car != null);
                 }
             }

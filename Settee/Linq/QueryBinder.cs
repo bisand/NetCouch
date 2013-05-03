@@ -61,7 +61,14 @@ namespace Biseth.Net.Settee.Linq
                     case "First":
                         return BindFirst(m.Type, m.Arguments[0], (LambdaExpression)StripQuotes(m.Arguments[1]));
                     case "FirstOrDefault":
-                        return BindFirstOrDefault(m.Type, m.Arguments[0], (LambdaExpression)StripQuotes(m.Arguments[1]));
+                        var reduce = m.Arguments[0].CanReduce;
+                        if (m.Arguments.Count > 1)
+                            return BindFirstOrDefault(m.Type, m.Arguments[0],
+                                                      (LambdaExpression) StripQuotes(m.Arguments[1]));
+                        else
+                            return VisitMethodCall((MethodCallExpression)m.Arguments[0]);
+                        //return BindFirstOrDefault(m.Type, m.Arguments[0],
+                        //                          (LambdaExpression)StripQuotes(m.Arguments[0]));
                 }
                 throw new NotSupportedException(string.Format("The method '{0}' is not supported", m.Method.Name));
             }
