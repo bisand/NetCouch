@@ -16,7 +16,7 @@ namespace Biseth.Net.Settee.Linq.Old
             _view.Append("function(doc) { if (doc.doc_type && doc.doc_type == '");
         }
 
-        public ViewQuery Build(TranslateResult result)
+        public ViewAndQuery Build(CouchDbTranslation result)
         {
             var notEqualStatements = result.Statements.Where(x => x.NodeType == ExpressionType.NotEqual).ToList();
             var equalStatemens = result.Statements.Where(x => x.NodeType == ExpressionType.Equal).ToList();
@@ -98,11 +98,11 @@ namespace Biseth.Net.Settee.Linq.Old
             _view.Append(" } ");
             _view.Append(" }");
 
-            return new ViewQuery {View = _view.ToString(), Query = _query.ToString()};
+            return new ViewAndQuery {View = _view.ToString(), Query = _query.ToString()};
         }
     }
 
-    public class ViewQuery
+    public class ViewAndQuery
     {
         public string View { get; set; }
         public string Query { get; set; }

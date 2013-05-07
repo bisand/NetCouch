@@ -15,7 +15,7 @@ namespace Biseth.Net.Settee.Linq.Old
             _couchApi = couchApi;
         }
 
-        public ResponseData<ViewResponse<T>> Execute(TranslateResult result, string queryString, ViewQuery viewQuery)
+        public ResponseData<ViewResponse<T>> Execute(CouchDbTranslation result, string queryString, ViewAndQuery viewAndQuery)
         {
             var queryResult =
                 _couchApi.Root()
@@ -37,7 +37,7 @@ namespace Biseth.Net.Settee.Linq.Old
 
                 // Assign the view to the design doc object
                 var designDoc = designDocResult.DataDeserialized;
-                designDoc.Views[result.ViewName] = new View { Map = viewQuery.View };
+                designDoc.Views[result.ViewName] = new View { Map = viewAndQuery.View };
 
                 // Save the design doc back to the server.
                 var responseData =

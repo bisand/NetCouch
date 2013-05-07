@@ -22,14 +22,14 @@ namespace Biseth.Net.Settee.Linq.Old
 
         public override object Execute(Expression expression)
         {
-            var result = Translate(expression);
-            var viewQuery = new CouchDbViewQueryBuilder().Build(result);
+            CouchDbTranslation result = Translate(expression);
+            ViewAndQuery viewAndQuery = new CouchDbViewQueryBuilder().Build(result);
 
-            var queryString = viewQuery.Query;
+            var queryString = viewAndQuery.Query;
             queryString += "&include_docs=true";
 
             // Query the database.
-            var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(result, queryString, viewQuery);
+            var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(result, queryString, viewAndQuery);
 
 
             // Try to extract the result.
@@ -49,7 +49,7 @@ namespace Biseth.Net.Settee.Linq.Old
             return new List<ViewRow<T>>();
         }
 
-        private static TranslateResult Translate(Expression expression)
+        private static CouchDbTranslation Translate(Expression expression)
         {
             expression = Evaluator.PartialEval(expression);
             var proj = (ProjectionExpression)new QueryBinder().Bind(expression);

@@ -16,7 +16,7 @@ namespace Biseth.Net.Settee.Linq.Old
         private int _level;
         private ExpressionType _lastExpressionType;
 
-        internal TranslateResult Format(Expression expression)
+        internal CouchDbTranslation Format(Expression expression)
         {
             _query = new StringBuilder();
             _queryProperties = new List<string>();
@@ -27,7 +27,7 @@ namespace Biseth.Net.Settee.Linq.Old
             Visit(expression);
 
             // Return the result.
-            var result = new TranslateResult
+            var result = new CouchDbTranslation
                 {
                     QueryText = _query.ToString(),
                     QueryProperties = _queryProperties,
@@ -235,15 +235,4 @@ namespace Biseth.Net.Settee.Linq.Old
             get { return _lastExprType; }
         }
     }
-
-    public class TranslateResult
-    {
-        internal string QueryText;
-        internal string DesignDocName;
-        internal string ViewName;
-        public List<string> QueryProperties { get; set; }
-        public List<string> QueryValues { get; set; }
-        public List<Statement> Statements { get; set; }
-    }
-
 }
