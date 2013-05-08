@@ -5,11 +5,12 @@ namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbTranslation
     {
-        internal string QueryText;
-        internal string DesignDocName;
-        internal string ViewName;
+        public string QueryText { get; set; }
+        public string DesignDocName { get; set; }
+        public string ViewName { get; set; }
         public List<string> QueryProperties { get; set; }
         public List<string> QueryValues { get; set; }
         public List<Statement> Statements { get; set; }
-    }
+        public ViewAndQuery ViewQuery { get; set; }
+}
 }

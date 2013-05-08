@@ -38,9 +38,11 @@ namespace Biseth.Net.Settee.Linq
             _provider = provider;
             _expression = expression;
         }
+
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            var execute = _provider.Execute(_expression);
+            return ((IEnumerable<T>) execute).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -4,7 +4,6 @@ using System.Linq;
 using Biseth.Net.Settee.CouchDb.Api;
 using Biseth.Net.Settee.Http;
 using Biseth.Net.Settee.Linq;
-using Biseth.Net.Settee.Linq.Old;
 using NUnit.Framework;
 
 namespace SetteeTests

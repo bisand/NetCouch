@@ -8,6 +8,5 @@ namespace Biseth.Net.Settee.Linq
     {
         ICouchDbQueryGenerator QueryGenerator { get; }
         CouchDbTranslation QueryTranslation { get; }
-        ViewAndQuery ViewQuery { get; }
     }
 }
