@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Biseth.Net.Settee.Linq
@@ -16,7 +17,8 @@ namespace Biseth.Net.Settee.Linq
 
         public object Execute(Expression expression)
         {
-            throw new NotImplementedException();
+            VisitExpression(expression);
+            return new List<T>();
         }
 
         protected void VisitExpression(Expression expression)
@@ -66,12 +68,10 @@ namespace Biseth.Net.Settee.Linq
 
         private void VisitMethodCall(MethodCallExpression unaryExpressionOp, bool negated = false)
         {
-            throw new NotImplementedException();
         }
 
         private void VisitMemberAccess(MemberExpression expression, bool b)
         {
-            throw new NotImplementedException();
         }
 
         private void VisitBinaryExpression(BinaryExpression expression)
@@ -107,42 +107,34 @@ namespace Biseth.Net.Settee.Linq
 
         private void VisitLessThanOrEqual(BinaryExpression expression)
         {
-            throw new NotImplementedException();
         }
 
         private void VisitLessThan(BinaryExpression expression)
         {
-            throw new NotImplementedException();
         }
 
         private void VisitGreaterThanOrEqual(BinaryExpression expression)
         {
-            throw new NotImplementedException();
         }
 
         private void VisitGreaterThan(BinaryExpression expression)
         {
-            throw new NotImplementedException();
         }
 
         private void VisitEquals(BinaryExpression expression)
         {
-            throw new NotImplementedException();
         }
 
         private void VisitNotEquals(BinaryExpression expression)
         {
-            throw new NotImplementedException();
         }
 
         private void VisitAndAlso(BinaryExpression expression)
         {
-            throw new NotImplementedException();
         }
 
         private void VisitOrElse(BinaryExpression expression)
         {
-            throw new NotImplementedException();
         }
     }
 }

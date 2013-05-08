@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Biseth.Net.Settee.Linq.Old
+namespace Biseth.Net.Settee.Linq
 {
     internal static class TypeSystem
     {

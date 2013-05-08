@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Biseth.Net.Settee.CouchDb.Api;
-using Biseth.Net.Settee.Linq.Old;
 
 namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
     {
+        private readonly ICouchApi _couchApi;
+
         public CouchDbQueryProvider(ICouchDbQueryGenerator queryGenerator, CouchDbTranslation queryTranslation)
         {
             QueryGenerator = queryGenerator;
@@ -16,17 +18,27 @@ namespace Biseth.Net.Settee.Linq
 
         public CouchDbQueryProvider(ICouchApi couchApi)
         {
-            throw new NotImplementedException();
-        }
-
-        public IQueryable CreateQuery(Expression expression)
-        {
-            throw new NotImplementedException();
+            _couchApi = couchApi;
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
-            throw new NotImplementedException();
+            return new CouchDbQuery<TElement>(this, expression);
+        }
+
+        public IQueryable CreateQuery(Expression expression)
+        {
+            var elementType = TypeSystem.GetElementType(expression.Type);
+            try
+            {
+                return (IQueryable) Activator.CreateInstance(
+                    typeof (CouchDbQuery<>).MakeGenericType(elementType),
+                    new object[] {this, expression});
+            }
+            catch (TargetInvocationException tie)
+            {
+                throw tie.InnerException;
+            }
         }
 
         public object Execute(Expression expression)

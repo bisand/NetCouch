@@ -8,20 +8,17 @@ namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbQuery<T> : ICouchDbQueryable<T>
     {
-        private readonly Expression _expression;
-        private readonly CouchDbQueryProvider<T> _provider;
-
         public CouchDbQuery(CouchDbQueryProvider<T> provider)
         {
             if (provider == null)
             {
                 throw new ArgumentNullException("provider");
             }
-            _provider = provider;
-            _expression = Expression.Constant(this);
+            Provider = provider;
+            Expression = Expression.Constant(this);
         }
 
-        public CouchDbQuery(CouchDbQueryProvider<T> provider, Expression expression)
+        public CouchDbQuery(ICouchDbQueryProvider provider, Expression expression)
         {
             if (provider == null)
             {
@@ -35,13 +32,13 @@ namespace Biseth.Net.Settee.Linq
             {
                 throw new ArgumentOutOfRangeException("expression");
             }
-            _provider = provider;
-            _expression = expression;
+            Provider = provider;
+            Expression = expression;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            var execute = _provider.Execute(_expression);
+            var execute = Provider.Execute(Expression);
             return ((IEnumerable<T>) execute).GetEnumerator();
         }
 

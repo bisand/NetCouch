@@ -91,7 +91,7 @@
     <Compile Include="Linq\Old\ColumnProjector.cs" />
     <Compile Include="Linq\Old\CouchDbQuery.cs" />
     <Compile Include="Linq\Old\CouchDbQueryContext.cs" />
-    <Compile Include="Linq\Old\CouchDbQueryExecuter.cs" />
+    <Compile Include="Linq\CouchDbQueryExecuter.cs" />
     <Compile Include="Linq\Old\CouchDbQueryProvider.cs" />
     <Compile Include="Linq\CouchDbTranslation.cs" />
     <Compile Include="Linq\Old\CouchDbViewQueryBuilder.cs" />
@@ -105,7 +105,7 @@
     <Compile Include="Linq\Old\QueryProvider.cs" />
     <Compile Include="Linq\TestModels\Place.cs" />
     <Compile Include="Linq\TestModels\PlaceType.cs" />
-    <Compile Include="Linq\Old\TypeSystem.cs" />
+    <Compile Include="Linq\TypeSystem.cs" />
     <Compile Include="Models\Couch\Database\DatabaseVendor.cs" />
     <Compile Include="Models\Couch\Database\HttpGetRoot.cs" />
     <Compile Include="Models\Couch\DesignDoc\DesignDoc.cs" />

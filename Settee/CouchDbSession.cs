@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using Biseth.Net.Settee.CouchDb.Api;
 using Biseth.Net.Settee.Http;
-using Biseth.Net.Settee.Linq.Old;
+using Biseth.Net.Settee.Linq;
 
 namespace Biseth.Net.Settee
 {
