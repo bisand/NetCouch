@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace Biseth.Net.Settee.Linq
 {
@@ -139,12 +140,18 @@ namespace Biseth.Net.Settee.Linq
                             //luceneQuery.OpenSubclause();
                         }
                         if (_chainedWhere == false && _insideWhere > 1)
+                        {
                             //luceneQuery.OpenSubclause();
+                        }
                         VisitExpression(((UnaryExpression)expression.Arguments[1]).Operand);
                         if (_chainedWhere == false && _insideWhere > 1)
+                        {
                             //luceneQuery.CloseSubclause();
+                        }
                         if (_chainedWhere)
+                        {
                             //luceneQuery.CloseSubclause();
+                        }
                         _chainedWhere = true;
                         _insideWhere--;
                         break;
@@ -158,7 +165,7 @@ namespace Biseth.Net.Settee.Linq
                             //luceneQuery.AddRootType(expression.Arguments[0].Type.GetGenericArguments()[0]);
                         }
                         VisitExpression(expression.Arguments[0]);
-                        //VisitSelect(((UnaryExpression)expression.Arguments[1]).Operand);
+                        VisitSelect(((UnaryExpression)expression.Arguments[1]).Operand);
                         break;
                     }
                 case "Skip":
@@ -288,6 +295,129 @@ namespace Biseth.Net.Settee.Linq
                         throw new NotSupportedException("Method not supported: " + expression.Method.Name);
                     }
             }
+        }
+
+        private bool _insideSelect;
+        private readonly bool _isMapReduce;
+        private void VisitSelect(Expression operand)
+        {
+            var lambdaExpression = operand as LambdaExpression;
+            var body = lambdaExpression != null ? lambdaExpression.Body : operand;
+            switch (body.NodeType)
+            {
+                case ExpressionType.Convert:
+                    _insideSelect = true;
+                    try
+                    {
+                        VisitSelect(((UnaryExpression)body).Operand);
+                    }
+                    finally
+                    {
+                        _insideSelect = false;
+                    }
+                    break;
+                case ExpressionType.MemberAccess:
+                    MemberExpression memberExpression = ((MemberExpression)body);
+                    AddToFieldsToFetch(GetSelectPath(memberExpression), memberExpression.Member.Name);
+                    if (_insideSelect == false)
+                    {
+                        //foreach (var renamedField in FieldsToRename.Where(x => x.OriginalField == memberExpression.Member.Name).ToArray())
+                        //{
+                        //    FieldsToRename.Remove(renamedField);
+                        //}
+                        //FieldsToRename.Add(new RenamedField
+                        //{
+                        //    NewField = null,
+                        //    OriginalField = memberExpression.Member.Name
+                        //});
+                    }
+                    break;
+                //Anonymous types come through here .Select(x => new { x.Cost } ) doesn't use a member initializer, even though it looks like it does
+                //See http://blogs.msdn.com/b/sreekarc/archive/2007/04/03/immutable-the-new-anonymous-type.aspx
+                case ExpressionType.New:
+                    var newExpression = ((NewExpression)body);
+                    newExpressionType = newExpression.Type;
+                    for (int index = 0; index < newExpression.Arguments.Count; index++)
+                    {
+                        var field = newExpression.Arguments[index] as MemberExpression;
+                        if (field == null)
+                            continue;
+                        //var expression = linqPathProvider.GetMemberExpression(newExpression.Arguments[index]);
+                        //var renamedField = GetSelectPath(expression);
+                        //AddToFieldsToFetch(renamedField, newExpression.Members[index].Name);
+                    }
+                    break;
+                //for example .Select(x => new SomeType { x.Cost } ), it's member init because it's using the object initializer
+                case ExpressionType.MemberInit:
+                    var memberInitExpression = ((MemberInitExpression)body);
+                    newExpressionType = memberInitExpression.NewExpression.Type;
+                    foreach (MemberBinding t in memberInitExpression.Bindings)
+                    {
+                        var field = t as MemberAssignment;
+                        if (field == null)
+                            continue;
+
+                        //var expression = linqPathProvider.GetMemberExpression(field.Expression);
+                        //var renamedField = GetSelectPath(expression);
+                        //AddToFieldsToFetch(renamedField, field.Member.Name);
+                    }
+                    break;
+                case ExpressionType.Parameter: // want the full thing, so just pass it on.
+                    break;
+
+                default:
+                    throw new NotSupportedException("Node not supported: " + body.NodeType);
+            }
+        }
+
+        private string GetSelectPath(MemberExpression expression)
+        {
+            var sb = new StringBuilder(expression.Member.Name);
+            expression = expression.Expression as MemberExpression;
+            while (expression != null)
+            {
+                sb.Insert(0, ".");
+                sb.Insert(0, expression.Member.Name);
+                expression = expression.Expression as MemberExpression;
+            }
+            return sb.ToString();
+        }
+
+        private void AddToFieldsToFetch(string docField, string renamedField)
+        {
+            //var identityProperty = luceneQuery.DocumentConvention.GetIdentityProperty(typeof(T));
+            //if (identityProperty != null && identityProperty.Name == docField)
+            //{
+            //    FieldsToFetch.Add(Constants.DocumentIdFieldName);
+            //    if (identityProperty.Name != renamedField)
+            //    {
+            //        docField = Constants.DocumentIdFieldName;
+            //    }
+            //}
+            //else
+            //{
+            //    FieldsToFetch.Add(docField);
+            //}
+            //if (docField != renamedField)
+            //{
+            //    if (identityProperty == null)
+            //    {
+            //        var idPropName = luceneQuery.DocumentConvention.FindIdentityPropertyNameFromEntityName(luceneQuery.DocumentConvention.GetTypeTagName(typeof(T)));
+            //        if (docField == idPropName)
+            //        {
+            //            FieldsToRename.Add(new RenamedField
+            //            {
+            //                NewField = renamedField,
+            //                OriginalField = Constants.DocumentIdFieldName
+            //            });
+            //        }
+            //    }
+            //    FieldsToRename.Add(new RenamedField
+            //    {
+            //        NewField = renamedField,
+            //        OriginalField = docField
+            //    });
+            //}
         }
 
         private void VisitMemberAccess(MemberExpression expression, bool b)

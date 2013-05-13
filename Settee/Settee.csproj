@@ -94,7 +94,7 @@
     <Compile Include="Linq\CouchDbQueryExecuter.cs" />
     <Compile Include="Linq\Old\CouchDbQueryProvider.cs" />
     <Compile Include="Linq\CouchDbTranslation.cs" />
-    <Compile Include="Linq\Old\CouchDbViewQueryBuilder.cs" />
+    <Compile Include="Linq\CouchDbViewQueryBuilder.cs" />
     <Compile Include="Linq\Old\DbExpressions.cs" />
     <Compile Include="Linq\Old\Evaluator.cs" />
     <Compile Include="Linq\Old\ExpressionVisitor.cs" />

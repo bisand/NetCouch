@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Biseth.Net.Settee.Linq.Old;
 
-namespace Biseth.Net.Settee.Linq.Old
+namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbViewQueryBuilder
     {
