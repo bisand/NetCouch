@@ -70,17 +70,17 @@ namespace Biseth.Net.Settee.Linq
                     _query.Append("[");
                     _view.Append("emit([");
                 }
-                if (eq.Left is ColumnExpression && eq.Right is ConstantExpression)
+                if (eq.Left is MemberExpression && eq.Right is ConstantExpression)
                 {
-                    _view.Append("doc." + (eq.Left as ColumnExpression).Name + ",");
+                    _view.Append("doc." + (eq.Left as MemberExpression).Member.Name + ",");
                     if ((eq.Right as ConstantExpression).Value is string)
                         _query.Append("\"" + (eq.Right as ConstantExpression).Value + "\",");
                     else
                         _query.Append((eq.Right as ConstantExpression).Value + ",");
                 }
-                else if (eq.Left is ConstantExpression && eq.Right is ColumnExpression)
+                else if (eq.Left is MemberExpression && eq.Right is ColumnExpression)
                 {
-                    _view.Append("doc." + (eq.Right as ColumnExpression).Name + ",");
+                    _view.Append("doc." + (eq.Right as MemberExpression).Member.Name + ",");
                     if ((eq.Left as ConstantExpression).Value is string)
                         _query.Append("\"" + (eq.Left as ConstantExpression).Value + "\",");
                     else

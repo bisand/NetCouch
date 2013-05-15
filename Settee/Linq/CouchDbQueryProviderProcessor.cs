@@ -26,11 +26,10 @@ namespace Biseth.Net.Settee.Linq
             _queryTranslation = queryTranslation;
         }
 
-        public object Execute(Expression expression)
+        public CouchDbTranslation Execute(Expression expression)
         {
             VisitExpression(expression);
-            //var translation = new QueryFormatter().Format(expression);
-            return new List<T>();
+            return _queryTranslation;
         }
 
         protected void VisitExpression(Expression expression)
@@ -427,6 +426,10 @@ namespace Biseth.Net.Settee.Linq
 
         private void VisitMemberAccess(MemberExpression expression, bool b)
         {
+            _queryTranslation.ViewName = _queryTranslation.ViewName == null
+                                             ? expression.Member.Name
+                                             : _queryTranslation.ViewName + expression.Member.Name;
+            _queryTranslation.QueryProperties.Add(expression.Member.Name);
         }
 
         private void VisitBinaryExpression(BinaryExpression expression)
@@ -468,25 +471,29 @@ namespace Biseth.Net.Settee.Linq
 
         private void VisitStatement(BinaryExpression expression)
         {
-            if (expression.NodeType == ExpressionType.Equal)
-                _queryTranslation.Statements.Add(new Statement(_lastExpressionType, _level, expression.Left,
-                                                               expression.NodeType, expression.Right));
-            else if (expression.NodeType == ExpressionType.NotEqual)
+            switch (expression.NodeType)
             {
-                _queryTranslation.Statements.Add(new Statement(_lastExpressionType, _level, expression.Left, expression.NodeType, expression.Right));
-                _queryTranslation.ViewName += "Not";
-                if (expression.Left is ConstantExpression)
-                {
-                    var leftExpression = expression.Left as ConstantExpression;
-                    if (leftExpression != null)
-                        _queryTranslation.ViewName += leftExpression.Value;
-                }
-                if (expression.Right is ConstantExpression)
-                {
-                    var rightExpression = expression.Right as ConstantExpression;
-                    if (rightExpression != null)
-                        _queryTranslation.ViewName += rightExpression.Value;
-                }
+                case ExpressionType.Equal:
+                    _queryTranslation.Statements.Add(new Statement(_lastExpressionType, _level, expression.Left,
+                                                                   expression.NodeType, expression.Right));
+                    break;
+                case ExpressionType.NotEqual:
+                    _queryTranslation.Statements.Add(new Statement(_lastExpressionType, _level, expression.Left,
+                                                                   expression.NodeType, expression.Right));
+                    _queryTranslation.ViewName += "Not";
+                    if (expression.Left is ConstantExpression)
+                    {
+                        var leftExpression = expression.Left as ConstantExpression;
+                        if (leftExpression != null)
+                            _queryTranslation.ViewName += leftExpression.Value;
+                    }
+                    if (expression.Right is ConstantExpression)
+                    {
+                        var rightExpression = expression.Right as ConstantExpression;
+                        if (rightExpression != null)
+                            _queryTranslation.ViewName += rightExpression.Value;
+                    }
+                    break;
             }
         }
 

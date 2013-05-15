@@ -16,13 +16,13 @@ namespace Biseth.Net.Settee.Linq
             _couchApi = couchApi;
         }
 
-        public ResponseData<ViewResponse<T>> Execute(CouchDbTranslation result, string queryString, ViewAndQuery viewAndQuery)
+        public ResponseData<ViewResponse<T>> Execute(CouchDbTranslation translation)
         {
             var queryResult =
                 _couchApi.Root()
                          .Db(_couchApi.DefaultDatabase)
-                         .DesignDoc(result.DesignDocName)
-                         .View(result.ViewName, queryString)
+                         .DesignDoc(translation.DesignDocName)
+                         .View(translation.ViewName, translation.ViewQuery.Query)
                          .Get<ViewResponse<T>>();
 
 
@@ -33,18 +33,18 @@ namespace Biseth.Net.Settee.Linq
                 var designDocResult =
                     _couchApi.Root()
                              .Db(_couchApi.DefaultDatabase)
-                             .DesignDoc(result.DesignDocName)
+                             .DesignDoc(translation.DesignDocName)
                              .Get<DesignDoc>();
 
                 // Assign the view to the design doc object
                 var designDoc = designDocResult.DataDeserialized;
-                designDoc.Views[result.ViewName] = new View { Map = viewAndQuery.View };
+                designDoc.Views[translation.ViewName] = new View { Map = translation.ViewQuery.View };
 
                 // Save the design doc back to the server.
                 var responseData =
                     _couchApi.Root()
                              .Db(_couchApi.DefaultDatabase)
-                             .DesignDoc(result.DesignDocName)
+                             .DesignDoc(translation.DesignDocName)
                              .Put<DesignDoc, object>(designDoc);
 
                 // If the design doc was successfully created, we re-run the query.
@@ -53,8 +53,8 @@ namespace Biseth.Net.Settee.Linq
                     queryResult =
                         _couchApi.Root()
                                  .Db(_couchApi.DefaultDatabase)
-                                 .DesignDoc(result.DesignDocName)
-                                 .View(result.ViewName, queryString)
+                                 .DesignDoc(translation.DesignDocName)
+                                 .View(translation.ViewName, translation.ViewQuery.Query)
                                  .Get<ViewResponse<T>>();
                 }
             }

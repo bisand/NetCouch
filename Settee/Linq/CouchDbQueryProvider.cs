@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Biseth.Net.Settee.CouchDb.Api;
+using Biseth.Net.Settee.Models.Couch.DesignDoc;
 
 namespace Biseth.Net.Settee.Linq
 {
@@ -38,7 +40,25 @@ namespace Biseth.Net.Settee.Linq
 
         public object Execute(Expression expression)
         {
-            return GetQueryProviderProcessor<T>().Execute(expression);
+            var translation = GetQueryProviderProcessor<T>().Execute(expression);
+            translation.ViewQuery = new CouchDbViewQueryBuilder().Build(translation);
+            translation.ViewQuery.Query += "&include_docs=true";
+            var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(translation);
+            // Try to extract the result.
+            if (queryResult != null)
+            {
+                if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count > 1)
+                {
+                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc);
+                }
+                if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count == 1)
+                {
+                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc).FirstOrDefault();
+                }
+                return new List<ViewRow<T>>();
+            }
+            // Something bad happened. We just return an empty result.
+            return new List<ViewRow<T>>();
         }
 
         public TResult Execute<TResult>(Expression expression)

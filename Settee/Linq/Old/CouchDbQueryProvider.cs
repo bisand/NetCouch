@@ -22,14 +22,13 @@ namespace Biseth.Net.Settee.Linq.Old
 
         public override object Execute(Expression expression)
         {
-            CouchDbTranslation result = Translate(expression);
-            ViewAndQuery viewAndQuery = new CouchDbViewQueryBuilder().Build(result);
+            CouchDbTranslation translation = Translate(expression);
+            translation.ViewQuery = new CouchDbViewQueryBuilder().Build(translation);
 
-            var queryString = viewAndQuery.Query;
-            queryString += "&include_docs=true";
+            translation.ViewQuery.Query += "&include_docs=true";
 
             // Query the database.
-            var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(result, queryString, viewAndQuery);
+            var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(translation);
 
 
             // Try to extract the result.
