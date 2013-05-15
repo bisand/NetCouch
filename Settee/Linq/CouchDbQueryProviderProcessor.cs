@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using Biseth.Net.Settee.Linq.Old;
 
 namespace Biseth.Net.Settee.Linq
 {
@@ -28,6 +29,7 @@ namespace Biseth.Net.Settee.Linq
         public object Execute(Expression expression)
         {
             VisitExpression(expression);
+            //var translation = new QueryFormatter().Format(expression);
             return new List<T>();
         }
 
@@ -85,10 +87,10 @@ namespace Biseth.Net.Settee.Linq
                 switch (expression.Arguments.Count)
                 {
                     case 1:
-                        VisitEquals(Expression.MakeBinary(ExpressionType.Equal, expression.Object, expression.Arguments[0]));
+                        VisitStatement(Expression.MakeBinary(ExpressionType.Equal, expression.Object, expression.Arguments[0]));
                         break;
                     case 2:
-                        VisitEquals(Expression.MakeBinary(ExpressionType.Equal, expression.Arguments[0], expression.Arguments[1]));
+                        VisitStatement(Expression.MakeBinary(ExpressionType.Equal, expression.Arguments[0], expression.Arguments[1]));
                         break;
                     default:
                         throw new ArgumentException("Can't understand Equals with " + expression.Arguments.Count + " arguments");
@@ -299,6 +301,9 @@ namespace Biseth.Net.Settee.Linq
 
         private bool _insideSelect;
         private readonly bool _isMapReduce;
+        private ExpressionType _lastExpressionType;
+        private int _level;
+
         private void VisitSelect(Expression operand)
         {
             var lambdaExpression = operand as LambdaExpression;
@@ -426,65 +431,75 @@ namespace Biseth.Net.Settee.Linq
 
         private void VisitBinaryExpression(BinaryExpression expression)
         {
+            _level++;
+            VisitExpression(expression.Left);
             switch (expression.NodeType)
             {
+                case ExpressionType.Or:
                 case ExpressionType.OrElse:
                     VisitOrElse(expression);
                     break;
+                case ExpressionType.And:
                 case ExpressionType.AndAlso:
                     VisitAndAlso(expression);
                     break;
                 case ExpressionType.NotEqual:
-                    VisitNotEquals(expression);
+                    VisitStatement(expression);
                     break;
                 case ExpressionType.Equal:
-                    VisitEquals(expression);
+                    VisitStatement(expression);
                     break;
                 case ExpressionType.GreaterThan:
-                    VisitGreaterThan(expression);
+                    VisitStatement(expression);
                     break;
                 case ExpressionType.GreaterThanOrEqual:
-                    VisitGreaterThanOrEqual(expression);
+                    VisitStatement(expression);
                     break;
                 case ExpressionType.LessThan:
-                    VisitLessThan(expression);
+                    VisitStatement(expression);
                     break;
                 case ExpressionType.LessThanOrEqual:
-                    VisitLessThanOrEqual(expression);
+                    VisitStatement(expression);
                     break;
             }
+            VisitExpression(expression.Right);
+            _level--;
         }
 
-        private void VisitLessThanOrEqual(BinaryExpression expression)
+        private void VisitStatement(BinaryExpression expression)
         {
-        }
-
-        private void VisitLessThan(BinaryExpression expression)
-        {
-        }
-
-        private void VisitGreaterThanOrEqual(BinaryExpression expression)
-        {
-        }
-
-        private void VisitGreaterThan(BinaryExpression expression)
-        {
-        }
-
-        private void VisitEquals(BinaryExpression expression)
-        {
-        }
-
-        private void VisitNotEquals(BinaryExpression expression)
-        {
+            if (expression.NodeType == ExpressionType.Equal)
+                _queryTranslation.Statements.Add(new Statement(_lastExpressionType, _level, expression.Left,
+                                                               expression.NodeType, expression.Right));
+            else if (expression.NodeType == ExpressionType.NotEqual)
+            {
+                _queryTranslation.Statements.Add(new Statement(_lastExpressionType, _level, expression.Left, expression.NodeType, expression.Right));
+                _queryTranslation.ViewName += "Not";
+                if (expression.Left is ConstantExpression)
+                {
+                    var leftExpression = expression.Left as ConstantExpression;
+                    if (leftExpression != null)
+                        _queryTranslation.ViewName += leftExpression.Value;
+                }
+                if (expression.Right is ConstantExpression)
+                {
+                    var rightExpression = expression.Right as ConstantExpression;
+                    if (rightExpression != null)
+                        _queryTranslation.ViewName += rightExpression.Value;
+                }
+            }
         }
 
         private void VisitAndAlso(BinaryExpression expression)
         {
+            _queryTranslation.ViewName += "And";
+            _lastExpressionType = ExpressionType.And;
         }
 
         private void VisitOrElse(BinaryExpression expression)
         {
+            _queryTranslation.ViewName += "Or";
+            _lastExpressionType = ExpressionType.Or;
         }
     }
 }

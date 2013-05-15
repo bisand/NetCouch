@@ -10,15 +10,10 @@ namespace Biseth.Net.Settee.Linq
     {
         private readonly ICouchApi _couchApi;
 
-        public CouchDbQueryProvider(ICouchDbQueryGenerator queryGenerator, CouchDbTranslation queryTranslation)
-        {
-            QueryGenerator = queryGenerator;
-            QueryTranslation = queryTranslation;
-        }
-
-        public CouchDbQueryProvider(ICouchApi couchApi)
+        public CouchDbQueryProvider(ICouchApi couchApi, CouchDbTranslation queryTranslation)
         {
             _couchApi = couchApi;
+            QueryTranslation = queryTranslation;
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)

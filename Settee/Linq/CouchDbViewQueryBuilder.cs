@@ -102,10 +102,4 @@ namespace Biseth.Net.Settee.Linq
             return new ViewAndQuery {View = _view.ToString(), Query = _query.ToString()};
         }
     }
-
-    public class ViewAndQuery
-    {
-        public string View { get; set; }
-        public string Query { get; set; }
-    }
 }

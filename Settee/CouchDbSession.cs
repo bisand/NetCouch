@@ -19,7 +19,7 @@ namespace Biseth.Net.Settee
 
         public CouchDbQuery<T> Query<T>()
         {
-            var query = new CouchDbQuery<T>(new CouchDbQueryProvider<T>(_api));
+            var query = new CouchDbQuery<T>(new CouchDbQueryProvider<T>(_api, new CouchDbTranslation()));
             return query;
         }
 
