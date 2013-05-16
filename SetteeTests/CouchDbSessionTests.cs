@@ -14,7 +14,7 @@ namespace SetteeTests
             {
                 using (var session = database.OpenSession("trivial"))
                 {
-                    var queryable = session.Query<Car>().Where(x => x.HorsePowers == 1337);
+                    var queryable = session.Query<Car>().Where(x => (x.HorsePowers == 1337 || x.Model == "1337") && x.Make == "Saab");
                     var cars = queryable.ToList();
                     Assert.That(cars != null && cars.Count > 0);
                 }
