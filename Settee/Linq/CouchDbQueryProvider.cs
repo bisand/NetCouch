@@ -44,6 +44,7 @@ namespace Biseth.Net.Settee.Linq
             translation.ViewQuery = new CouchDbViewQueryBuilder().Build(translation);
             translation.ViewQuery.Query += "&include_docs=true";
             var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(translation);
+   
             // Try to extract the result.
             if (queryResult != null)
             {
@@ -57,6 +58,7 @@ namespace Biseth.Net.Settee.Linq
                 }
                 return new List<ViewRow<T>>();
             }
+            
             // Something bad happened. We just return an empty result.
             return new List<ViewRow<T>>();
         }

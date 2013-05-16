@@ -14,10 +14,13 @@ namespace Biseth.Net.Settee.Linq
         private readonly CouchDbTranslation _queryTranslation;
 
         private bool _chainedWhere;
+        private bool _insideSelect;
         private int _insideWhere;
-        private Expression<Func<T, bool>> predicate;
-        private Type newExpressionType;
+        private ExpressionType _lastExpressionType;
+        private int _level;
         private string currentPath = string.Empty;
+        private Type newExpressionType;
+        private Expression<Func<T, bool>> predicate;
         private int subClauseDepth;
 
         public CouchDbQueryProviderProcessor(ICouchDbQueryGenerator queryGenerator, CouchDbTranslation queryTranslation)
@@ -72,6 +75,10 @@ namespace Biseth.Net.Settee.Linq
                         {
                             VisitExpression(((LambdaExpression) expression).Body);
                         }
+                        else if(expression is ConstantExpression)
+                        {
+                            VisitConstant((ConstantExpression) expression);
+                        }
                         break;
                 }
             }
@@ -81,47 +88,63 @@ namespace Biseth.Net.Settee.Linq
         {
             var declaringType = expression.Method.DeclaringType;
             Debug.Assert(declaringType != null);
-            if (declaringType != typeof(string) && expression.Method.Name == "Equals")
+            if (declaringType != typeof (string) && expression.Method.Name == "Equals")
             {
                 switch (expression.Arguments.Count)
                 {
                     case 1:
-                        VisitStatement(Expression.MakeBinary(ExpressionType.Equal, expression.Object, expression.Arguments[0]));
+                        VisitStatement(Expression.MakeBinary(ExpressionType.Equal, expression.Object,
+                                                             expression.Arguments[0]));
                         break;
                     case 2:
-                        VisitStatement(Expression.MakeBinary(ExpressionType.Equal, expression.Arguments[0], expression.Arguments[1]));
+                        VisitStatement(Expression.MakeBinary(ExpressionType.Equal, expression.Arguments[0],
+                                                             expression.Arguments[1]));
                         break;
                     default:
-                        throw new ArgumentException("Can't understand Equals with " + expression.Arguments.Count + " arguments");
+                        throw new ArgumentException("Can't understand Equals with " + expression.Arguments.Count +
+                                                    " arguments");
                 }
                 return;
             }
-            if (declaringType == typeof(Queryable))
+            if (declaringType == typeof (Queryable))
             {
                 VisitQueryableMethodCall(expression);
                 return;
             }
 
-            if (declaringType == typeof(String))
+            if (declaringType == typeof (String))
             {
-                //VisitStringMethodCall(expression);
+                VisitStringMethodCall(expression);
                 return;
             }
 
-            if (declaringType == typeof(Enumerable))
+            if (declaringType == typeof (Enumerable))
             {
-                //VisitEnumerableMethodCall(expression, negated);
+                VisitEnumerableMethodCall(expression, negated);
                 return;
             }
             if (declaringType.IsGenericType &&
-                declaringType.GetGenericTypeDefinition() == typeof(List<>))
+                declaringType.GetGenericTypeDefinition() == typeof (List<>))
             {
-                //VisitListMethodCall(expression);
+                VisitListMethodCall(expression);
                 return;
             }
 
             var method = declaringType.Name + "." + expression.Method.Name;
-            throw new NotSupportedException(string.Format("Method not supported: {0}. Expression: {1}.", method, expression));
+            throw new NotSupportedException(string.Format("Method not supported: {0}. Expression: {1}.", method,
+                                                          expression));
+        }
+
+        private void VisitListMethodCall(MethodCallExpression expression)
+        {
+        }
+
+        private void VisitEnumerableMethodCall(MethodCallExpression expression, bool negated)
+        {
+        }
+
+        private void VisitStringMethodCall(MethodCallExpression expression)
+        {
         }
 
         private void VisitQueryableMethodCall(MethodCallExpression expression)
@@ -133,52 +156,27 @@ namespace Biseth.Net.Settee.Linq
                     break;
                 case "Where":
                     {
-                        _insideWhere++;
                         VisitExpression(expression.Arguments[0]);
-                        if (_chainedWhere)
-                        {
-                            //luceneQuery.AndAlso();
-                            //luceneQuery.OpenSubclause();
-                        }
-                        if (_chainedWhere == false && _insideWhere > 1)
-                        {
-                            //luceneQuery.OpenSubclause();
-                        }
-                        VisitExpression(((UnaryExpression)expression.Arguments[1]).Operand);
-                        if (_chainedWhere == false && _insideWhere > 1)
-                        {
-                            //luceneQuery.CloseSubclause();
-                        }
-                        if (_chainedWhere)
-                        {
-                            //luceneQuery.CloseSubclause();
-                        }
+                        VisitExpression(expression.Arguments[1]);
                         _chainedWhere = true;
-                        _insideWhere--;
                         break;
                     }
                 case "Select":
                     {
-                        if (expression.Arguments[0].Type.IsGenericType &&
-                            expression.Arguments[0].Type.GetGenericTypeDefinition() == typeof(IQueryable<>) &&
-                            expression.Arguments[0].Type != expression.Arguments[1].Type)
-                        {
-                            //luceneQuery.AddRootType(expression.Arguments[0].Type.GetGenericArguments()[0]);
-                        }
                         VisitExpression(expression.Arguments[0]);
-                        VisitSelect(((UnaryExpression)expression.Arguments[1]).Operand);
+                        VisitSelect(((UnaryExpression) expression.Arguments[1]).Operand);
                         break;
                     }
                 case "Skip":
                     {
                         VisitExpression(expression.Arguments[0]);
-                        //VisitSkip(((ConstantExpression)expression.Arguments[1]));
+                        VisitSkip(((ConstantExpression) expression.Arguments[1]));
                         break;
                     }
                 case "Take":
                     {
                         VisitExpression(expression.Arguments[0]);
-                        //VisitTake(((ConstantExpression)expression.Arguments[1]));
+                        VisitTake(((ConstantExpression) expression.Arguments[1]));
                         break;
                     }
                 case "First":
@@ -189,18 +187,17 @@ namespace Biseth.Net.Settee.Linq
                         {
                             if (_chainedWhere)
                             {
-                                //luceneQuery.AndAlso();
                             }
-                            VisitExpression(((UnaryExpression)expression.Arguments[1]).Operand);
+                            VisitExpression(((UnaryExpression) expression.Arguments[1]).Operand);
                         }
 
                         if (expression.Method.Name == "First")
                         {
-                            //VisitFirst();
+                            VisitFirst();
                         }
                         else
                         {
-                            //VisitFirstOrDefault();
+                            VisitFirstOrDefault();
                         }
                         _chainedWhere = _chainedWhere || expression.Arguments.Count == 2;
                         break;
@@ -213,18 +210,17 @@ namespace Biseth.Net.Settee.Linq
                         {
                             if (_chainedWhere)
                             {
-                                //luceneQuery.AndAlso();
                             }
-                            VisitExpression(((UnaryExpression)expression.Arguments[1]).Operand);
+                            VisitExpression(((UnaryExpression) expression.Arguments[1]).Operand);
                         }
 
                         if (expression.Method.Name == "Single")
                         {
-                            //VisitSingle();
+                            VisitSingle();
                         }
                         else
                         {
-                            //VisitSingleOrDefault();
+                            VisitSingleOrDefault();
                         }
                         _chainedWhere = _chainedWhere || expression.Arguments.Count == 2;
                         break;
@@ -232,7 +228,7 @@ namespace Biseth.Net.Settee.Linq
                 case "All":
                     {
                         VisitExpression(expression.Arguments[0]);
-                        //VisitAll((Expression<Func<T, bool>>)((UnaryExpression)expression.Arguments[1]).Operand);
+                        VisitAll((Expression<Func<T, bool>>) ((UnaryExpression) expression.Arguments[1]).Operand);
                         break;
                     }
                 case "Any":
@@ -242,12 +238,11 @@ namespace Biseth.Net.Settee.Linq
                         {
                             if (_chainedWhere)
                             {
-                                //luceneQuery.AndAlso();
                             }
-                            VisitExpression(((UnaryExpression)expression.Arguments[1]).Operand);
+                            VisitExpression(((UnaryExpression) expression.Arguments[1]).Operand);
                         }
 
-                        //VisitAny();
+                        VisitAny();
                         break;
                     }
                 case "Count":
@@ -257,12 +252,11 @@ namespace Biseth.Net.Settee.Linq
                         {
                             if (_chainedWhere)
                             {
-                                //luceneQuery.AndAlso();
                             }
-                            VisitExpression(((UnaryExpression)expression.Arguments[1]).Operand);
+                            VisitExpression(((UnaryExpression) expression.Arguments[1]).Operand);
                         }
 
-                        //VisitCount();
+                        VisitCount();
                         break;
                     }
                 case "LongCount":
@@ -272,16 +266,14 @@ namespace Biseth.Net.Settee.Linq
                         {
                             if (_chainedWhere)
                             {
-                                //luceneQuery.AndAlso();
                             }
-                            VisitExpression(((UnaryExpression)expression.Arguments[1]).Operand);
+                            VisitExpression(((UnaryExpression) expression.Arguments[1]).Operand);
                         }
 
-                        //VisitLongCount();
+                        VisitLongCount();
                         break;
                     }
                 case "Distinct":
-                    //luceneQuery.GroupBy(AggregationOperation.Distinct);
                     VisitExpression(expression.Arguments[0]);
                     break;
                 case "OrderBy":
@@ -289,7 +281,8 @@ namespace Biseth.Net.Settee.Linq
                 case "ThenByDescending":
                 case "OrderByDescending":
                     VisitExpression(expression.Arguments[0]);
-                    //VisitOrderBy((LambdaExpression)((UnaryExpression)expression.Arguments[1]).Operand, expression.Method.Name.EndsWith("Descending"));
+                    VisitOrderBy((LambdaExpression) ((UnaryExpression) expression.Arguments[1]).Operand,
+                                 expression.Method.Name.EndsWith("Descending"));
                     break;
                 default:
                     {
@@ -297,11 +290,6 @@ namespace Biseth.Net.Settee.Linq
                     }
             }
         }
-
-        private bool _insideSelect;
-        private readonly bool _isMapReduce;
-        private ExpressionType _lastExpressionType;
-        private int _level;
 
         private void VisitSelect(Expression operand)
         {
@@ -313,7 +301,7 @@ namespace Biseth.Net.Settee.Linq
                     _insideSelect = true;
                     try
                     {
-                        VisitSelect(((UnaryExpression)body).Operand);
+                        VisitSelect(((UnaryExpression) body).Operand);
                     }
                     finally
                     {
@@ -321,27 +309,18 @@ namespace Biseth.Net.Settee.Linq
                     }
                     break;
                 case ExpressionType.MemberAccess:
-                    MemberExpression memberExpression = ((MemberExpression)body);
+                    var memberExpression = ((MemberExpression) body);
                     AddToFieldsToFetch(GetSelectPath(memberExpression), memberExpression.Member.Name);
                     if (_insideSelect == false)
                     {
-                        //foreach (var renamedField in FieldsToRename.Where(x => x.OriginalField == memberExpression.Member.Name).ToArray())
-                        //{
-                        //    FieldsToRename.Remove(renamedField);
-                        //}
-                        //FieldsToRename.Add(new RenamedField
-                        //{
-                        //    NewField = null,
-                        //    OriginalField = memberExpression.Member.Name
-                        //});
                     }
                     break;
-                //Anonymous types come through here .Select(x => new { x.Cost } ) doesn't use a member initializer, even though it looks like it does
-                //See http://blogs.msdn.com/b/sreekarc/archive/2007/04/03/immutable-the-new-anonymous-type.aspx
+                    //Anonymous types come through here .Select(x => new { x.Cost } ) doesn't use a member initializer, even though it looks like it does
+                    //See http://blogs.msdn.com/b/sreekarc/archive/2007/04/03/immutable-the-new-anonymous-type.aspx
                 case ExpressionType.New:
-                    var newExpression = ((NewExpression)body);
+                    var newExpression = ((NewExpression) body);
                     newExpressionType = newExpression.Type;
-                    for (int index = 0; index < newExpression.Arguments.Count; index++)
+                    for (var index = 0; index < newExpression.Arguments.Count; index++)
                     {
                         var field = newExpression.Arguments[index] as MemberExpression;
                         if (field == null)
@@ -351,11 +330,11 @@ namespace Biseth.Net.Settee.Linq
                         //AddToFieldsToFetch(renamedField, newExpression.Members[index].Name);
                     }
                     break;
-                //for example .Select(x => new SomeType { x.Cost } ), it's member init because it's using the object initializer
+                    //for example .Select(x => new SomeType { x.Cost } ), it's member init because it's using the object initializer
                 case ExpressionType.MemberInit:
-                    var memberInitExpression = ((MemberInitExpression)body);
+                    var memberInitExpression = ((MemberInitExpression) body);
                     newExpressionType = memberInitExpression.NewExpression.Type;
-                    foreach (MemberBinding t in memberInitExpression.Bindings)
+                    foreach (var t in memberInitExpression.Bindings)
                     {
                         var field = t as MemberAssignment;
                         if (field == null)
@@ -387,41 +366,9 @@ namespace Biseth.Net.Settee.Linq
             return sb.ToString();
         }
 
-        private void AddToFieldsToFetch(string docField, string renamedField)
+        private void AddToFieldsToFetch(string fieldName, string renamedFieldName)
         {
-            //var identityProperty = luceneQuery.DocumentConvention.GetIdentityProperty(typeof(T));
-            //if (identityProperty != null && identityProperty.Name == docField)
-            //{
-            //    FieldsToFetch.Add(Constants.DocumentIdFieldName);
-            //    if (identityProperty.Name != renamedField)
-            //    {
-            //        docField = Constants.DocumentIdFieldName;
-            //    }
-            //}
-            //else
-            //{
-            //    FieldsToFetch.Add(docField);
-            //}
-            //if (docField != renamedField)
-            //{
-            //    if (identityProperty == null)
-            //    {
-            //        var idPropName = luceneQuery.DocumentConvention.FindIdentityPropertyNameFromEntityName(luceneQuery.DocumentConvention.GetTypeTagName(typeof(T)));
-            //        if (docField == idPropName)
-            //        {
-            //            FieldsToRename.Add(new RenamedField
-            //            {
-            //                NewField = renamedField,
-            //                OriginalField = Constants.DocumentIdFieldName
-            //            });
-            //        }
-            //    }
-            //    FieldsToRename.Add(new RenamedField
-            //    {
-            //        NewField = renamedField,
-            //        OriginalField = docField
-            //    });
-            //}
+            // Extract field
         }
 
         private void VisitMemberAccess(MemberExpression expression, bool b)
@@ -497,6 +444,14 @@ namespace Biseth.Net.Settee.Linq
             }
         }
 
+        private void VisitConstant(ConstantExpression expression)
+        {
+            if (expression.Type == typeof (CouchDbQuery<T>))
+            {
+                _queryTranslation.DesignDocName = typeof(T).Name.ToLower();
+            }
+        }
+
         private void VisitAndAlso(BinaryExpression expression)
         {
             _queryTranslation.ViewName += "And";
@@ -507,6 +462,50 @@ namespace Biseth.Net.Settee.Linq
         {
             _queryTranslation.ViewName += "Or";
             _lastExpressionType = ExpressionType.Or;
+        }
+
+        private void VisitFirstOrDefault()
+        {
+        }
+
+        private void VisitFirst()
+        {
+        }
+
+        private void VisitOrderBy(LambdaExpression operand, bool endsWith)
+        {
+        }
+
+        private void VisitLongCount()
+        {
+        }
+
+        private void VisitCount()
+        {
+        }
+
+        private void VisitAny()
+        {
+        }
+
+        private void VisitAll(Expression<Func<T, bool>> operand)
+        {
+        }
+
+        private void VisitSingleOrDefault()
+        {
+        }
+
+        private void VisitSingle()
+        {
+        }
+
+        private void VisitTake(ConstantExpression constantExpression)
+        {
+        }
+
+        private void VisitSkip(ConstantExpression constantExpression)
+        {
         }
     }
 }

@@ -21,6 +21,21 @@ namespace SetteeTests
             }
         }
 
+        public void OpenSessionAndQueryTheDatabaseWithLinq()
+        {
+            using (var database = new CouchDatabase("http://localhost:5984/"))
+            {
+                using (var session = database.OpenSession("trivial"))
+                {
+                    var queryable = from car in session.Query<Car>()
+                                    where car.HorsePowers == 1337
+                                    select car;
+                    var cars = queryable.ToList();
+                    Assert.That(cars != null && cars.Count > 0);
+                }
+            }
+        }
+
         [Test]
         public void WhenQueryingForFirstRecord_ThenOneRecordShouldBeReturned()
         {
