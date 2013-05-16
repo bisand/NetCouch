@@ -39,7 +39,9 @@ namespace Biseth.Net.Settee.Linq
         public IEnumerator<T> GetEnumerator()
         {
             var execute = Provider.Execute(Expression);
-            return ((IEnumerable<T>) execute).GetEnumerator();
+            return (execute is IEnumerable<T>) == false
+                       ? new List<T> {(T) execute}.GetEnumerator()
+                       : ((IEnumerable<T>) execute).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -122,10 +122,7 @@ namespace Biseth.Net.Settee.Linq.Old
 
         protected override Expression VisitConstant(ConstantExpression c)
         {
-            if (c.Value == null)
-            {
-            }
-            else
+            if (c.Value != null)
             {
                 switch (Type.GetTypeCode(c.Value.GetType()))
                 {
