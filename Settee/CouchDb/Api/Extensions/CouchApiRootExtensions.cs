@@ -98,6 +98,13 @@ namespace Biseth.Net.Settee.CouchDb.Api.Extensions
             return responseData;
         }
 
+        public static ResponseData<object> Put(this CouchApiRoot element, dynamic obj = default(dynamic))
+        {
+            var requestData = new RequestData<dynamic>(element.PathElement, obj, "application/json");
+            var responseData = element.RequestClient.Put<dynamic, object>(requestData);
+            return responseData;
+        }
+
         public static ResponseData<TOut> Post<TIn, TOut>(this CouchApiRoot element, TIn obj = default(TIn))
         {
             var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");

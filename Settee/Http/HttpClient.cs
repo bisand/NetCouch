@@ -257,10 +257,25 @@ namespace Biseth.Net.Settee.Http
                 return;
             }
             asyncResult.ResponseStream = asyncResult.Response.GetResponseStream();
-            if (asyncResult.ResponseStream != null)
-                asyncResult.InternalAsyncResult = asyncResult.ResponseStream.BeginRead(asyncResult.BufferRead, 0, asyncResult.BufferReadSize, BufferReadCallback, asyncResult);
+            if (asyncResult.ResponseStream != null && asyncResult.ResponseStream.CanRead)
+            {
+                try
+                {
+                    asyncResult.InternalAsyncResult = asyncResult.ResponseStream.BeginRead(asyncResult.BufferRead, 0,
+                                                                                           asyncResult.BufferReadSize,
+                                                                                           BufferReadCallback, asyncResult);
+                }
+                catch (Exception e)
+                {
+                    asyncResult.ResponseStream.Close();
+                    asyncResult.Response.Close();
+                    asyncResult.SetComplete();
+                }
+            }
             else
+            {
                 asyncResult.SetComplete();
+            }
         }
 
         private static void BufferReadCallback(IAsyncResult ar)

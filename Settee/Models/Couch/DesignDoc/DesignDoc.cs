@@ -6,6 +6,11 @@ namespace Biseth.Net.Settee.Models.Couch.DesignDoc
     [DataContract]
     public class DesignDoc
     {
+        public DesignDoc()
+        {
+            Views = new Dictionary<string, View>();
+        }
+
         [DataMember(Name = "_id", EmitDefaultValue = false)]
         public string Id { get; set; }
         [DataMember(Name = "_rev", EmitDefaultValue = false)]
