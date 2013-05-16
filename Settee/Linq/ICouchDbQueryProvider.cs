@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Biseth.Net.Settee.Linq.Old;
+﻿using System.Linq;
 
 namespace Biseth.Net.Settee.Linq
 {

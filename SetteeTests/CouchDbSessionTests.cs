@@ -21,6 +21,7 @@ namespace SetteeTests
             }
         }
 
+        [Test]
         public void OpenSessionAndQueryTheDatabaseWithLinq()
         {
             using (var database = new CouchDatabase("http://localhost:5984/"))
@@ -43,7 +44,7 @@ namespace SetteeTests
             {
                 using (var session = database.OpenSession("trivial"))
                 {
-                    var car = session.Query<Car>().Where(x => x.HorsePowers == 1337).FirstOrDefault();
+                    var car = session.Query<Car>().FirstOrDefault(x => x.HorsePowers == 1337);
                     Assert.That(car != null);
                 }
             }

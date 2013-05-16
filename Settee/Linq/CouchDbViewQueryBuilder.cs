@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Biseth.Net.Settee.Linq.Old;
 
 namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbViewQueryBuilder
     {
-        private readonly StringBuilder _view;
         private readonly StringBuilder _query;
+        private readonly StringBuilder _view;
 
         public CouchDbViewQueryBuilder()
         {
@@ -21,8 +20,8 @@ namespace Biseth.Net.Settee.Linq
         {
             var notEqualStatements = result.Statements.Where(x => x.NodeType == ExpressionType.NotEqual).ToList();
             var equalStatemens = result.Statements.Where(x => x.NodeType == ExpressionType.Equal).ToList();
-            var equalGroups = equalStatemens.Select(x=>x.Level).GroupBy(g=>g).ToList();
-           
+            var equalGroups = equalStatemens.Select(x => x.Level).GroupBy(g => g).ToList();
+
             _view.Append(result.DesignDocName);
             _view.Append("') { ");
             // emit operatins goes here
@@ -39,14 +38,14 @@ namespace Biseth.Net.Settee.Linq
                     else if (i > 0 && statement.LastExprType == ExpressionType.Or)
                         _view.Append(" || ");
 
-                    if (statement.Left is ColumnExpression && statement.Right is ConstantExpression)
+                    if (statement.Left is MemberExpression && statement.Right is ConstantExpression)
                     {
-                        _view.Append("doc." + (statement.Left as ColumnExpression).Name + " != ");
+                        _view.Append("doc." + (statement.Left as MemberExpression).Member.Name + " != ");
                         _view.Append("'" + (statement.Right as ConstantExpression).Value + "'");
                     }
-                    else if (statement.Left is ConstantExpression && statement.Right is ColumnExpression)
+                    else if (statement.Left is ConstantExpression && statement.Right is MemberExpression)
                     {
-                        _view.Append("doc." + (statement.Right as ColumnExpression).Name + " != ");
+                        _view.Append("doc." + (statement.Right as MemberExpression).Member.Name + " != ");
                         _view.Append("'" + (statement.Left as ConstantExpression).Value + "'");
                     }
                     i++;
@@ -78,7 +77,7 @@ namespace Biseth.Net.Settee.Linq
                     else
                         _query.Append((eq.Right as ConstantExpression).Value + ",");
                 }
-                else if (eq.Left is MemberExpression && eq.Right is ColumnExpression)
+                else if (eq.Left is ConstantExpression && eq.Right is MemberExpression)
                 {
                     _view.Append("doc." + (eq.Right as MemberExpression).Member.Name + ",");
                     if ((eq.Left as ConstantExpression).Value is string)

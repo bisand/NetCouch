@@ -2,7 +2,6 @@
 using Biseth.Net.Settee.CouchDb.Api;
 using Biseth.Net.Settee.CouchDb.Api.Extensions;
 using Biseth.Net.Settee.Http;
-using Biseth.Net.Settee.Linq.Old;
 using Biseth.Net.Settee.Models.Couch.DesignDoc;
 
 namespace Biseth.Net.Settee.Linq
