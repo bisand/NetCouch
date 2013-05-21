@@ -446,6 +446,7 @@ namespace Biseth.Net.Settee.Linq
             if (expression.Type == typeof(CouchDbQuery<T>))
             {
                 _queryTranslation.DesignDocName = typeof(T).Name.ToLower();
+                _queryTranslation.ViewName = typeof(T).Name;
             }
             else
             {

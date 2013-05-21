@@ -53,7 +53,8 @@ namespace Biseth.Net.Settee.Linq
                 _view.Append(") { ");
             }
 
-            _query.Append("keys=[");
+            if (equalStatemens.Any())
+                _query.Append("keys=[");
             Statement prevExpr = null;
             foreach (var eq in equalStatemens)
             {
