@@ -41,7 +41,8 @@ namespace Biseth.Net.Settee.Linq
         public object Execute(Expression expression)
         {
             var translation = GetQueryProviderProcessor<T>().Execute(expression);
-            translation.ViewQuery = new CouchDbViewQueryBuilder().Build(translation);
+            var dbTranslation = new CouchDbVisitor<T>(QueryGenerator, QueryTranslation).Execute(expression);
+            translation.ViewQuery = new CouchDbViewQueryBuilder(translation).Build();
             translation.ViewQuery.Query += "&include_docs=true";
             var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(translation);
    

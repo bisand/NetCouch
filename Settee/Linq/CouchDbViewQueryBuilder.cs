@@ -6,28 +6,30 @@ namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbViewQueryBuilder
     {
+        private readonly CouchDbTranslation _translation;
         private readonly StringBuilder _query;
         private readonly StringBuilder _view;
 
-        public CouchDbViewQueryBuilder()
+        public CouchDbViewQueryBuilder(CouchDbTranslation translation)
         {
+            _translation = translation;
             _query = new StringBuilder();
             _view = new StringBuilder();
             _view.Append("function(doc) { if (doc.doc_type && doc.doc_type == '");
         }
 
-        public ViewAndQuery Build(CouchDbTranslation result)
+        public ViewAndQuery Build()
         {
-            var notEqualStatements = result.Statements.Where(x => x.NodeType == ExpressionType.NotEqual).ToList();
-            var equalStatemens = result.Statements.Where(x => x.NodeType == ExpressionType.Equal).ToList();
+            var notEqualStatements = _translation.Statements.Where(x => x.NodeType == ExpressionType.NotEqual).ToList();
+            var equalStatemens = _translation.Statements.Where(x => x.NodeType == ExpressionType.Equal).ToList();
             var equalGroups = equalStatemens.Select(x => x.Level).GroupBy(g => g).ToList();
 
-            _view.Append(result.DesignDocName);
+            _view.Append(_translation.DesignDocName);
             _view.Append("') { ");
             // emit operatins goes here
 
-            var count = notEqualStatements.Count();
-            if (count > 0)
+            var notEqualCount = notEqualStatements.Count();
+            if (notEqualCount > 0)
             {
                 _view.Append("if (");
                 var i = 0;
@@ -54,52 +56,97 @@ namespace Biseth.Net.Settee.Linq
             }
 
             if (equalStatemens.Any())
-                _query.Append("keys=[");
-            Statement prevExpr = null;
-            foreach (var eq in equalStatemens)
             {
-                if (prevExpr != null && eq.LastExprType == ExpressionType.Or)
+                _query.Append("keys=[");
+                Statement prevExpr = null;
+                foreach (var eq in equalStatemens)
                 {
-                    _view.Remove(_view.Length - 1, 1);
-                    _view.Append("],null);");
-                    _query.Remove(_query.Length - 1, 1);
-                    _query.Append("],");
+                    if (prevExpr == null || eq.LastExprType == ExpressionType.Or)
+                    {
+                        _query.Append("[");
+                        _view.Append("emit([");
+                    }
+                    if (prevExpr != null && eq.LastExprType == ExpressionType.Or)
+                    {
+                        _view.Remove(_view.Length - 1, 1);
+                        _view.Append("],null);");
+                        _query.Remove(_query.Length - 1, 1);
+                        _query.Append("],");
+                    }
+
+                    string memberName;
+                    object expressionValue;
+                    if (IsMemberExpression(eq.Left, out memberName) && ContainsValue(eq.Right, out expressionValue))
+                    {
+                        _view.AppendFormat("doc.{0},", memberName);
+                        if (expressionValue is string)
+                            _query.AppendFormat("'{0}',", expressionValue);
+                        else
+                            _query.AppendFormat("{0},", expressionValue);
+                    }
+                    else if (ContainsValue(eq.Left, out expressionValue) && IsMemberExpression(eq.Right, out memberName))
+                    {
+                        _view.AppendFormat("doc.{0},", memberName);
+                        if (expressionValue is string)
+                            _query.AppendFormat("'{0}',", expressionValue);
+                        else
+                            _query.AppendFormat("{0},", expressionValue);
+                    }
+                    prevExpr = eq;
                 }
-                if (prevExpr == null || eq.LastExprType == ExpressionType.Or)
-                {
-                    _query.Append("[");
-                    _view.Append("emit([");
-                }
-                if (eq.Left is MemberExpression && eq.Right is ConstantExpression)
-                {
-                    _view.Append("doc." + (eq.Left as MemberExpression).Member.Name + ",");
-                    if ((eq.Right as ConstantExpression).Value is string)
-                        _query.Append("\"" + (eq.Right as ConstantExpression).Value + "\",");
-                    else
-                        _query.Append((eq.Right as ConstantExpression).Value + ",");
-                }
-                else if (eq.Left is ConstantExpression && eq.Right is MemberExpression)
-                {
-                    _view.Append("doc." + (eq.Right as MemberExpression).Member.Name + ",");
-                    if ((eq.Left as ConstantExpression).Value is string)
-                        _query.Append("\"" + (eq.Left as ConstantExpression).Value + "\",");
-                    else
-                        _query.Append((eq.Left as ConstantExpression).Value + ",");
-                }
-                prevExpr = eq;
+                _view.Remove(_view.Length - 1, 1);
+                _view.Append("],null);");
+                _query.Remove(_query.Length - 1, 1);
+                _query.Append("]]");
+            }
+            else
+            {
+                _view.Append("emit(null, null);");
             }
 
-            _view.Remove(_view.Length - 1, 1);
-            _view.Append("],null);");
-            _query.Remove(_query.Length - 1, 1);
-            _query.Append("]]");
-            if (count > 0)
+            if (notEqualCount > 0)
                 _view.Append(" } ");
 
             _view.Append(" } ");
             _view.Append(" }");
 
             return new ViewAndQuery {View = _view.ToString(), Query = _query.ToString()};
+        }
+
+        private static bool IsMemberExpression(Expression expression, out string memberName)
+        {
+            memberName = null;
+            if (expression is MemberExpression)
+            {
+                memberName = (expression as MemberExpression).Member.Name;
+                return true;
+            }
+            return false;
+        }
+
+        private static bool ContainsValue(Expression expression, out object expressionValue)
+        {
+            expressionValue = null;
+
+            var constExpr = expression as ConstantExpression;
+            if (constExpr != null)
+            {
+                object value = new CouchDbVisitor<object>(null, null).Visit(constExpr);
+                expressionValue = value;
+                return true;
+            }
+            var memberExp = expression as MemberExpression;
+            if(memberExp != null)
+            {
+                object value = new CouchDbVisitor<object>(null, null).Visit(memberExp);
+                if (ContainsValue(memberExp.Expression, out value))
+                {
+                    expressionValue = value;
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
