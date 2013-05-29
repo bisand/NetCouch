@@ -40,8 +40,8 @@ namespace Biseth.Net.Settee.Linq
 
         public object Execute(Expression expression)
         {
-            var translation = GetQueryProviderProcessor<T>().Execute(expression);
-            var dbTranslation = new CouchDbVisitor<T>(QueryGenerator, QueryTranslation).Execute(expression);
+            //var translation = GetQueryProviderProcessor<T>().Execute(expression);
+            var translation = new CouchDbVisitor<T>(QueryTranslation).Execute(expression);
             translation.ViewQuery = new CouchDbViewQueryBuilder(translation).Build();
             translation.ViewQuery.Query += "&include_docs=true";
             var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(translation);
@@ -69,12 +69,11 @@ namespace Biseth.Net.Settee.Linq
             return (TResult) Execute(expression);
         }
 
-        public ICouchDbQueryGenerator QueryGenerator { get; private set; }
         public CouchDbTranslation QueryTranslation { get; private set; }
 
         private CouchDbQueryProviderProcessor<TResult> GetQueryProviderProcessor<TResult>()
         {
-            return new CouchDbQueryProviderProcessor<TResult>(QueryGenerator, QueryTranslation);
+            return new CouchDbQueryProviderProcessor<TResult>(QueryTranslation);
         }
     }
 }

@@ -1,16 +1,17 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbVisitor<T> : ExpressionVisitor
     {
-        private readonly ICouchDbQueryGenerator _queryGenerator;
         private readonly CouchDbTranslation _queryTranslation;
 
-        public CouchDbVisitor(ICouchDbQueryGenerator queryGenerator, CouchDbTranslation queryTranslation)
+        public CouchDbVisitor(CouchDbTranslation queryTranslation)
         {
-            _queryGenerator = queryGenerator;
             _queryTranslation = queryTranslation;
         }
 
@@ -29,6 +30,10 @@ namespace Biseth.Net.Settee.Linq
         {
             // Recurse down to see if we can simplify...
             var expression = Visit(node.Expression);
+            if (expression != node.Expression)
+            {
+                return Expression.MakeMemberAccess(expression, node.Member);
+            }
 
             // If we've ended up with a constant, and it's a property or a field,
             // we can simplify ourselves to a constant
@@ -50,7 +55,63 @@ namespace Biseth.Net.Settee.Linq
                     return Expression.Constant(value);
                 }
             }
+
             return base.VisitMember(node);
+        }
+
+        protected override Expression VisitConstant(ConstantExpression node)
+        {
+            Debug.Write(node.Value);
+            return base.VisitConstant(node);
+        }
+
+        protected override Expression VisitBinary(BinaryExpression bnode)
+        {
+            switch (bnode.NodeType)
+            {
+                case ExpressionType.And:
+                case ExpressionType.AndAlso:
+                    Visit(bnode.Left);
+                    Visit(bnode.Right);
+                    return bnode;
+
+                case ExpressionType.Equal:
+                case ExpressionType.LessThan:
+                case ExpressionType.LessThanOrEqual:
+                case ExpressionType.GreaterThan:
+                case ExpressionType.GreaterThanOrEqual:
+                    return VisitBinaryComparison(bnode);
+                default:
+                    throw new NotSupportedException(string.Format(
+                        "The binary operator {0} is not supported", bnode.NodeType));
+            }
+        }
+
+        private Expression VisitBinaryComparison(BinaryExpression node)
+        {
+            var constant = (node.Left as ConstantExpression ?? node.Right as ConstantExpression);
+            var memberAccess = (node.Left as MemberExpression ?? node.Right as MemberExpression);
+
+            if (memberAccess == null || constant == null)
+            {
+                throw new NotSupportedException(string.Format("One of the operand not supported for operator {0}", node.NodeType));
+            }
+
+            if (constant.Value == null)
+            {
+                throw new NotSupportedException(string.Format("NULL is not supported for {0}", node.ToString()));
+            }
+
+            var constantTypeCode = Type.GetTypeCode(constant.Value.GetType());
+            if (constantTypeCode != TypeCode.Int32 && constantTypeCode != TypeCode.String)
+                throw new NotSupportedException(string.Format("Constant {0} is of an unsupported type {1}",
+                    constant, constant.Value.GetType().Name));
+            TranslateStandardComparison(node.NodeType, constant, memberAccess);
+            return node;
+        }
+
+        private void TranslateStandardComparison(ExpressionType nodeType, ConstantExpression constant, MemberExpression memberAccess)
+        {
         }
     }
 }

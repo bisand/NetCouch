@@ -131,14 +131,14 @@ namespace Biseth.Net.Settee.Linq
             var constExpr = expression as ConstantExpression;
             if (constExpr != null)
             {
-                object value = new CouchDbVisitor<object>(null, null).Visit(constExpr);
+                object value = new CouchDbVisitor<object>(null).Visit(constExpr);
                 expressionValue = value;
                 return true;
             }
             var memberExp = expression as MemberExpression;
             if(memberExp != null)
             {
-                object value = new CouchDbVisitor<object>(null, null).Visit(memberExp);
+                object value = new CouchDbVisitor<object>(null).Visit(memberExp);
                 if (ContainsValue(memberExp.Expression, out value))
                 {
                     expressionValue = value;

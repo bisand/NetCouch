@@ -87,7 +87,6 @@
     <Compile Include="Linq\CouchDbQueryProviderProcessor.cs" />
     <Compile Include="Linq\CouchDbVisitor.cs" />
     <Compile Include="Linq\ICouchDbQueryable.cs" />
-    <Compile Include="Linq\ICouchDbQueryGenerator.cs" />
     <Compile Include="Linq\ICouchDbQueryProvider.cs" />
     <Compile Include="Linq\CouchDbQueryExecuter.cs" />
     <Compile Include="Linq\CouchDbTranslation.cs" />

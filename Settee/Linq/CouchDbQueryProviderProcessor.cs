@@ -9,7 +9,6 @@ namespace Biseth.Net.Settee.Linq
 {
     public class CouchDbQueryProviderProcessor<T>
     {
-        private readonly ICouchDbQueryGenerator _queryGenerator;
         private readonly CouchDbTranslation _queryTranslation;
 
         private bool _chainedWhere;
@@ -18,9 +17,8 @@ namespace Biseth.Net.Settee.Linq
         private int _level;
         private Expression<Func<T, bool>> _predicate;
 
-        public CouchDbQueryProviderProcessor(ICouchDbQueryGenerator queryGenerator, CouchDbTranslation queryTranslation)
+        public CouchDbQueryProviderProcessor(CouchDbTranslation queryTranslation)
         {
-            _queryGenerator = queryGenerator;
             _queryTranslation = queryTranslation;
         }
 
