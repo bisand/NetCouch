@@ -45,7 +45,7 @@
     <Compile Include="Car.cs" />
     <Compile Include="CouchDbSessionTests.cs" />
     <Compile Include="LinqTests.cs" />
-    <Compile Include="Parson.cs" />
+    <Compile Include="Person.cs" />
     <Compile Include="RequestClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
