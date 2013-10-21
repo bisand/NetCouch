@@ -53,7 +53,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Settee\Settee.csproj">
+    <ProjectReference Include="..\NetCouch\NetCouch.csproj">
       <Project>{EA71B208-DA4A-4DA5-92F5-EA740477FB75}</Project>
       <Name>Settee</Name>
     </ProjectReference>

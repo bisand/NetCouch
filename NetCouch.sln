@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settee", "Settee\Settee.csproj", "{EA71B208-DA4A-4DA5-92F5-EA740477FB75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCouch", "NetCouch\NetCouch.csproj", "{EA71B208-DA4A-4DA5-92F5-EA740477FB75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetteeTests", "SetteeTests\SetteeTests.csproj", "{B5B9235F-C49B-47A6-8F11-66DC708C6F1E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCouchTests", "NetCouchTests\NetCouchTests.csproj", "{B5B9235F-C49B-47A6-8F11-66DC708C6F1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
