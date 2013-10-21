@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using Biseth.Net.Settee;
+using Biseth.Net.Couch;
 using NUnit.Framework;
 
-namespace SetteeTests
+namespace NetCouchTests
 {
     [TestFixture]
     public class CouchDbSessionTests

@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.Serialization;
-using Biseth.Net.Settee.CouchDb.Api;
-using Biseth.Net.Settee.CouchDb.Api.Extensions;
-using Biseth.Net.Settee.Linq;
-using Biseth.Net.Settee.Models.Couch.Doc;
+using Biseth.Net.Couch.Db.Api;
+using Biseth.Net.Couch.Db.Api.Extensions;
+using Biseth.Net.Couch.Linq;
+using Biseth.Net.Couch.Models.Couch.Doc;
 
-namespace Biseth.Net.Settee
+namespace Biseth.Net.Couch
 {
     public class CouchDbSession : IDisposable
     {
@@ -88,9 +86,10 @@ namespace Biseth.Net.Settee
         {
             get { return _dictionary.Count; }
         }
+
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            return _dictionary.Select(x=>x.Key);
+            return _dictionary.Select(x => x.Key);
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)

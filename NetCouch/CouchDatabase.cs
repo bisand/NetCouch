@@ -1,20 +1,18 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Data;
 using System.Net;
-using Biseth.Net.Settee.CouchDb.Api;
-using Biseth.Net.Settee.CouchDb.Api.Extensions;
-using Biseth.Net.Settee.Http;
-using Biseth.Net.Settee.Models.Couch.Database;
-using Biseth.Net.Settee.Models.Couch.DesignDoc;
+using Biseth.Net.Couch.Db.Api;
+using Biseth.Net.Couch.Db.Api.Extensions;
+using Biseth.Net.Couch.Exceptions;
+using Biseth.Net.Couch.Http;
+using Biseth.Net.Couch.Models.Couch.Database;
 
-namespace Biseth.Net.Settee
+namespace Biseth.Net.Couch
 {
     public class CouchDatabase : IDisposable
     {
-        private bool _disposed;
         private readonly RequestClient _client;
         private CouchApi _api;
+        private bool _disposed;
 
         public CouchDatabase(string serverUrl)
         {
@@ -45,7 +43,7 @@ namespace Biseth.Net.Settee
                                      .Put<dynamic, JsonSuccessStatement>("");
 
                 if ((dbResponse.DataDeserialized == null || dbResponse.DataDeserialized.Ok == false) && dbResponse.StatusCode != HttpStatusCode.Created)
-                    throw new DataException("An error occurred while creating the database!");
+                    throw new CouchDbException("An error occurred while creating the database!");
             }
         }
 

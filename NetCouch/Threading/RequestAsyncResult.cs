@@ -1,8 +1,8 @@
 ﻿using System;
-using Biseth.Net.Settee.Http;
-using Biseth.Net.Settee.Serialization;
+using Biseth.Net.Couch.Http;
+using Biseth.Net.Couch.Serialization;
 
-namespace Biseth.Net.Settee.Threading
+namespace Biseth.Net.Couch.Threading
 {
     public class RequestAsyncResult<TIn, TOut> : BasicAsyncResult
     {

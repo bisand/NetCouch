@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Biseth.Net.Settee.Models.Couch.DesignDoc
+namespace Biseth.Net.Couch.Models.Couch.DesignDoc
 {
     [DataContract]
     public class ViewRow<T>

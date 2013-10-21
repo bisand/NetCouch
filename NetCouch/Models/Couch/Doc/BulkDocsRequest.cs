@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Biseth.Net.Settee.Models.Couch.Doc
+namespace Biseth.Net.Couch.Models.Couch.Doc
 {
     [DataContract]
     public class BulkDocsRequest
@@ -13,6 +12,6 @@ namespace Biseth.Net.Settee.Models.Couch.Doc
         }
 
         [DataMember(Name = "docs", IsRequired = true)]
-        public List<object> Docs { get; set; } 
+        public List<object> Docs { get; set; }
     }
 }

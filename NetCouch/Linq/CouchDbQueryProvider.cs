@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Biseth.Net.Settee.CouchDb.Api;
-using Biseth.Net.Settee.Models.Couch.DesignDoc;
+using Biseth.Net.Couch.Db.Api;
+using Biseth.Net.Couch.Models.Couch.DesignDoc;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Couch.Linq
 {
     public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
     {
@@ -45,7 +45,7 @@ namespace Biseth.Net.Settee.Linq
             translation.ViewQuery = new CouchDbViewQueryBuilder(translation).Build();
             translation.ViewQuery.Query += "&include_docs=true";
             var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(translation);
-   
+
             // Try to extract the result.
             if (queryResult != null)
             {
@@ -59,7 +59,7 @@ namespace Biseth.Net.Settee.Linq
                 }
                 return new List<ViewRow<T>>();
             }
-            
+
             // Something bad happened. We just return an empty result.
             return new List<ViewRow<T>>();
         }

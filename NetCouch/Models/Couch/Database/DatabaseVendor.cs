@@ -1,4 +1,4 @@
-﻿namespace Biseth.Net.Settee.Models.Couch.Database
+﻿namespace Biseth.Net.Couch.Models.Couch.Database
 {
     public class DatabaseVendor
     {

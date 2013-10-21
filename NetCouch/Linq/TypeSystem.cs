@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Couch.Linq
 {
     internal static class TypeSystem
     {
@@ -30,7 +30,8 @@ namespace Biseth.Net.Settee.Linq
                 foreach (var iface in ifaces)
                 {
                     var ienum = FindIEnumerable(iface);
-                    if (ienum != null) return ienum;
+                    if (ienum != null)
+                        return ienum;
                 }
             }
             if (seqType.BaseType != null && seqType.BaseType != typeof (object))
@@ -73,11 +74,14 @@ namespace Biseth.Net.Settee.Linq
         internal static Type GetMemberType(MemberInfo mi)
         {
             var fi = mi as FieldInfo;
-            if (fi != null) return fi.FieldType;
+            if (fi != null)
+                return fi.FieldType;
             var pi = mi as PropertyInfo;
-            if (pi != null) return pi.PropertyType;
+            if (pi != null)
+                return pi.PropertyType;
             var ei = mi as EventInfo;
-            if (ei != null) return ei.EventHandlerType;
+            if (ei != null)
+                return ei.EventHandlerType;
             return null;
         }
     }

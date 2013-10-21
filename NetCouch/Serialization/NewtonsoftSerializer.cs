@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Biseth.Net.Settee.Serialization
+namespace Biseth.Net.Couch.Serialization
 {
     internal class NewtonsoftSerializer<TIn, TOut> : ISerializer<TIn, TOut>
     {

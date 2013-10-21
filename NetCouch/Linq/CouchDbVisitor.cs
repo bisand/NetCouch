@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Couch.Linq
 {
     public class CouchDbVisitor<T> : ExpressionVisitor
     {
@@ -99,13 +98,13 @@ namespace Biseth.Net.Settee.Linq
 
             if (constant.Value == null)
             {
-                throw new NotSupportedException(string.Format("NULL is not supported for {0}", node.ToString()));
+                throw new NotSupportedException(string.Format("NULL is not supported for {0}", node));
             }
 
             var constantTypeCode = Type.GetTypeCode(constant.Value.GetType());
             if (constantTypeCode != TypeCode.Int32 && constantTypeCode != TypeCode.String)
                 throw new NotSupportedException(string.Format("Constant {0} is of an unsupported type {1}",
-                    constant, constant.Value.GetType().Name));
+                                                              constant, constant.Value.GetType().Name));
             TranslateStandardComparison(node.NodeType, constant, memberAccess);
             return node;
         }

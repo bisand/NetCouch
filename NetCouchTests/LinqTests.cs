@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using Biseth.Net.Settee.CouchDb.Api;
-using Biseth.Net.Settee.Http;
-using Biseth.Net.Settee.Linq;
+using Biseth.Net.Couch.Db.Api;
+using Biseth.Net.Couch.Http;
+using Biseth.Net.Couch.Linq;
 using NUnit.Framework;
 
-namespace SetteeTests
+namespace NetCouchTests
 {
     [TestFixture]
     public class LinqTests
@@ -23,7 +23,7 @@ namespace SetteeTests
             Console.WriteLine("Starting to process queries...");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            for (int i = 0; i < 1000; i++)
+            for (var i = 0; i < 1000; i++)
             {
                 var cars = query.Where(p => p.Model == "1337").ToList();
                 Assert.That(cars != null && cars.Count > 0);

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Couch.Linq
 {
     public class CouchDbQuery<T> : ICouchDbQueryable<T>
     {

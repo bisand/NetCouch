@@ -1,4 +1,4 @@
-﻿namespace Biseth.Net.Settee.Http
+﻿namespace Biseth.Net.Couch.Http
 {
     public class HttpMethod
     {

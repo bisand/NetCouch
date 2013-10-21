@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Text;
-using Biseth.Net.Settee.Threading;
+using Biseth.Net.Couch.Threading;
 
-namespace Biseth.Net.Settee.Http
+namespace Biseth.Net.Couch.Http
 {
     public class HttpClient : IHttpClient
     {
@@ -207,6 +207,7 @@ namespace Biseth.Net.Settee.Http
             }
             catch (Exception ex)
             {
+                asyncResult.Exception = ex;
                 asyncResult.SetComplete();
                 return;
             }
@@ -226,6 +227,7 @@ namespace Biseth.Net.Settee.Http
             }
             catch (Exception ex)
             {
+                asyncResult.Exception = ex;
                 asyncResult.SetComplete();
                 return;
             }
@@ -253,6 +255,7 @@ namespace Biseth.Net.Settee.Http
             }
             catch (Exception ex)
             {
+                asyncResult.Exception = ex;
                 asyncResult.SetComplete();
                 return;
             }
@@ -265,8 +268,9 @@ namespace Biseth.Net.Settee.Http
                                                                                            asyncResult.BufferReadSize,
                                                                                            BufferReadCallback, asyncResult);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
+                    asyncResult.Exception = ex;
                     asyncResult.ResponseStream.Close();
                     asyncResult.Response.Close();
                     asyncResult.SetComplete();

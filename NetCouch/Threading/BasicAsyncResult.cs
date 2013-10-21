@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Biseth.Net.Settee.Threading
+namespace Biseth.Net.Couch.Threading
 {
     public class BasicAsyncResult : IAsyncResult, IDisposable
     {
@@ -27,6 +27,8 @@ namespace Biseth.Net.Settee.Threading
         {
             get { return CreateWaitHandle(); }
         }
+
+        public Exception Exception { get; set; }
 
         public bool CompletedSynchronously
         {

@@ -1,6 +1,6 @@
-﻿using Biseth.Net.Settee.CouchDb.Api.Elements;
+﻿using Biseth.Net.Couch.Db.Api.Elements;
 
-namespace Biseth.Net.Settee.CouchDb.Api.Extensions
+namespace Biseth.Net.Couch.Db.Api.Extensions
 {
     public static class CouchApiDocumentExtensions
     {

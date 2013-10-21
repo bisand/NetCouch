@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Couch.Linq
 {
     public interface ICouchDbQueryProvider : IQueryProvider
     {

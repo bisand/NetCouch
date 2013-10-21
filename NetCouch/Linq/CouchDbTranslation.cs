@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Couch.Linq
 {
     public class CouchDbTranslation
     {
@@ -19,5 +19,5 @@ namespace Biseth.Net.Settee.Linq
         public List<string> QueryValues { get; set; }
         public List<Statement> Statements { get; set; }
         public ViewAndQuery ViewQuery { get; set; }
-}
+    }
 }

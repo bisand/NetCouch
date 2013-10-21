@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace Biseth.Net.Settee.Threading
+namespace Biseth.Net.Couch.Threading
 {
     public class HttpAsyncResult : BasicAsyncResult
     {

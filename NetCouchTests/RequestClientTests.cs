@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Net;
-using Biseth.Net.Settee.CouchDb.Api;
-using Biseth.Net.Settee.CouchDb.Api.Extensions;
-using Biseth.Net.Settee.Http;
-using Biseth.Net.Settee.Models.Couch.Database;
+using Biseth.Net.Couch.Db.Api;
+using Biseth.Net.Couch.Db.Api.Extensions;
+using Biseth.Net.Couch.Http;
+using Biseth.Net.Couch.Models.Couch.Database;
 using NUnit.Framework;
 
-namespace SetteeTests
+namespace NetCouchTests
 {
     [TestFixture]
     public class RequestClientTests

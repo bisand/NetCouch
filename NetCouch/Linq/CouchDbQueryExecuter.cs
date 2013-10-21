@@ -1,10 +1,10 @@
 ﻿using System.Net;
-using Biseth.Net.Settee.CouchDb.Api;
-using Biseth.Net.Settee.CouchDb.Api.Extensions;
-using Biseth.Net.Settee.Http;
-using Biseth.Net.Settee.Models.Couch.DesignDoc;
+using Biseth.Net.Couch.Db.Api;
+using Biseth.Net.Couch.Db.Api.Extensions;
+using Biseth.Net.Couch.Http;
+using Biseth.Net.Couch.Models.Couch.DesignDoc;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Couch.Linq
 {
     public class CouchDbQueryExecuter<T>
     {
@@ -37,7 +37,7 @@ namespace Biseth.Net.Settee.Linq
 
                 // Assign the view to the design doc object
                 var designDoc = designDocResult.DataDeserialized;
-                designDoc.Views[translation.ViewName] = new View { Map = translation.ViewQuery.View };
+                designDoc.Views[translation.ViewName] = new View {Map = translation.ViewQuery.View};
 
                 // Save the design doc back to the server.
                 var responseData =
@@ -59,6 +59,5 @@ namespace Biseth.Net.Settee.Linq
             }
             return queryResult;
         }
-
     }
 }

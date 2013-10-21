@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Biseth.Net.Settee")]
+[assembly: AssemblyTitle("Biseth.Net.Couch")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("biseth.net")]
-[assembly: AssemblyProduct("Biseth.Net.Settee")]
+[assembly: AssemblyProduct("Biseth.Net.Couch")]
 [assembly: AssemblyCopyright("Copyright © André Biseth 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

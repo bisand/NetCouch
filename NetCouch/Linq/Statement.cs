@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Couch.Linq
 {
     public class Statement
     {
         private readonly ExpressionType _lastExprType;
-        private readonly int _level;
         private readonly Expression _left;
+        private readonly int _level;
         private readonly ExpressionType _nodeType;
         private readonly Expression _right;
 

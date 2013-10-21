@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Biseth.Net.Settee.Http
+namespace Biseth.Net.Couch.Http
 {
     public interface IHttpClient : IDisposable
     {

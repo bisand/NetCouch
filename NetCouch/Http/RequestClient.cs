@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Net;
-using Biseth.Net.Settee.Threading;
+using Biseth.Net.Couch.Threading;
 
-namespace Biseth.Net.Settee.Http
+namespace Biseth.Net.Couch.Http
 {
     public class RequestClient : IRequestClient, IDisposable
     {
-        private bool _disposed;
         private readonly IHttpClient _httpClient;
+        private bool _disposed;
         private string _url;
 
         public RequestClient(string url)

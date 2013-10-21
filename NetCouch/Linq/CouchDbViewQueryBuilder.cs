@@ -2,12 +2,12 @@
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Biseth.Net.Settee.Linq
+namespace Biseth.Net.Couch.Linq
 {
     public class CouchDbViewQueryBuilder
     {
-        private readonly CouchDbTranslation _translation;
         private readonly StringBuilder _query;
+        private readonly CouchDbTranslation _translation;
         private readonly StringBuilder _view;
 
         public CouchDbViewQueryBuilder(CouchDbTranslation translation)
@@ -136,7 +136,7 @@ namespace Biseth.Net.Settee.Linq
                 return true;
             }
             var memberExp = expression as MemberExpression;
-            if(memberExp != null)
+            if (memberExp != null)
             {
                 object value = new CouchDbVisitor<object>(null).Visit(memberExp);
                 if (ContainsValue(memberExp.Expression, out value))

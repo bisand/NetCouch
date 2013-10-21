@@ -1,4 +1,4 @@
-﻿namespace Biseth.Net.Settee.Linq
+﻿namespace Biseth.Net.Couch.Linq
 {
     public class ViewAndQuery
     {
