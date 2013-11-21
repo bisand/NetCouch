@@ -20,10 +20,10 @@ namespace Biseth.Net.Couch.Linq
             return _queryTranslation;
         }
 
-        public override Expression Visit(Expression node)
-        {
-            return base.Visit(node);
-        }
+        //public override Expression Visit(Expression node)
+        //{
+        //    return base.Visit(node);
+        //}
 
         protected override Expression VisitMember(MemberExpression node)
         {
@@ -70,6 +70,8 @@ namespace Biseth.Net.Couch.Linq
             {
                 case ExpressionType.And:
                 case ExpressionType.AndAlso:
+                case ExpressionType.Or:
+                case ExpressionType.OrElse:
                     Visit(bnode.Left);
                     Visit(bnode.Right);
                     return bnode;

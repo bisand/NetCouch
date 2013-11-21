@@ -146,6 +146,10 @@ namespace Biseth.Net.Couch.Http
                 {
                     Request = (HttpWebRequest) WebRequest.Create(uri)
                 };
+            
+            if (requestData.Headers != null) 
+                asyncResult.Request.Headers = requestData.Headers;
+
             asyncResult.Request.Method = requestData.Method;
             asyncResult.Request.Referer = BaseUri.ToString();
             if (requestData.ContentType != null)

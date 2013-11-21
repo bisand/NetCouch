@@ -44,8 +44,15 @@ namespace NetCouchTests
             var post = api.Root().Db("test").Doc().Post<Person, dynamic>(person);
             Assert.IsNotNull(post);
 
-            var postDoc = api.Root().Db("test").Doc("Test").Put<Person, dynamic>(person);
+            var getDoc = api.Root().Db("test").Doc("Test").Get<Person>();
+            Assert.IsNotNull(getDoc);
+
+            getDoc.DataDeserialized.Weight = 77;
+
+            var postDoc = api.Root().Db("test").Doc("Test").Put<Person, dynamic>(getDoc.DataDeserialized, (string)getDoc.DynamicData._rev);
             Assert.IsNotNull(postDoc);
+
+
         }
     }
 }

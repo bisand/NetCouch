@@ -1,4 +1,5 @@
-﻿using Biseth.Net.Couch.Db.Api.Elements;
+﻿using System.Net;
+using Biseth.Net.Couch.Db.Api.Elements;
 using Biseth.Net.Couch.Http;
 
 namespace Biseth.Net.Couch.Db.Api.Extensions
@@ -98,9 +99,11 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
             return responseData;
         }
 
-        public static ResponseData<TOut> Put<TIn, TOut>(this CouchApiRoot element, TIn obj = default(TIn))
+        public static ResponseData<TOut> Put<TIn, TOut>(this CouchApiRoot element, TIn obj = default(TIn), string revision = null)
         {
             var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");
+            if (!string.IsNullOrWhiteSpace(revision))
+                requestData.Headers = new WebHeaderCollection {{"If-Match", revision}};
             var responseData = element.RequestClient.Put<TIn, TOut>(requestData);
             return responseData;
         }

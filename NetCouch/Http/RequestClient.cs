@@ -174,7 +174,6 @@ namespace Biseth.Net.Couch.Http
                     HttpClient = _httpClient,
                     Method = HttpMethod.Put,
                 };
-
             asyncResult.InternalAsyncResult = asyncResult.Serializer.SerializeFunc.BeginInvoke(requestData.RequestObject, SerializeCallback<TIn, TOut>, asyncResult);
 
             return asyncResult;
@@ -258,11 +257,11 @@ namespace Biseth.Net.Couch.Http
             switch (asyncResult.Method)
             {
                 case HttpMethod.Put:
-                    var dataPut = new HttpRequestData(asyncResult.RequestData.Url, "", "application/json", HttpMethod.Put, data);
+                    var dataPut = new HttpRequestData(asyncResult.RequestData.Url, "", "application/json", HttpMethod.Put, data, asyncResult.RequestData.Headers);
                     asyncResult.InternalAsyncResult = asyncResult.HttpClient.BeginPut(dataPut, RequestCallback<TIn, TOut>, asyncResult);
                     break;
                 case HttpMethod.Post:
-                    var dataPost = new HttpRequestData(asyncResult.RequestData.Url, "", "application/json", HttpMethod.Post, data);
+                    var dataPost = new HttpRequestData(asyncResult.RequestData.Url, "", "application/json", HttpMethod.Post, data, asyncResult.RequestData.Headers);
                     asyncResult.InternalAsyncResult = asyncResult.HttpClient.BeginPost(dataPost, RequestCallback<TIn, TOut>, asyncResult);
                     break;
                 default:
