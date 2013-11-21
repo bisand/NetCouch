@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+    <metadata>
+        <id>NetCouch</id>
+        <version>0.1-alpha</version>
+        <title>NetCouch</title>
+        <authors>André Biseth</authors>
+        <owners>André Biseth</owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>My package description.</description>
+        <copyright>2013 by André Biseth</copyright>
+        <language>en-US</language>
+        <tags>CouchDB</tags>
+    </metadata>
+    <files />
+</package>
