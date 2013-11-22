@@ -7,8 +7,8 @@ namespace Biseth.Net.Couch.Serialization
     {
         public NewtonsoftSerializer()
         {
-            SerializeFunc = obj => JsonConvert.SerializeObject(obj);
-            DeserializeFunc = JsonConvert.DeserializeObject<TOut>;
+            SerializeFunc = Serialize;
+            DeserializeFunc = Deserialize;
         }
 
         public Func<TIn, string> SerializeFunc { get; set; }
@@ -16,12 +16,14 @@ namespace Biseth.Net.Couch.Serialization
 
         public string Serialize(TIn obj)
         {
-            return JsonConvert.SerializeObject(obj);
+            var result = JsonConvert.SerializeObject(obj);
+            return result;
         }
 
         public TOut Deserialize(string text)
         {
-            return JsonConvert.DeserializeObject<TOut>(text);
+            var result = JsonConvert.DeserializeObject<TOut>(text);
+            return result;
         }
     }
 }
