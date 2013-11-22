@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Runtime.Serialization;
-using System.Threading;
+using Biseth.Net.Couch;
 using Biseth.Net.Couch.Db.Api;
 using Biseth.Net.Couch.Db.Api.Extensions;
 using Biseth.Net.Couch.Http;
@@ -31,7 +28,7 @@ namespace NetCouchTests
             for (var i = 0; i < 1000; i++)
             {
                 var car = new Car {HorsePowers = 10 + i, Make = "Audi", Model = i.ToString()};
-                dynamic obj = new DocWrappoer<Car>(car);
+                dynamic obj = new CouchObjectProxy<Car>(car);
                 obj.Test = "Test123";
                 cars.Add(obj);
             }

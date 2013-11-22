@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net;
 using Biseth.Net.Couch.Db.Api;
 using Biseth.Net.Couch.Db.Api.Extensions;
@@ -10,6 +12,7 @@ namespace Biseth.Net.Couch
 {
     public class CouchDatabase : IDisposable
     {
+        private static readonly ConcurrentBag<string> _availableDatabases = new ConcurrentBag<string>();
         private readonly RequestClient _client;
         private CouchApi _api;
         private bool _disposed;
@@ -17,13 +20,24 @@ namespace Biseth.Net.Couch
         public CouchDatabase(string serverUrl)
         {
             _client = new RequestClient(serverUrl);
+            _api = new CouchApi(_client);
+            var queryResult = _api.Root().Get<HttpGetRoot>();
+            if (queryResult == null || queryResult.StatusCode != HttpStatusCode.OK)
+            {
+                // An error occurred...
+            }
         }
 
         public CouchDbSession OpenSession(string databaseName)
         {
             _api = new CouchApi(_client, databaseName);
             var session = new CouchDbSession(_api);
-            CreateDatabaseIfMissing(databaseName);
+            string tmpStr;
+            if (!_availableDatabases.TryPeek(out tmpStr))
+            {
+                CreateDatabaseIfMissing(databaseName);
+                _availableDatabases.Add(databaseName);
+            }
             return session;
         }
 
@@ -31,7 +45,7 @@ namespace Biseth.Net.Couch
         {
             var queryResult = _api.Root()
                                   .Db(_api.DefaultDatabase)
-                                  .Get<object>();
+                                  .Get<DatabaseInfo>();
 
 
             // Create the view if it doess not exist.

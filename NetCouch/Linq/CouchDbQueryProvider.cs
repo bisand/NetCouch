@@ -11,10 +11,12 @@ namespace Biseth.Net.Couch.Linq
     public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
     {
         private readonly ICouchApi _couchApi;
+        private readonly HashSet<object> _trackedEntities;
 
-        public CouchDbQueryProvider(ICouchApi couchApi, CouchDbTranslation queryTranslation)
+        public CouchDbQueryProvider(ICouchApi couchApi, CouchDbTranslation queryTranslation, HashSet<object> trackedEntities)
         {
             _couchApi = couchApi;
+            _trackedEntities = trackedEntities;
             QueryTranslation = queryTranslation;
         }
 
@@ -49,6 +51,11 @@ namespace Biseth.Net.Couch.Linq
             // Try to extract the result.
             if (queryResult != null)
             {
+                foreach (var row in queryResult.DataDeserialized.Rows)
+                {
+                    _trackedEntities.Add(row.Doc);
+                }
+
                 if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count > 1)
                 {
                     return queryResult.DataDeserialized.Rows.Select(x => x.Doc);

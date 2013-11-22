@@ -44,6 +44,7 @@
     <Compile Include="Attributes\CouchIndex.cs" />
     <Compile Include="CouchDatabase.cs" />
     <Compile Include="CouchDbSession.cs" />
+    <Compile Include="CouchObjectProxy.cs" />
     <Compile Include="Exceptions\CouchDbException.cs" />
     <Compile Include="Db\Api\CouchApi.cs" />
     <Compile Include="Db\Api\Elements\CouchApiRootCommand.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Linq\Statement.cs" />
     <Compile Include="Linq\TypeSystem.cs" />
     <Compile Include="Linq\ViewAndQuery.cs" />
+    <Compile Include="Models\Couch\Database\DatabaseInfo.cs" />
     <Compile Include="Models\Couch\Database\DatabaseVendor.cs" />
     <Compile Include="Models\Couch\Database\HttpGetRoot.cs" />
     <Compile Include="Models\Couch\Database\JsonSuccessStatement.cs" />
@@ -97,7 +99,6 @@
     <Compile Include="Models\Couch\DesignDoc\ViewRow.cs" />
     <Compile Include="Models\Couch\Doc\BulkDocsRequest.cs" />
     <Compile Include="Models\Couch\Doc\BulkDocsResponse.cs" />
-    <Compile Include="Models\Couch\Doc\DocWrappoer.cs" />
     <Compile Include="Models\Couch\Doc\DocResponse.cs" />
     <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Http\RequestClient.cs" />
