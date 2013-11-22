@@ -2,8 +2,8 @@
 {
     public class Car
     {
-        public int HorsePowers;
-        public string Make;
-        public string Model;
+        public int HorsePowers { get; set; }
+        public string Make { get; set; }
+        public string Model { get; set; }
     }
 }

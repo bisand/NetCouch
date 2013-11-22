@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.Serialization;
+using System.Threading;
 using Biseth.Net.Couch.Db.Api;
 using Biseth.Net.Couch.Db.Api.Extensions;
 using Biseth.Net.Couch.Http;
-using Biseth.Net.Couch.Linq;
 using Biseth.Net.Couch.Models.Couch.Doc;
-using Moq;
 using NUnit.Framework;
 
 namespace NetCouchTests
@@ -26,10 +27,13 @@ namespace NetCouchTests
             Console.WriteLine("Starting to process queries...");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var cars = new List<Car>();
+            var cars = new List<object>();
             for (var i = 0; i < 1000; i++)
             {
-                cars.Add(new Car{HorsePowers = 10+i, Make = "Audi", Model = i.ToString()});
+                var car = new Car {HorsePowers = 10 + i, Make = "Audi", Model = i.ToString()};
+                dynamic obj = new DocWrappoer<Car>(car);
+                obj.Test = "Test123";
+                cars.Add(obj);
             }
             var request = new BulkDocsRequest(cars);
             var responseData = api.Root().Db("trivial").BulkDocs().Post<BulkDocsRequest, BulkDocsResponse>(request);

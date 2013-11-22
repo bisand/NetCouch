@@ -1,6 +1,9 @@
 ﻿using System.Net;
+using System.Reflection;
+using System.Reflection.Emit;
 using Biseth.Net.Couch.Db.Api.Elements;
 using Biseth.Net.Couch.Http;
+using Biseth.Net.Couch.Models.Couch.Doc;
 
 namespace Biseth.Net.Couch.Db.Api.Extensions
 {

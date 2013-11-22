@@ -15,7 +15,7 @@ namespace Biseth.Net.Couch.Linq
             _translation = translation;
             _query = new StringBuilder();
             _view = new StringBuilder();
-            _view.Append("function(doc) { if (doc.doc_type && doc.doc_type == '");
+            _view.Append("function(doc) { if (doc.doc__type && doc.doc__type == '");
         }
 
         public ViewAndQuery Build()
