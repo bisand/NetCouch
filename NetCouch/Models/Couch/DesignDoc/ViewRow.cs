@@ -15,6 +15,6 @@ namespace Biseth.Net.Couch.Models.Couch.DesignDoc
         public object Value { get; set; }
 
         [DataMember(Name = "doc")]
-        public T Doc { get; set; }
+        public CouchObjectProxy<T> Doc { get; set; }
     }
 }

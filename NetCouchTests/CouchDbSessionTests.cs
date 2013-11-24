@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Biseth.Net.Couch;
 using Biseth.Net.Couch.Models.Couch.Doc;
@@ -32,17 +34,24 @@ namespace NetCouchTests
         [Test]
         public void CreateAndStoreManyObjectsInsideSession()
         {
-            using (var database = new CouchDatabase("http://localhost:5984/"))
+            for (int t = 0; t < 10; t++)
             {
-                using (var session = database.OpenSession("trivial"))
+                var sw = new Stopwatch();
+                sw.Start();
+                using (var database = new CouchDatabase("http://localhost:5984/"))
                 {
-                    for (var i = 0; i < 1000; i++)
+                    using (var session = database.OpenSession("trivial"))
                     {
-                        var car = new Car {HorsePowers = 10 + i, Make = "Audi", Model = i.ToString()};
-                        session.Store(car);
+                        for (var i = 0; i < 1000; i++)
+                        {
+                            var car = new Car {Id = Guid.NewGuid().ToString(), HorsePowers = 10 + i, Make = "Audi", Model = i.ToString()};
+                            session.Store(car);
+                        }
+                        session.SaveChanges();
                     }
-                    session.SaveChanges();
                 }
+                sw.Stop();
+                Console.WriteLine("{0} - Elapsed: {1} ms.", t, sw.ElapsedMilliseconds);
             }
         }
 

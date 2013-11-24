@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using Biseth.Net.Couch.Db.Api;
 using Biseth.Net.Couch.Db.Api.Extensions;
+using Biseth.Net.Couch.Http;
 using Biseth.Net.Couch.Linq;
 using Biseth.Net.Couch.Models.Couch.Doc;
 
@@ -13,15 +14,15 @@ namespace Biseth.Net.Couch
     {
         private readonly ICouchApi _api;
         private readonly Component _component = new Component();
-        private readonly HashSet<object> _storedEntities;
-        private readonly HashSet<object> _trackedEntities;
+        private readonly HashSet<dynamic> _storedEntities;
+        private readonly HashSet<dynamic> _trackedEntities;
         private bool _disposed;
 
         public CouchDbSession(ICouchApi api)
         {
             _api = api;
-            _storedEntities = new HashSet<object>();
-            _trackedEntities = new HashSet<object>();
+            _storedEntities = new HashSet<dynamic>();
+            _trackedEntities = new HashSet<dynamic>();
         }
 
         public CouchDbQuery<T> Query<T>()
@@ -46,10 +47,40 @@ namespace Biseth.Net.Couch
                         .Db(_api.DefaultDatabase)
                         .BulkDocs()
                         .Post<BulkDocsRequest, BulkDocsResponse>(new BulkDocsRequest(_storedEntities));
+
+                //UpdateValues(responseData);
             }
-            if (_trackedEntities.Any())
+            if (_trackedEntities.Any(x=>x.Modified))
             {
-                // Bulk update tracked entities...
+                var modifiedObjects = _trackedEntities.Where(x => x.Modified);
+                var responseData =
+                    _api.Root()
+                        .Db(_api.DefaultDatabase)
+                        .BulkDocs()
+                        .Post<BulkDocsRequest, BulkDocsResponse>(new BulkDocsRequest(modifiedObjects));
+                
+                UpdateValues(responseData);
+                foreach (var o in modifiedObjects)
+                    o.ResetEntity();
+            }
+        }
+
+        private void UpdateValues(ResponseData<BulkDocsResponse> responseData)
+        {
+            var storedCount = _storedEntities.Count;
+            var returnedCount = responseData.DataDeserialized.Count;
+            if (storedCount != returnedCount)
+                return;
+
+            var i = 0;
+            foreach (var obj in _storedEntities)
+            {
+                var data = responseData.DataDeserialized[i++];
+                if (obj.Id != null && obj.Id != data.Id)
+                    continue;
+
+                obj.Id = data.Id;
+                obj.Rev = data.Rev;
             }
         }
 

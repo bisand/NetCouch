@@ -13,5 +13,11 @@ namespace Biseth.Net.Couch.Models.Couch.Doc
 
         [DataMember(Name = "rev", EmitDefaultValue = false)]
         public string Rev { get; set; }
+
+        [DataMember(Name = "error", EmitDefaultValue = false)]
+        public string Error { get; set; }
+
+        [DataMember(Name = "reason", EmitDefaultValue = false)]
+        public string Reason { get; set; }
     }
 }

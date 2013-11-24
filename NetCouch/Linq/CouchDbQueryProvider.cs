@@ -11,9 +11,9 @@ namespace Biseth.Net.Couch.Linq
     public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
     {
         private readonly ICouchApi _couchApi;
-        private readonly HashSet<object> _trackedEntities;
+        private readonly HashSet<dynamic> _trackedEntities;
 
-        public CouchDbQueryProvider(ICouchApi couchApi, CouchDbTranslation queryTranslation, HashSet<object> trackedEntities)
+        public CouchDbQueryProvider(ICouchApi couchApi, CouchDbTranslation queryTranslation, HashSet<dynamic> trackedEntities)
         {
             _couchApi = couchApi;
             _trackedEntities = trackedEntities;
@@ -58,11 +58,11 @@ namespace Biseth.Net.Couch.Linq
 
                 if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count > 1)
                 {
-                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc);
+                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc.Entity);
                 }
                 if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count == 1)
                 {
-                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc).FirstOrDefault();
+                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc.Entity).FirstOrDefault();
                 }
                 return new List<ViewRow<T>>();
             }
