@@ -58,11 +58,13 @@ namespace Biseth.Net.Couch.Linq
 
                 if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count > 1)
                 {
-                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc.Entity);
+                    var result = queryResult.DataDeserialized.Rows.Select(x => x.Doc.Entity);
+                    return result;
                 }
                 if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count == 1)
                 {
-                    return queryResult.DataDeserialized.Rows.Select(x => x.Doc.Entity).FirstOrDefault();
+                    var result = queryResult.DataDeserialized.Rows.Select(x => x.Doc.Entity).FirstOrDefault();
+                    return result;
                 }
                 return new List<ViewRow<T>>();
             }

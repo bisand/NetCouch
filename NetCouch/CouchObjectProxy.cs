@@ -13,6 +13,7 @@ namespace Biseth.Net.Couch
         private readonly Dictionary<string, object> _dictionary = new Dictionary<string, object>();
         private readonly Type _entityType;
         private T _originalEntity;
+        private T _entity;
         private bool _modified;
 
         public CouchObjectProxy(T entity)
@@ -40,14 +41,20 @@ namespace Biseth.Net.Couch
         {
             get
             {
-                var entity = GetEntity();
-                return entity;
+                if (_entity == null || _modified)
+                    _entity = GetEntity();
+                return _entity;
             }
         }
 
         public T OriginalEntity
         {
-            get { return _originalEntity; }
+            get
+            {
+                if (_originalEntity == null)
+                    _originalEntity = GetEntity();
+                return _originalEntity;
+            }
         }
 
         public int Count
