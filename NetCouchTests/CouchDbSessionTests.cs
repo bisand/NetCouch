@@ -24,9 +24,10 @@ namespace NetCouchTests
                     foreach (var car in cars)
                     {
                         car.Model = "Cool";
+                        var test = session.Load<Car>(car.Id);
                     }
                     session.SaveChanges();
-                    Assert.That(cars != null && cars.Count > 0);
+                    Assert.That(cars != null && cars.Any());
                 }
             }
         }

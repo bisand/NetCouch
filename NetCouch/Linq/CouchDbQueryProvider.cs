@@ -11,12 +11,14 @@ namespace Biseth.Net.Couch.Linq
     public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
     {
         private readonly ICouchApi _couchApi;
-        private readonly HashSet<dynamic> _trackedEntities;
+        private readonly List<dynamic> _trackedDocuments;
+        private readonly List<T> _trackedEntities;
 
-        public CouchDbQueryProvider(ICouchApi couchApi, CouchDbTranslation queryTranslation, HashSet<dynamic> trackedEntities)
+        public CouchDbQueryProvider(ICouchApi couchApi, CouchDbTranslation queryTranslation, List<dynamic> trackedDocuments)
         {
             _couchApi = couchApi;
-            _trackedEntities = trackedEntities;
+            _trackedDocuments = trackedDocuments;
+            _trackedEntities = new List<T>();
             QueryTranslation = queryTranslation;
         }
 
@@ -53,24 +55,14 @@ namespace Biseth.Net.Couch.Linq
             {
                 foreach (var row in queryResult.DataDeserialized.Rows)
                 {
-                    _trackedEntities.Add(row.Doc);
+                    _trackedDocuments.Add(row.Doc);
+                    _trackedEntities.Add(row.Doc.Entity);
                 }
 
-                if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count > 1)
-                {
-                    var result = queryResult.DataDeserialized.Rows.Select(x => x.Doc.Entity);
-                    return result;
-                }
-                if (queryResult.DataDeserialized.Rows != null && queryResult.DataDeserialized.Rows.Count == 1)
-                {
-                    var result = queryResult.DataDeserialized.Rows.Select(x => x.Doc.Entity).FirstOrDefault();
-                    return result;
-                }
-                return new List<ViewRow<T>>();
+                if (_trackedEntities.Count > 1)
+                    return _trackedEntities;
             }
-
-            // Something bad happened. We just return an empty result.
-            return new List<ViewRow<T>>();
+            return new List<T>();
         }
 
         public TResult Execute<TResult>(Expression expression)

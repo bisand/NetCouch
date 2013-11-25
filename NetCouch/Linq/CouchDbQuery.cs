@@ -38,10 +38,11 @@ namespace Biseth.Net.Couch.Linq
 
         public IEnumerator<T> GetEnumerator()
         {
-            var execute = Provider.Execute(Expression);
-            return (execute is IEnumerable<T>)
-                ? ((IEnumerable<T>) execute).GetEnumerator()
-                : new List<T> {(T) execute}.GetEnumerator();
+            var result = Provider.Execute(Expression);
+            if (result is IEnumerable<T>) 
+                return ((IEnumerable<T>) result).GetEnumerator();
+            
+            return new List<T> {(T) result}.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

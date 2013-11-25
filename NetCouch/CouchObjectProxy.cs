@@ -12,9 +12,9 @@ namespace Biseth.Net.Couch
     {
         private readonly Dictionary<string, object> _dictionary = new Dictionary<string, object>();
         private readonly Type _entityType;
-        private T _originalEntity;
         private T _entity;
         private bool _modified;
+        private T _originalEntity;
 
         public CouchObjectProxy(T entity)
         {
@@ -25,7 +25,7 @@ namespace Biseth.Net.Couch
 
         public CouchObjectProxy()
         {
-            _entityType = typeof (T);
+            _entityType = typeof(T);
         }
 
         [DataMember(Name = "_id", EmitDefaultValue = false, Order = 0)]
@@ -45,6 +45,7 @@ namespace Biseth.Net.Couch
                     _entity = GetEntity();
                 return _entity;
             }
+            set { _entity = value; }
         }
 
         public T OriginalEntity
@@ -121,12 +122,10 @@ namespace Biseth.Net.Couch
         private T GetEntity()
         {
             var entity = Activator.CreateInstance(_entityType);
-            foreach (var s in new[] {"id", "rev"})
-            {
-                var propertyInfo = _entityType.GetProperty(s, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                if (propertyInfo != null)
-                    propertyInfo.SetValue(entity, Id, null);
-            }
+            var piId = _entityType.GetProperty("Id", BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            var piRev = _entityType.GetProperty("Rev", BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (piId != null) piId.SetValue(entity, Id, null);
+            if (piRev != null) piRev.SetValue(entity, Rev, null);
 
             foreach (var kvp in _dictionary)
             {
@@ -135,15 +134,15 @@ namespace Biseth.Net.Couch
                     if (propertyInfo.PropertyType == typeof(int))
                     {
                         int tmpInt;
-                        if(kvp.Value != null && int.TryParse(kvp.Value.ToString(), out tmpInt))
+                        if (kvp.Value != null && int.TryParse(kvp.Value.ToString(), out tmpInt))
                             propertyInfo.SetValue(entity, tmpInt, null);
                     }
                     else
                     {
-                        propertyInfo.SetValue(entity, kvp.Value, null);                        
+                        propertyInfo.SetValue(entity, kvp.Value, null);
                     }
             }
-            return (T) entity;
+            return (T)entity;
         }
     }
 }
