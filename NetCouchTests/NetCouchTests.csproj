@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Car.cs" />
     <Compile Include="CouchDbSessionTests.cs" />
+    <Compile Include="EntityProviderTests.cs" />
     <Compile Include="LinqTests.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="RequestClientTests.cs" />

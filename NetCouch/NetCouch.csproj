@@ -129,6 +129,14 @@
     <Compile Include="IQToolkit\Data\Common\Translation\SkipToRowNumberRewriter.cs" />
     <Compile Include="IQToolkit\Data\Common\Translation\SubqueryRemover.cs" />
     <Compile Include="IQToolkit\Data\Common\Translation\UnusedColumnRemover.cs" />
+    <Compile Include="IQToolkit\Data\Providers\CouchDb\CouchDbCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="IQToolkit\Data\Providers\CouchDb\CouchDbConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="IQToolkit\Data\Providers\CouchDb\CouchDbLanguage.cs" />
+    <Compile Include="IQToolkit\Data\Providers\CouchDb\CouchDbQueryProvider.cs" />
     <Compile Include="IQToolkit\Data\DbEntityProvider.cs" />
     <Compile Include="IQToolkit\Data\DbTypeSystem.cs" />
     <Compile Include="IQToolkit\Data\EntityPolicy.cs" />
@@ -137,6 +145,8 @@
     <Compile Include="IQToolkit\Data\Mapping\AttributeMapping.cs" />
     <Compile Include="IQToolkit\Data\Mapping\ImplicitMapping.cs" />
     <Compile Include="IQToolkit\Data\Mapping\XmlMapping.cs" />
+    <Compile Include="IQToolkit\Data\Providers\CouchDb\CouchDbTransaction.cs" />
+    <Compile Include="IQToolkit\Data\Providers\CouchDb\CouchDbTypeSystem.cs" />
     <Compile Include="IQToolkit\DeferredList.cs" />
     <Compile Include="IQToolkit\DeferredValue.cs" />
     <Compile Include="IQToolkit\EnumerateOnce.cs" />
@@ -195,6 +205,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Db\Helpers\" />
+    <Folder Include="Test\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

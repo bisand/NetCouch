@@ -19,13 +19,31 @@ namespace Biseth.Net.Couch
 
         public CouchDatabase(string serverUrl)
         {
+            ServerUrl = serverUrl;
             _client = new RequestClient(serverUrl);
             _api = new CouchApi(_client);
+        }
+
+        public string ServerUrl { get; set; }
+
+        public string DefaultDatabase
+        {
+            get { return _api.DefaultDatabase; }
+        }
+
+        public ResponseData<HttpGetRoot> Initialize()
+        {
             var queryResult = _api.Root().Get<HttpGetRoot>();
             if (queryResult == null || queryResult.StatusCode != HttpStatusCode.OK)
             {
                 // An error occurred...
             }
+            return queryResult;
+        }
+
+        public void ChangeDatabase(string databaseName)
+        {
+            _api.DefaultDatabase = databaseName;
         }
 
         public CouchDbSession OpenSession(string databaseName)

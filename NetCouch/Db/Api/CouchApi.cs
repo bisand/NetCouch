@@ -6,12 +6,11 @@ namespace Biseth.Net.Couch.Db.Api
     public class CouchApi : ICouchApi
     {
         protected readonly IRequestClient RequestClient;
-        private readonly string _defaultDatabase;
 
         public CouchApi(IRequestClient requestClient, string defaultDatabase = "_users")
         {
             RequestClient = requestClient;
-            _defaultDatabase = defaultDatabase;
+            DefaultDatabase = defaultDatabase;
         }
 
         public CouchApiRoot Root()
@@ -20,9 +19,6 @@ namespace Biseth.Net.Couch.Db.Api
             return root;
         }
 
-        public string DefaultDatabase
-        {
-            get { return _defaultDatabase; }
-        }
+        public string DefaultDatabase { get; set; }
     }
 }
