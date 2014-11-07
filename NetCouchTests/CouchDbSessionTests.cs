@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Biseth.Net.Couch;
 using Biseth.Net.Couch.Models.Couch.Doc;
 using NUnit.Framework;
@@ -35,7 +36,10 @@ namespace NetCouchTests
         [Test]
         public void CreateAndStoreManyObjectsInsideSession()
         {
-            for (int t = 0; t < 10; t++)
+            //for (int t = 0; t < 10; t++)
+            Stopwatch swTotal = new Stopwatch();
+            swTotal.Start();
+            Parallel.For(0, 10, t =>
             {
                 var sw = new Stopwatch();
                 sw.Start();
@@ -43,7 +47,7 @@ namespace NetCouchTests
                 {
                     using (var session = database.OpenSession("trivial"))
                     {
-                        for (var i = 0; i < 1000; i++)
+                        for (var i = 0; i < 10000; i++)
                         {
                             var car = new Car {Id = Guid.NewGuid().ToString(), HorsePowers = 10 + i, Make = "Audi", Model = i.ToString()};
                             session.Store(car);
@@ -53,7 +57,9 @@ namespace NetCouchTests
                 }
                 sw.Stop();
                 Console.WriteLine("{0} - Elapsed: {1} ms.", t, sw.ElapsedMilliseconds);
-            }
+            });
+            swTotal.Stop();
+            Console.WriteLine("Total - Elapsed: {0} ms.", swTotal.ElapsedMilliseconds);
         }
 
         [Test]
