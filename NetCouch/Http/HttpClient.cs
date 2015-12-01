@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Text;
+using Biseth.Net.Couch.Extensions;
 using Biseth.Net.Couch.Threading;
 
 namespace Biseth.Net.Couch.Http
@@ -141,7 +142,8 @@ namespace Biseth.Net.Couch.Http
 
         private IAsyncResult StartProcessing(HttpRequestData requestData, AsyncCallback callback, object state)
         {
-            var uri = new Uri(BaseUri, requestData.Path);
+            Uri uri = BaseUri.Append(requestData.Path);
+
             var asyncResult = new HttpAsyncResult(callback, state)
                 {
                     Request = (HttpWebRequest) WebRequest.Create(uri)

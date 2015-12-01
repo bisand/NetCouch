@@ -72,6 +72,7 @@
     <Compile Include="Db\Api\Extensions\CouchApiDocumentExtensions.cs" />
     <Compile Include="Db\Api\Extensions\CouchApiRootExtensions.cs" />
     <Compile Include="Db\Api\ICouchApi.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Http\HttpClient.cs" />
     <Compile Include="Http\HttpMethod.cs" />
