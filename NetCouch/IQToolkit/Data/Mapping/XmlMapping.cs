@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Mapping
+namespace NetCouch.IQToolkit.Data.Mapping
 {
     public class XmlMapping : AttributeMapping
     {

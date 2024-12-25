@@ -3,7 +3,7 @@ using System.Data.Common;
 using System.Data.OleDb;
 using System.Data.SqlClient;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Providers.CouchDb
+namespace NetCouch.IQToolkit.Data.Providers.CouchDb
 {
     public class CouchDbCommand : DbCommand
     {

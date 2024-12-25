@@ -1,4 +1,4 @@
-﻿namespace Biseth.Net.Couch.Http
+﻿namespace NetCouch.Http
 {
     public class HttpMethod
     {

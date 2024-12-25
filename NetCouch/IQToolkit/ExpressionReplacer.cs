@@ -3,7 +3,7 @@
 
 using System.Linq.Expressions;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     /// <summary>
     /// Replaces references to one specific instance of an expression node with another node

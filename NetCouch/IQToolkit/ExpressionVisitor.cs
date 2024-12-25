@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Biseth.Net.Couch.IQToolkit 
+namespace NetCouch.IQToolkit 
 {
     public abstract class ExpressionVisitor
     {

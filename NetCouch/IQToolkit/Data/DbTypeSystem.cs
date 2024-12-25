@@ -4,9 +4,9 @@
 using System;
 using System.Data;
 using System.Text;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Language;
 
-namespace Biseth.Net.Couch.IQToolkit.Data
+namespace NetCouch.IQToolkit.Data
 {
     public class DbTypeSystem : QueryTypeSystem
     {        

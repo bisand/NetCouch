@@ -1,7 +1,7 @@
 ﻿using System;
-using Biseth.Net.Couch.Db.Api.Elements;
+using NetCouch.Db.Api.Elements;
 
-namespace Biseth.Net.Couch.Db.Api.Extensions
+namespace NetCouch.Db.Api.Extensions
 {
     public static class CouchApiDbExtensions
     {
@@ -10,7 +10,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
             if (string.IsNullOrWhiteSpace(databaseName))
                 throw new ArgumentNullException("databaseName");
 
-            var result = new CouchApiDb(element.RequestClient)
+            var result = new CouchApiDb(element._requestClient)
                 {
                     PathElement = element.PathElement + databaseName.ToLower() + "/"
                 };
@@ -19,7 +19,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand AllDocs(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_all_docs/"
                 };
@@ -28,7 +28,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand BulkDocs(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_bulk_docs/"
                 };
@@ -37,7 +37,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand Changes(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_changes/"
                 };
@@ -46,7 +46,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand Compact(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_compact/"
                 };
@@ -55,7 +55,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand EnsureFullCommit(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_ensure_full_commit/"
                 };
@@ -64,7 +64,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand MissingRevs(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_missing_revs/"
                 };
@@ -73,7 +73,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand Purge(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_purge/"
                 };
@@ -82,7 +82,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand RevsDiff(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_revs_diff/"
                 };
@@ -91,7 +91,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand RevsLimit(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_revs_limit/"
                 };
@@ -100,7 +100,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand Security(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_security/"
                 };
@@ -109,7 +109,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand TempView(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_temp_view/"
                 };
@@ -118,7 +118,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDbCommand ViewCleanup(this CouchApiDb element)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_view_cleanup/"
                 };

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Biseth.Net.Couch.Linq
+namespace NetCouch.Linq
 {
     public class CouchDbVisitor<T> : ExpressionVisitor
     {

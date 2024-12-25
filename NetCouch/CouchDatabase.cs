@@ -2,13 +2,13 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
-using Biseth.Net.Couch.Db.Api;
-using Biseth.Net.Couch.Db.Api.Extensions;
-using Biseth.Net.Couch.Exceptions;
-using Biseth.Net.Couch.Http;
-using Biseth.Net.Couch.Models.Couch.Database;
+using NetCouch.Db.Api;
+using NetCouch.Db.Api.Extensions;
+using NetCouch.Exceptions;
+using NetCouch.Http;
+using NetCouch.Models.Couch.Database;
 
-namespace Biseth.Net.Couch
+namespace NetCouch
 {
     public class CouchDatabase : IDisposable
     {

@@ -2,9 +2,9 @@
 using System.Data;
 using System.Data.Common;
 using System.Net;
-using Biseth.Net.Couch.Db.Api;
+using NetCouch.Db.Api;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Providers.CouchDb
+namespace NetCouch.IQToolkit.Data.Providers.CouchDb
 {
     public class CouchDbConnection : DbConnection
     {

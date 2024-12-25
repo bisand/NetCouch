@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     public static class ExpressionExtensions
     {

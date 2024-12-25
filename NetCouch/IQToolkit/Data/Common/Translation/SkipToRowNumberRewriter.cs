@@ -3,10 +3,10 @@
 
 using System.Linq;
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Language;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Translation
+namespace NetCouch.IQToolkit.Data.Common.Translation
 {
     /// <summary>
     /// Rewrites take & skip expressions into uses of TSQL row_number function

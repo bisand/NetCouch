@@ -4,9 +4,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Language;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Expressions
+namespace NetCouch.IQToolkit.Data.Common.Expressions
 {
     /// <summary>
     /// Writes out an expression tree (including DbExpression nodes) in a C#-ish syntax

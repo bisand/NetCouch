@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Biseth.Net.Couch.Extensions
+namespace NetCouch.Extensions
 {
     public static class UriExtensions
     {

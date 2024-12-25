@@ -7,7 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Expressions
+namespace NetCouch.IQToolkit.Data.Common.Expressions
 {
     public static class Aggregator
     {

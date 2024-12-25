@@ -1,12 +1,12 @@
-﻿using Biseth.Net.Couch.Db.Api.Elements;
+﻿using NetCouch.Db.Api.Elements;
 
-namespace Biseth.Net.Couch.Db.Api.Extensions
+namespace NetCouch.Db.Api.Extensions
 {
     public static class CouchApiDesignDocumentExtensions
     {
         public static CouchApiDesignDoc DesignDoc(this CouchApiDb element, string name = null)
         {
-            var result = new CouchApiDesignDoc(element.RequestClient)
+            var result = new CouchApiDesignDoc(element._requestClient)
                 {
                     PathElement = element.PathElement + "_design/" +
                                   (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "")
@@ -16,7 +16,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDesignDocAttachment Attachment(this CouchApiDesignDoc element, string attachment = null)
         {
-            var result = new CouchApiDesignDocAttachment(element.RequestClient)
+            var result = new CouchApiDesignDocAttachment(element._requestClient)
                 {
                     PathElement = element.PathElement +
                                   (!string.IsNullOrWhiteSpace(attachment) ? (attachment + "/") : "")
@@ -26,7 +26,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDesignDocCommand Info(this CouchApiDesignDoc element)
         {
-            var result = new CouchApiDesignDocCommand(element.RequestClient)
+            var result = new CouchApiDesignDocCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_info/"
                 };
@@ -35,7 +35,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDesignDocCommandView View(this CouchApiDesignDoc element, string name, string parameters = null)
         {
-            var result = new CouchApiDesignDocCommandView(element.RequestClient)
+            var result = new CouchApiDesignDocCommandView(element._requestClient)
                 {
                     PathElement = element.PathElement + "_view/" +
                                   (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "") +
@@ -46,7 +46,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDesignDocCommandShow Show(this CouchApiDesignDoc element, string name)
         {
-            var result = new CouchApiDesignDocCommandShow(element.RequestClient)
+            var result = new CouchApiDesignDocCommandShow(element._requestClient)
                 {
                     PathElement = element.PathElement + "_show/" +
                                   (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "")
@@ -56,7 +56,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDesignDocCommandList List(this CouchApiDesignDoc element, string name, string viewName)
         {
-            var result = new CouchApiDesignDocCommandList(element.RequestClient)
+            var result = new CouchApiDesignDocCommandList(element._requestClient)
                 {
                     PathElement = element.PathElement + "_list/" +
                                   (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "") +
@@ -67,7 +67,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDesignDocCommandList List(this CouchApiDesignDoc element, string name, string otherDesignDoc, string viewName)
         {
-            var result = new CouchApiDesignDocCommandList(element.RequestClient)
+            var result = new CouchApiDesignDocCommandList(element._requestClient)
                 {
                     PathElement = element.PathElement + "_list/" +
                                   (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "") +
@@ -79,7 +79,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDesignDocCommandUpdate Update(this CouchApiDesignDoc element, string name, string doc = null)
         {
-            var result = new CouchApiDesignDocCommandUpdate(element.RequestClient)
+            var result = new CouchApiDesignDocCommandUpdate(element._requestClient)
                 {
                     PathElement = element.PathElement + "_update/" +
                                   (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "") +
@@ -90,7 +90,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiDesignDocCommandRewrite Rewrite(this CouchApiDesignDoc element, string name, string anything)
         {
-            var result = new CouchApiDesignDocCommandRewrite(element.RequestClient)
+            var result = new CouchApiDesignDocCommandRewrite(element._requestClient)
                 {
                     PathElement = element.PathElement + "_rewrite/" +
                                   (!string.IsNullOrWhiteSpace(name) ? (name + "/") : "") +

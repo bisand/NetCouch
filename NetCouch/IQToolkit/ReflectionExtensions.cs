@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     public static class ReflectionExtensions
     {

@@ -1,14 +1,14 @@
-﻿using Biseth.Net.Couch.Http;
+﻿using NetCouch.Http;
 
-namespace Biseth.Net.Couch.Db.Api.Elements
+namespace NetCouch.Db.Api.Elements
 {
     public class CouchApiRoot
     {
-        protected internal readonly IRequestClient RequestClient;
+        protected internal readonly RequestClient _requestClient;
 
-        public CouchApiRoot(IRequestClient requestClient)
+        public CouchApiRoot(RequestClient requestClient)
         {
-            RequestClient = requestClient;
+            _requestClient = requestClient;
             PathElement = "/";
         }
 

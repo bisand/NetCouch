@@ -8,10 +8,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Biseth.Net.Couch.IQToolkit.Data.Common;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Mapping;
+using NetCouch.IQToolkit.Data.Common;
+using NetCouch.IQToolkit.Data.Common.Mapping;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Mapping
+namespace NetCouch.IQToolkit.Data.Mapping
 {
     public abstract class MappingAttribute : Attribute
     {

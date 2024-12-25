@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace Biseth.Net.Couch
+namespace NetCouch
 {
     [DataContract]
     public class CouchObjectProxy<T> : DynamicObject

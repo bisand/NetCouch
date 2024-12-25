@@ -4,7 +4,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     /// <summary>
     /// Finds the first sub-expression that is of a specified type

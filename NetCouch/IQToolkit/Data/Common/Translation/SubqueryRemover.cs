@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Expressions;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Translation
+namespace NetCouch.IQToolkit.Data.Common.Translation
 {
     /// <summary>
     /// Removes one or more SelectExpression's by rewriting the expression tree to not include them, promoting

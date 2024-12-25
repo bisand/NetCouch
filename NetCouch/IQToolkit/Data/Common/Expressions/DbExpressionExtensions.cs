@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Translation;
+using NetCouch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Translation;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Expressions
+namespace NetCouch.IQToolkit.Data.Common.Expressions
 {
     public static class DbExpressionExtensions
     {

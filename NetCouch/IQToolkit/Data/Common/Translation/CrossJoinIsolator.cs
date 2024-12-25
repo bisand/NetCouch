@@ -4,9 +4,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Expressions;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Translation
+namespace NetCouch.IQToolkit.Data.Common.Translation
 {
     /// <summary>
     /// Isolates cross joins from other types of joins using nested sub queries

@@ -1,12 +1,12 @@
-﻿using Biseth.Net.Couch.Db.Api.Elements;
+﻿using NetCouch.Db.Api.Elements;
 
-namespace Biseth.Net.Couch.Db.Api.Extensions
+namespace NetCouch.Db.Api.Extensions
 {
     public static class CouchApiDocumentExtensions
     {
         public static CouchApiDbCommand Doc(this CouchApiDb element, string documentId = null)
         {
-            var result = new CouchApiDbCommand(element.RequestClient)
+            var result = new CouchApiDbCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + (!string.IsNullOrWhiteSpace(documentId) ? (documentId + "/") : "")
                 };
@@ -15,7 +15,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiAttachment Attachment(this CouchApiDoc element, string attachment = null)
         {
-            var result = new CouchApiAttachment(element.RequestClient)
+            var result = new CouchApiAttachment(element._requestClient)
                 {
                     PathElement = element.PathElement + (!string.IsNullOrWhiteSpace(attachment) ? (attachment + "/") : "")
                 };

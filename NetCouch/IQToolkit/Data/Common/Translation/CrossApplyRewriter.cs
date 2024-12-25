@@ -3,10 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Language;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Translation
+namespace NetCouch.IQToolkit.Data.Common.Translation
 {
     /// <summary>
     /// Attempts to rewrite cross-apply and outer-apply joins as inner and left-outer joins

@@ -1,10 +1,10 @@
-﻿using Biseth.Net.Couch.Http;
+﻿using NetCouch.Http;
 
-namespace Biseth.Net.Couch.Db.Api.Elements
+namespace NetCouch.Db.Api.Elements
 {
     public class CouchApiConfig : CouchApiRoot
     {
-        public CouchApiConfig(IRequestClient requestClient)
+        public CouchApiConfig(RequestClient requestClient)
             : base(requestClient)
         {
         }

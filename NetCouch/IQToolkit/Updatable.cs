@@ -8,7 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     public interface IUpdatable : IQueryable
     {

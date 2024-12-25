@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.Common;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Providers.CouchDb
+namespace NetCouch.IQToolkit.Data.Providers.CouchDb
 {
     public class CouchDbTransaction : DbTransaction
     {

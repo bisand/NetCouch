@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Biseth.Net.Couch.Threading
+namespace NetCouch.Threading
 {
     public class BasicAsyncResult : IAsyncResult, IDisposable
     {

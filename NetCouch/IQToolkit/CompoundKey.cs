@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     public class CompoundKey : IEquatable<CompoundKey>, IEnumerable<object>, IEnumerable
     {

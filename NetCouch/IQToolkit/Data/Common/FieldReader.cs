@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common
+namespace NetCouch.IQToolkit.Data.Common
 {
     public abstract class FieldReader
     {

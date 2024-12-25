@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Biseth.Net.Couch.Extensions
+namespace NetCouch.Extensions
 {
     public static class EnumerableExtensions
     {

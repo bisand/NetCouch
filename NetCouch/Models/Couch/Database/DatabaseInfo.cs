@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Biseth.Net.Couch.Models.Couch.Database
+namespace NetCouch.Models.Couch.Database
 {
     [DataContract]
     public class DatabaseInfo

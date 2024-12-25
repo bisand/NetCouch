@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     public static class ReadOnlyExtensions
     {

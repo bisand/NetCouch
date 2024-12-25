@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     /// <summary>
     /// Compare two expressions to determine if they are equivalent

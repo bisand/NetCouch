@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     public class EnumerateOnce<T> : IEnumerable<T>, IEnumerable
     {

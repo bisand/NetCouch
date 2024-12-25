@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Mapping;
+using NetCouch.IQToolkit.Data.Common.Mapping;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Mapping
+namespace NetCouch.IQToolkit.Data.Mapping
 {
     /// <summary>
     /// A simple query mapping that attempts to infer mapping from naming conventions

@@ -1,6 +1,6 @@
-﻿using Biseth.Net.Couch.Db.Api.Elements;
+﻿using NetCouch.Db.Api.Elements;
 
-namespace Biseth.Net.Couch.Db.Api
+namespace NetCouch.Db.Api
 {
     public interface ICouchApi
     {

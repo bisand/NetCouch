@@ -5,9 +5,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Translation;
+using NetCouch.IQToolkit.Data.Common.Translation;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Expressions
+namespace NetCouch.IQToolkit.Data.Common.Expressions
 {
     /// <summary>
     /// Determines if two expressions are equivalent. Supports DbExpression nodes.

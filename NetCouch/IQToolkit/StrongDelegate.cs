@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     /// <summary>
     /// Make a strongly-typed delegate to a weakly typed method (one that takes single object[] argument)

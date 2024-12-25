@@ -1,21 +1,21 @@
-﻿using Biseth.Net.Couch.Db.Api.Elements;
-using Biseth.Net.Couch.Http;
+﻿using NetCouch.Db.Api.Elements;
+using NetCouch.Http;
 
-namespace Biseth.Net.Couch.Db.Api
+namespace NetCouch.Db.Api
 {
     public class CouchApi : ICouchApi
     {
-        protected readonly IRequestClient RequestClient;
+        protected readonly RequestClient _requestClient;
 
-        public CouchApi(IRequestClient requestClient, string defaultDatabase = "_users")
+        public CouchApi(RequestClient requestClient, string defaultDatabase = "_users")
         {
-            RequestClient = requestClient;
+            _requestClient = requestClient;
             DefaultDatabase = defaultDatabase;
         }
 
         public CouchApiRoot Root()
         {
-            var root = new CouchApiRoot(RequestClient);
+            var root = new CouchApiRoot(_requestClient);
             return root;
         }
 

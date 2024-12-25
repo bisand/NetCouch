@@ -7,9 +7,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Expressions;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Language
+namespace NetCouch.IQToolkit.Data.Common.Language
 {
     /// <summary>
     /// Formats a query expression into common SQL language syntax

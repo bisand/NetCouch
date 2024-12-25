@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Biseth.Net.Couch.Linq
+namespace NetCouch.Linq
 {
     public class Statement
     {

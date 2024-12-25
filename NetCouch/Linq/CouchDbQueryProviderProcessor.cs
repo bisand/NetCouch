@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Biseth.Net.Couch.Linq
+namespace NetCouch.Linq
 {
     public class CouchDbQueryProviderProcessor<T>
     {

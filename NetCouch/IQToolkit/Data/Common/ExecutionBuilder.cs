@@ -7,12 +7,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Mapping;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Translation;
+using NetCouch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Mapping;
+using NetCouch.IQToolkit.Data.Common.Translation;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common
+namespace NetCouch.IQToolkit.Data.Common
 {
     /// <summary>
     /// Builds an execution plan for a query expression

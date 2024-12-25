@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Biseth.Net.Couch.Exceptions
+namespace NetCouch.Exceptions
 {
     internal class CouchDbException : Exception
     {

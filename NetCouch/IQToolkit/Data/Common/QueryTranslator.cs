@@ -2,10 +2,10 @@
 // This source code is made available under the terms of the Microsoft Public License (MS-PL)
 
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Mapping;
+using NetCouch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Mapping;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common
+namespace NetCouch.IQToolkit.Data.Common
 {
     /// <summary>
     /// Defines query execution & materialization policies. 

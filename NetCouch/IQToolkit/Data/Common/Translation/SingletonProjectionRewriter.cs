@@ -2,10 +2,10 @@
 // This source code is made available under the terms of the Microsoft Public License (MS-PL)
 
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Language;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Translation
+namespace NetCouch.IQToolkit.Data.Common.Translation
 {
     /// <summary>
     /// Rewrites nested singleton projection into server-side joins

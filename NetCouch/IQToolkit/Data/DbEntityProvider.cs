@@ -7,11 +7,11 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using Biseth.Net.Couch.IQToolkit.Data.Common;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Mapping;
+using NetCouch.IQToolkit.Data.Common;
+using NetCouch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Mapping;
 
-namespace Biseth.Net.Couch.IQToolkit.Data
+namespace NetCouch.IQToolkit.Data
 {
     public class DbEntityProvider : EntityProvider
     {

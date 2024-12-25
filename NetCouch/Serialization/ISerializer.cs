@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Biseth.Net.Couch.Serialization
+namespace NetCouch.Serialization
 {
     public interface ISerializer<TIn, TOut>
     {

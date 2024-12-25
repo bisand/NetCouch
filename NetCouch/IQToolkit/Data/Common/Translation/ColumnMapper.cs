@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Expressions;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Translation
+namespace NetCouch.IQToolkit.Data.Common.Translation
 {
     /// <summary>
     /// Rewrite all column references to one or more aliases to a new single alias

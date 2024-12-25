@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Expressions;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Translation
+namespace NetCouch.IQToolkit.Data.Common.Translation
 {
     /// <summary>
     /// Removes joins expressions that are identical to joins that already exist

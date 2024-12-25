@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common.Language
+namespace NetCouch.IQToolkit.Data.Common.Language
 {
     public abstract class QueryType
     {

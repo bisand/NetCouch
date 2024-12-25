@@ -10,7 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Biseth.Net.Couch.IQToolkit
+namespace NetCouch.IQToolkit
 {
     /// <summary>
     /// Writes out an expression tree in a C#-ish syntax

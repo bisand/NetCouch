@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using Biseth.Net.Couch;
-using Biseth.Net.Couch.IQToolkit;
-using Biseth.Net.Couch.IQToolkit.Data.Common;
-using Biseth.Net.Couch.IQToolkit.Data.Mapping;
-using Biseth.Net.Couch.IQToolkit.Data.Providers.CouchDb;
+using NetCouch;
+using NetCouch.IQToolkit;
+using NetCouch.IQToolkit.Data.Common;
+using NetCouch.IQToolkit.Data.Mapping;
+using NetCouch.IQToolkit.Data.Providers.CouchDb;
 using NUnit.Framework;
 
 namespace NetCouchTests

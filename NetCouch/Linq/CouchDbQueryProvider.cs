@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Biseth.Net.Couch.Db.Api;
-using Biseth.Net.Couch.Models.Couch.DesignDoc;
+using NetCouch.Db.Api;
+using NetCouch.Models.Couch.DesignDoc;
 
-namespace Biseth.Net.Couch.Linq
+namespace NetCouch.Linq
 {
     public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
     {

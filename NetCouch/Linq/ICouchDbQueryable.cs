@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Biseth.Net.Couch.Linq
+namespace NetCouch.Linq
 {
     public interface ICouchDbQueryable<out T> : IOrderedQueryable<T>
     {

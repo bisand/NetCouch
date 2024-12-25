@@ -6,10 +6,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Biseth.Net.Couch.IQToolkit.Data.Common;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common;
+using NetCouch.IQToolkit.Data.Common.Expressions;
 
-namespace Biseth.Net.Couch.IQToolkit.Data
+namespace NetCouch.IQToolkit.Data
 {
     public class EntityPolicy : QueryPolicy
     {

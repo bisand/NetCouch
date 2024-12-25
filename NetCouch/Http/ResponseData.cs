@@ -1,7 +1,6 @@
 ﻿using System.Net;
-using Newtonsoft.Json;
 
-namespace Biseth.Net.Couch.Http
+namespace NetCouch.Http
 {
     public class ResponseData<T>
     {
@@ -19,7 +18,7 @@ namespace Biseth.Net.Couch.Http
                 if (string.IsNullOrWhiteSpace(Data))
                     return default(dynamic);
 
-                var data = JsonConvert.DeserializeObject<dynamic>(Data);
+                var data = System.Text.Json.JsonSerializer.Deserialize<dynamic>(Data);
                 return data;
             }
         }

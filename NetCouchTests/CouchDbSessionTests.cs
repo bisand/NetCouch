@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Biseth.Net.Couch;
-using Biseth.Net.Couch.Models.Couch.Doc;
+using NetCouch;
+using NetCouch.Models.Couch.Doc;
 using NUnit.Framework;
 
 namespace NetCouchTests

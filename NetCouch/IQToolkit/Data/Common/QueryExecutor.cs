@@ -3,9 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Mapping;
+using NetCouch.IQToolkit.Data.Common.Mapping;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common
+namespace NetCouch.IQToolkit.Data.Common
 {
     public interface ICreateExecutor
     {

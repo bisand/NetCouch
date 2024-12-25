@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Biseth.Net.Couch.Db.Api;
-using Biseth.Net.Couch.Db.Api.Extensions;
-using Biseth.Net.Couch.Http;
-using Biseth.Net.Couch.Linq;
-using Biseth.Net.Couch.Models.Couch.Doc;
+using NetCouch.Db.Api;
+using NetCouch.Db.Api.Extensions;
+using NetCouch.Http;
+using NetCouch.Linq;
+using NetCouch.Models.Couch.Doc;
 
-namespace Biseth.Net.Couch
+namespace NetCouch
 {
     public class CouchDbSession : IDisposable
     {

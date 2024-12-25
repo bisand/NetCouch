@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Biseth.Net.Couch.Models.Couch.Doc
+namespace NetCouch.Models.Couch.Doc
 {
     [DataContract]
     public class DocResponse

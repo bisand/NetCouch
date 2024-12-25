@@ -1,17 +1,17 @@
 ﻿using System.Net;
 using System.Reflection;
 using System.Reflection.Emit;
-using Biseth.Net.Couch.Db.Api.Elements;
-using Biseth.Net.Couch.Http;
-using Biseth.Net.Couch.Models.Couch.Doc;
+using NetCouch.Db.Api.Elements;
+using NetCouch.Http;
+using NetCouch.Models.Couch.Doc;
 
-namespace Biseth.Net.Couch.Db.Api.Extensions
+namespace NetCouch.Db.Api.Extensions
 {
     public static class CouchApiRootExtensions
     {
         public static CouchApiRootCommand ActiveTasks(this CouchApiRoot element)
         {
-            var result = new CouchApiRootCommand(element.RequestClient)
+            var result = new CouchApiRootCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_active_tasks/"
                 };
@@ -20,7 +20,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiRootCommand AllDbs(this CouchApiRoot element)
         {
-            var result = new CouchApiRootCommand(element.RequestClient)
+            var result = new CouchApiRootCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_all_dbs/"
                 };
@@ -29,7 +29,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiRootCommand Log(this CouchApiRoot element)
         {
-            var result = new CouchApiRootCommand(element.RequestClient)
+            var result = new CouchApiRootCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_log/"
                 };
@@ -38,7 +38,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiRootCommand Replicate(this CouchApiRoot element)
         {
-            var result = new CouchApiRootCommand(element.RequestClient)
+            var result = new CouchApiRootCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_replicate/"
                 };
@@ -47,7 +47,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiRootCommand Restart(this CouchApiRoot element)
         {
-            var result = new CouchApiRootCommand(element.RequestClient)
+            var result = new CouchApiRootCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_restart/"
                 };
@@ -56,7 +56,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiRootCommand Stats(this CouchApiRoot element)
         {
-            var result = new CouchApiRootCommand(element.RequestClient)
+            var result = new CouchApiRootCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_stats/"
                 };
@@ -65,7 +65,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiRootCommand Utils(this CouchApiRoot element)
         {
-            var result = new CouchApiRootCommand(element.RequestClient)
+            var result = new CouchApiRootCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_utils/"
                 };
@@ -74,7 +74,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiRootCommand UuIds(this CouchApiRoot element)
         {
-            var result = new CouchApiRootCommand(element.RequestClient)
+            var result = new CouchApiRootCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_uuids/"
                 };
@@ -83,7 +83,7 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static CouchApiRootCommand Favicon(this CouchApiRoot element)
         {
-            var result = new CouchApiRootCommand(element.RequestClient)
+            var result = new CouchApiRootCommand(element._requestClient)
                 {
                     PathElement = element.PathElement + "_favicon.ico/"
                 };
@@ -92,13 +92,13 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
 
         public static ResponseData<object> Head(this CouchApiRoot element)
         {
-            var responseData = element.RequestClient.Head<object>(element.PathElement);
+            var responseData = element._requestClient.Head<object>(element.PathElement);
             return responseData;
         }
 
         public static ResponseData<T> Get<T>(this CouchApiRoot element)
         {
-            var responseData = element.RequestClient.Get<T>(element.PathElement);
+            var responseData = element._requestClient.Get<T>(element.PathElement);
             return responseData;
         }
 
@@ -107,21 +107,21 @@ namespace Biseth.Net.Couch.Db.Api.Extensions
             var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");
             if (!string.IsNullOrWhiteSpace(revision))
                 requestData.Headers = new WebHeaderCollection {{"If-Match", revision}};
-            var responseData = element.RequestClient.Put<TIn, TOut>(requestData);
+            var responseData = element._requestClient.Put<TIn, TOut>(requestData);
             return responseData;
         }
 
         public static ResponseData<object> Put(this CouchApiRoot element, dynamic obj = default(dynamic))
         {
             var requestData = new RequestData<dynamic>(element.PathElement, obj, "application/json");
-            var responseData = element.RequestClient.Put<dynamic, object>(requestData);
+            var responseData = element._requestClient.Put<dynamic, object>(requestData);
             return responseData;
         }
 
         public static ResponseData<TOut> Post<TIn, TOut>(this CouchApiRoot element, TIn obj = default(TIn))
         {
             var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");
-            var responseData = element.RequestClient.Post<TIn, TOut>(requestData);
+            var responseData = element._requestClient.Post<TIn, TOut>(requestData);
             return responseData;
         }
     }

@@ -3,9 +3,9 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Translation;
+using NetCouch.IQToolkit.Data.Common.Translation;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common
+namespace NetCouch.IQToolkit.Data.Common
 {
     /// <summary>
     /// Defines query execution & materialization policies. 

@@ -1,7 +1,6 @@
 using System;
-using Newtonsoft.Json;
 
-namespace Biseth.Net.Couch.Serialization
+namespace NetCouch.Serialization
 {
     internal class NewtonsoftSerializer<TIn, TOut> : ISerializer<TIn, TOut>
     {
@@ -16,13 +15,13 @@ namespace Biseth.Net.Couch.Serialization
 
         public string Serialize(TIn obj)
         {
-            var result = JsonConvert.SerializeObject(obj);
+            var result = System.Text.Json.JsonSerializer.Serialize(obj);
             return result;
         }
 
         public TOut Deserialize(string text)
         {
-            var result = JsonConvert.DeserializeObject<TOut>(text);
+            var result = System.Text.Json.JsonSerializer.Deserialize<TOut>(text);
             return result;
         }
     }

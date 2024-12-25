@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Biseth.Net.Couch.Attributes
+namespace NetCouch.Attributes
 {
     /// <summary>
     ///     The couch index is created as a design document view in CouchDB and will be named

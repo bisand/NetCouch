@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Language;
 
-namespace Biseth.Net.Couch.IQToolkit.Data.Common
+namespace NetCouch.IQToolkit.Data.Common
 {
     public class QueryCommand
     {

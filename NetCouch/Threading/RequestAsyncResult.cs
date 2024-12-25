@@ -1,8 +1,8 @@
 ﻿using System;
-using Biseth.Net.Couch.Http;
-using Biseth.Net.Couch.Serialization;
+using NetCouch.Http;
+using NetCouch.Serialization;
 
-namespace Biseth.Net.Couch.Threading
+namespace NetCouch.Threading
 {
     public class RequestAsyncResult<TIn, TOut> : BasicAsyncResult
     {
@@ -16,7 +16,7 @@ namespace Biseth.Net.Couch.Threading
         }
 
         public string Method { get; set; }
-        public IHttpClient HttpClient { get; set; }
+        public Http.HttpClient HttpClient { get; set; }
         public RequestData<TIn> RequestData { get; set; }
         public ResponseData<TOut> ResponseData { get; set; }
         public ISerializer<TIn, TOut> Serializer { get; set; }

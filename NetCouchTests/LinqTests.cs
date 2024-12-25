@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Biseth.Net.Couch;
-using Biseth.Net.Couch.Db.Api;
-using Biseth.Net.Couch.Db.Api.Extensions;
-using Biseth.Net.Couch.Http;
-using Biseth.Net.Couch.Models.Couch.Doc;
+using NetCouch;
+using NetCouch.Db.Api;
+using NetCouch.Db.Api.Extensions;
+using NetCouch.Http;
+using NetCouch.Models.Couch.Doc;
 using Newtonsoft.Json;
 using NUnit.Framework;
 

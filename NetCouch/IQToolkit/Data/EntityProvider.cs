@@ -8,13 +8,13 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Biseth.Net.Couch.IQToolkit.Data.Common;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Expressions;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Language;
-using Biseth.Net.Couch.IQToolkit.Data.Common.Mapping;
-using Biseth.Net.Couch.IQToolkit.Data.Mapping;
+using NetCouch.IQToolkit.Data.Common;
+using NetCouch.IQToolkit.Data.Common.Expressions;
+using NetCouch.IQToolkit.Data.Common.Language;
+using NetCouch.IQToolkit.Data.Common.Mapping;
+using NetCouch.IQToolkit.Data.Mapping;
 
-namespace Biseth.Net.Couch.IQToolkit.Data
+namespace NetCouch.IQToolkit.Data
 {
     /// <summary>
     /// A LINQ IQueryable query provider that executes database queries over a DbConnection

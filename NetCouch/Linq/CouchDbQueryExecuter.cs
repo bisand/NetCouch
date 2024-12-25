@@ -1,10 +1,10 @@
 ﻿using System.Net;
-using Biseth.Net.Couch.Db.Api;
-using Biseth.Net.Couch.Db.Api.Extensions;
-using Biseth.Net.Couch.Http;
-using Biseth.Net.Couch.Models.Couch.DesignDoc;
+using NetCouch.Db.Api;
+using NetCouch.Db.Api.Extensions;
+using NetCouch.Http;
+using NetCouch.Models.Couch.DesignDoc;
 
-namespace Biseth.Net.Couch.Linq
+namespace NetCouch.Linq
 {
     public class CouchDbQueryExecuter<T>
     {

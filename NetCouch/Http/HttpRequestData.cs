@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Biseth.Net.Couch.Http
+namespace NetCouch.Http
 {
     public class HttpRequestData
     {
