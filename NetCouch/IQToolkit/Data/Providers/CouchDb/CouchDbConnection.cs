@@ -49,7 +49,7 @@ namespace NetCouch.IQToolkit.Data.Providers.CouchDb
                 var responseData = _couchDatabase.Initialize();
                 if (responseData.StatusCode == HttpStatusCode.OK)
                 {
-                    var version = responseData.DataDeserialized.Version;
+                    var version = responseData.Body.Version;
                     if (!string.IsNullOrWhiteSpace(version))
                         return ConnectionState.Open;
                 }
@@ -69,7 +69,7 @@ namespace NetCouch.IQToolkit.Data.Providers.CouchDb
                 var responseData = _couchDatabase.Initialize();
                 if (responseData.StatusCode == HttpStatusCode.OK)
                 {
-                    var version = responseData.DataDeserialized.Version;
+                    var version = responseData.Body.Version;
                     if (!string.IsNullOrWhiteSpace(version))
                         return version;
                 }

@@ -1,25 +1,62 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 
 namespace NetCouch.Http
 {
-    public class ResponseData<T>
+    public record ResponseData<T>(HttpHeaders Headers, HttpStatusCode StatusCode, string StatusDescription, string BodyString, T Body)
     {
-        public string ContentType { get; set; }
-        public long ContentLength { get; set; }
-        public HttpStatusCode StatusCode { get; set; }
-        public string StatusDescription { get; set; }
-        public string Data { get; set; }
-        public T DataDeserialized { get; set; }
+        public ResponseData() : this(new CustomHttpHeaders(), default, default, default, default)
+        {
+        }
+
+        public string ContentType
+        {
+            get
+            {
+                if (Headers == null)
+                    return string.Empty;
+
+                if (Headers.TryGetValues("Content-Type", out var values))
+                {
+                    return values.FirstOrDefault() ?? string.Empty;
+                }
+                return string.Empty;
+            }
+            set
+            {
+                Headers.Remove("Content-Type");
+                Headers.Add("Content-Type", value);
+            }
+        }
+        public long ContentLength
+        {
+            get
+            {
+                if (Headers == null)
+                    return 0;
+
+                if (Headers.TryGetValues("Content-Length", out var values))
+                {
+                    return long.Parse(values.FirstOrDefault() ?? "0");
+                }
+                return 0;
+            }
+            set
+            {
+                Headers.Remove("Content-Length");
+                Headers.Add("Content-Length", value.ToString());
+            }
+        }
 
         public dynamic DynamicData
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(Data))
-                    return default(dynamic);
+                if (string.IsNullOrWhiteSpace(BodyString))
+                    return default;
 
-                var data = System.Text.Json.JsonSerializer.Deserialize<dynamic>(Data);
-                return data;
+                var body = System.Text.Json.JsonSerializer.Deserialize<dynamic>(BodyString);
+                return body;
             }
         }
     }

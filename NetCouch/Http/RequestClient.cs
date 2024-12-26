@@ -1,7 +1,8 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
-using NetCouch.Threading;
+﻿using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace NetCouch.Http
 {
@@ -13,8 +14,15 @@ namespace NetCouch.Http
 
         public RequestClient(string url)
         {
+            var handler = new SocketsHttpHandler
+            {
+                PooledConnectionLifetime = TimeSpan.FromMinutes(5), // Refresh connections periodically
+                PooledConnectionIdleTimeout = TimeSpan.FromMinutes(2),
+                MaxConnectionsPerServer = 10, // Adjust based on expected load
+            };
+
             _url = url;
-            _httpClient = new HttpClient(url);
+            _httpClient = new HttpClient(handler);
         }
 
         public RequestClient(string url, HttpClient httpClient)
@@ -23,15 +31,22 @@ namespace NetCouch.Http
             _httpClient = httpClient;
         }
 
+        private static async Task<ResponseData<TOut>> GetResponseDataAsync<TOut>(HttpResponseMessage response)
+        {
+            var data = await response.Content.ReadAsStringAsync();
+            var length = response.Content.Headers.ContentLength ?? 0;
+            var contentType = response.Content.Headers.ContentType?.MediaType ?? "application/json";
+            var body = JsonSerializer.Deserialize<TOut>(data);
+            return new ResponseData<TOut> { BodyString = data, Body = body, ContentLength = length, ContentType = contentType, StatusCode = response.StatusCode, StatusDescription = response.ReasonPhrase ?? string.Empty };
+        }
+
         public async Task<ResponseData<TOut>> GetAsync<TOut>(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
-                throw new ArgumentNullException("path");
-
-            var requestData = new RequestData<TOut>(path);
-            var httpRequestData = new HttpRequestData(path) { Method = HttpMethod.Get };
-            var response = await _httpClient.GetAsync(httpRequestData);
-            return new ResponseData<TOut> { Data = response.Data, ContentLength = response.ContentLength, ContentType = response.ContentType, StatusCode = response.StatusCode, StatusDescription = response.StatusDescription };
+                throw new ArgumentNullException(nameof(path));
+            var url = new Uri(new Uri(_url), path);
+            var response = await _httpClient.GetAsync(url);
+            return await GetResponseDataAsync<TOut>(response);
         }
 
         public ResponseData<TOut> Get<TOut>(string path)
@@ -45,9 +60,9 @@ namespace NetCouch.Http
                 throw new ArgumentNullException("path");
 
             var requestData = new RequestData<TOut>(path);
-            var httpRequestData = new HttpRequestData(path) { Method = HttpMethod.Head };
-            var response = await _httpClient.HeadAsync(httpRequestData);
-            return new ResponseData<TOut> { Data = response.Data, ContentLength = response.ContentLength, ContentType = response.ContentType, StatusCode = response.StatusCode, StatusDescription = response.StatusDescription };
+            var httpRequestData = new HttpRequestMessage(HttpMethod.Head, path);
+            var response = await _httpClient.SendAsync(httpRequestData);
+            return await GetResponseDataAsync<TOut>(response);
         }
 
         public ResponseData<TOut> Head<TOut>(string path)
@@ -61,9 +76,9 @@ namespace NetCouch.Http
                 throw new ArgumentNullException("path");
 
             var requestData = new RequestData<TOut>(path);
-            var httpRequestData = new HttpRequestData(path) { Method = HttpMethod.Options };
-            var response = await _httpClient.OptionsAsync(httpRequestData);
-            return new ResponseData<TOut> { Data = response.Data, ContentLength = response.ContentLength, ContentType = response.ContentType, StatusCode = response.StatusCode, StatusDescription = response.StatusDescription };
+            var httpRequestData = new HttpRequestMessage(HttpMethod.Options, path);
+            var response = await _httpClient.SendAsync(httpRequestData);
+            return await GetResponseDataAsync<TOut>(response);
         }
 
         public ResponseData<TOut> Options<TOut>(string path)
@@ -76,10 +91,9 @@ namespace NetCouch.Http
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentNullException("path");
 
-            var requestData = new RequestData<TOut>(path);
-            var httpRequestData = new HttpRequestData(path) { Method = HttpMethod.Delete };
-            var response = await _httpClient.DeleteAsync(httpRequestData);
-            return new ResponseData<TOut> { Data = response.Data, ContentLength = response.ContentLength, ContentType = response.ContentType, StatusCode = response.StatusCode, StatusDescription = response.StatusDescription };
+            var url = new Uri(new Uri(_url), path);
+            var response = await _httpClient.DeleteAsync(url);
+            return await GetResponseDataAsync<TOut>(response);
         }
 
         public ResponseData<TOut> Delete<TOut>(string path)
@@ -90,11 +104,16 @@ namespace NetCouch.Http
         public async Task<ResponseData<TOut>> PutAsync<TIn, TOut>(RequestData<TIn> requestData)
         {
             if (requestData == null)
-                throw new ArgumentNullException("requestData");
+                throw new ArgumentNullException(nameof(requestData));
 
-            var httpRequestData = new HttpRequestData(requestData.Url) { Method = HttpMethod.Put, Data = requestData.RequestObject.ToString(), ContentType = "application/json", Headers = requestData.Headers };
-            var response = await _httpClient.PutAsync(httpRequestData);
-            return new ResponseData<TOut> { Data = response.Data, ContentLength = response.ContentLength, ContentType = response.ContentType, StatusCode = response.StatusCode, StatusDescription = response.StatusDescription };
+            JsonContent content = JsonContent.Create(requestData.Body);
+            foreach (var header in requestData.Headers)
+            {
+                content.Headers.Add(header.Key, header.Value);
+            }
+            var url = new Uri(new Uri(_url), requestData.Url);
+            var response = await _httpClient.PutAsync(url, content);
+            return await GetResponseDataAsync<TOut>(response);
         }
 
         public ResponseData<TOut> Put<TIn, TOut>(RequestData<TIn> requestData)
@@ -104,12 +123,10 @@ namespace NetCouch.Http
 
         public async Task<ResponseData<TOut>> PostAsync<TIn, TOut>(RequestData<TIn> requestData)
         {
-            if (requestData == null)
-                throw new ArgumentNullException("requestData");
-
-            var httpRequestData = new HttpRequestData(requestData.Url) { Method = HttpMethod.Post, Data = requestData.RequestObject.ToString(), ContentType = "application/json", Headers = requestData.Headers };
-            var response = await _httpClient.PostAsync(httpRequestData);
-            return new ResponseData<TOut> { Data = response.Data, ContentLength = response.ContentLength, ContentType = response.ContentType, StatusCode = response.StatusCode, StatusDescription = response.StatusDescription };
+            ArgumentNullException.ThrowIfNull(requestData, nameof(requestData));
+            var url = new Uri(new Uri(_url), requestData.Url);
+            var response = await _httpClient.PostAsync(url, JsonContent.Create(requestData.Body));
+            return await GetResponseDataAsync<TOut>(response);
         }
 
         public ResponseData<TOut> Post<TIn, TOut>(RequestData<TIn> requestData)

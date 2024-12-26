@@ -36,7 +36,7 @@ namespace NetCouch.Linq
                              .Get<DesignDoc>();
 
                 // Assign the view to the design doc object
-                var designDoc = designDocResult.DataDeserialized;
+                var designDoc = designDocResult.Body;
                 designDoc.Views[translation.ViewName] = new View {Map = translation.ViewQuery.View};
 
                 // Save the design doc back to the server.

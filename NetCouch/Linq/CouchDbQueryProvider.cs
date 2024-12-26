@@ -53,7 +53,7 @@ namespace NetCouch.Linq
             // Try to extract the result.
             if (queryResult != null)
             {
-                foreach (var row in queryResult.DataDeserialized.Rows)
+                foreach (var row in queryResult.Body.Rows)
                 {
                     _trackedDocuments.Add(row.Doc);
                     _trackedEntities.Add(row.Doc.Entity);

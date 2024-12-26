@@ -3,15 +3,9 @@ using NetCouch.Http;
 
 namespace NetCouch.Db.Api
 {
-    public class CouchApi : ICouchApi
+    public class CouchApi(RequestClient requestClient, string defaultDatabase = "_users") : ICouchApi
     {
-        protected readonly RequestClient _requestClient;
-
-        public CouchApi(RequestClient requestClient, string defaultDatabase = "_users")
-        {
-            _requestClient = requestClient;
-            DefaultDatabase = defaultDatabase;
-        }
+        protected readonly RequestClient _requestClient = requestClient;
 
         public CouchApiRoot Root()
         {
@@ -19,6 +13,6 @@ namespace NetCouch.Db.Api
             return root;
         }
 
-        public string DefaultDatabase { get; set; }
+        public string DefaultDatabase { get; set; } = defaultDatabase;
     }
 }

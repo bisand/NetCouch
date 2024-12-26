@@ -45,7 +45,7 @@ namespace NetCouch
                     .Doc(id)
                     .Get<CouchObjectProxy<T>>();
             
-            return responseData.DataDeserialized.Entity;
+            return responseData.Body.Entity;
         }
 
         public void SaveChanges()
@@ -79,14 +79,14 @@ namespace NetCouch
         private void UpdateValues(ResponseData<BulkDocsResponse> responseData, List<dynamic> documents)
         {
             var storedCount = documents.Count;
-            var returnedCount = responseData.DataDeserialized.Count;
+            var returnedCount = responseData.Body.Count;
             if (storedCount != returnedCount)
                 return;
 
             var i = 0;
             foreach (var obj in documents)
             {
-                var data = responseData.DataDeserialized[i++];
+                var data = responseData.Body[i++];
                 if (obj.Id != null && obj.Id != data.Id)
                     continue;
 

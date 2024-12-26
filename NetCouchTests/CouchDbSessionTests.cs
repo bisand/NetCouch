@@ -15,7 +15,7 @@ namespace NetCouchTests
         [Test]
         public void OpenSessionAndQueryTheDatabase()
         {
-            using (var database = new CouchDatabase("http://localhost:5984/"))
+            using (var database = new CouchDatabase("https://couchdb.publicnode.eu/"))
             {
                 using (var session = database.OpenSession("trivial"))
                 {
@@ -43,7 +43,7 @@ namespace NetCouchTests
             {
                 var sw = new Stopwatch();
                 sw.Start();
-                using (var database = new CouchDatabase("http://localhost:5984/"))
+                using (var database = new CouchDatabase("https://couchdb.publicnode.eu/"))
                 {
                     using (var session = database.OpenSession("trivial"))
                     {
@@ -65,7 +65,7 @@ namespace NetCouchTests
         [Test]
         public void OpenSessionAndQueryTheDatabaseWithLinq()
         {
-            using (var database = new CouchDatabase("http://localhost:5984/"))
+            using (var database = new CouchDatabase("https://couchdb.publicnode.eu/"))
             {
                 using (var session = database.OpenSession("trivial"))
                 {
@@ -81,7 +81,7 @@ namespace NetCouchTests
         [Test]
         public void WhenQueryingForFirstRecord_ThenOneRecordShouldBeReturned()
         {
-            using (var database = new CouchDatabase("http://localhost:5984/"))
+            using (var database = new CouchDatabase("https://couchdb.publicnode.eu/"))
             {
                 using (var session = database.OpenSession("trivial"))
                 {

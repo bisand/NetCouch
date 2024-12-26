@@ -12,81 +12,81 @@ namespace NetCouch.Db.Api.Extensions
         public static CouchApiRootCommand ActiveTasks(this CouchApiRoot element)
         {
             var result = new CouchApiRootCommand(element._requestClient)
-                {
-                    PathElement = element.PathElement + "_active_tasks/"
-                };
+            {
+                PathElement = element.PathElement + "_active_tasks/"
+            };
             return result;
         }
 
         public static CouchApiRootCommand AllDbs(this CouchApiRoot element)
         {
             var result = new CouchApiRootCommand(element._requestClient)
-                {
-                    PathElement = element.PathElement + "_all_dbs/"
-                };
+            {
+                PathElement = element.PathElement + "_all_dbs/"
+            };
             return result;
         }
 
         public static CouchApiRootCommand Log(this CouchApiRoot element)
         {
             var result = new CouchApiRootCommand(element._requestClient)
-                {
-                    PathElement = element.PathElement + "_log/"
-                };
+            {
+                PathElement = element.PathElement + "_log/"
+            };
             return result;
         }
 
         public static CouchApiRootCommand Replicate(this CouchApiRoot element)
         {
             var result = new CouchApiRootCommand(element._requestClient)
-                {
-                    PathElement = element.PathElement + "_replicate/"
-                };
+            {
+                PathElement = element.PathElement + "_replicate/"
+            };
             return result;
         }
 
         public static CouchApiRootCommand Restart(this CouchApiRoot element)
         {
             var result = new CouchApiRootCommand(element._requestClient)
-                {
-                    PathElement = element.PathElement + "_restart/"
-                };
+            {
+                PathElement = element.PathElement + "_restart/"
+            };
             return result;
         }
 
         public static CouchApiRootCommand Stats(this CouchApiRoot element)
         {
             var result = new CouchApiRootCommand(element._requestClient)
-                {
-                    PathElement = element.PathElement + "_stats/"
-                };
+            {
+                PathElement = element.PathElement + "_stats/"
+            };
             return result;
         }
 
         public static CouchApiRootCommand Utils(this CouchApiRoot element)
         {
             var result = new CouchApiRootCommand(element._requestClient)
-                {
-                    PathElement = element.PathElement + "_utils/"
-                };
+            {
+                PathElement = element.PathElement + "_utils/"
+            };
             return result;
         }
 
         public static CouchApiRootCommand UuIds(this CouchApiRoot element)
         {
             var result = new CouchApiRootCommand(element._requestClient)
-                {
-                    PathElement = element.PathElement + "_uuids/"
-                };
+            {
+                PathElement = element.PathElement + "_uuids/"
+            };
             return result;
         }
 
         public static CouchApiRootCommand Favicon(this CouchApiRoot element)
         {
             var result = new CouchApiRootCommand(element._requestClient)
-                {
-                    PathElement = element.PathElement + "_favicon.ico/"
-                };
+            {
+                PathElement = element.PathElement + "_favicon.ico/"
+            };
             return result;
         }
 
@@ -102,23 +102,23 @@ namespace NetCouch.Db.Api.Extensions
             return responseData;
         }
 
-        public static ResponseData<TOut> Put<TIn, TOut>(this CouchApiRoot element, TIn obj = default(TIn), string revision = null)
+        public static ResponseData<TOut> Put<TIn, TOut>(this CouchApiRoot element, TIn obj = default, string revision = null)
         {
             var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");
             if (!string.IsNullOrWhiteSpace(revision))
-                requestData.Headers = new WebHeaderCollection {{"If-Match", revision}};
+                requestData.Headers.Add("If-Match", revision);
             var responseData = element._requestClient.Put<TIn, TOut>(requestData);
             return responseData;
         }
 
-        public static ResponseData<object> Put(this CouchApiRoot element, dynamic obj = default(dynamic))
+        public static ResponseData<object> Put(this CouchApiRoot element, dynamic obj = default)
         {
             var requestData = new RequestData<dynamic>(element.PathElement, obj, "application/json");
             var responseData = element._requestClient.Put<dynamic, object>(requestData);
             return responseData;
         }
 
-        public static ResponseData<TOut> Post<TIn, TOut>(this CouchApiRoot element, TIn obj = default(TIn))
+        public static ResponseData<TOut> Post<TIn, TOut>(this CouchApiRoot element, TIn obj = default)
         {
             var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");
             var responseData = element._requestClient.Post<TIn, TOut>(requestData);

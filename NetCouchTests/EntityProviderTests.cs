@@ -14,7 +14,7 @@ namespace NetCouchTests
         [Test]
         public void TestNewInstance()
         {
-            using (var database = new CouchDatabase("http://localhost:5984/"))
+            using (var database = new CouchDatabase("https://couchdb.publicnode.eu/"))
             {
                 var mapping = new ImplicitMapping();
                 var policy = new QueryPolicy();

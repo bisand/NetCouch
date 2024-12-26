@@ -14,7 +14,7 @@ namespace NetCouchTests
         [Test]
         public void When_getting_data_from_then_server__Then_it_should_be_deserialized()
         {
-            var client = new RequestClient("http://localhost:5984/");
+            var client = new RequestClient("https://couchdb.publicnode.eu/");
             var api = new CouchApi(client);
 
             var responseData = api.Root().Stats().Get<dynamic>();
@@ -26,7 +26,7 @@ namespace NetCouchTests
             Assert.IsNotNull(configData);
 
             var configSectionData = api.Root().Config().Section("daemons").Get<dynamic>();
-            var indexServer = configSectionData.DataDeserialized.index_server.ToString();
+            var indexServer = configSectionData.Body.index_server.ToString();
             Assert.IsNotNull(configSectionData);
 
             var dbData = api.Root().Db("Test").Get<dynamic>();
@@ -47,9 +47,9 @@ namespace NetCouchTests
             var getDoc = api.Root().Db("test").Doc("Test").Get<Person>();
             Assert.IsNotNull(getDoc);
 
-            getDoc.DataDeserialized.Weight = 77;
+            getDoc.Body.Weight = 77;
 
-            var postDoc = api.Root().Db("test").Doc("Test").Put<Person, dynamic>(getDoc.DataDeserialized, (string)getDoc.DynamicData._rev);
+            var postDoc = api.Root().Db("test").Doc("Test").Put<Person, dynamic>(getDoc.Body, (string)getDoc.DynamicData._rev);
             Assert.IsNotNull(postDoc);
 
 

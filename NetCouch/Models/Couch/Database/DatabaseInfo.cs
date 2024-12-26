@@ -1,39 +1,37 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace NetCouch.Models.Couch.Database
 {
-    [DataContract]
-    public class DatabaseInfo
+    public class DatabaseInfo : InternalResult
     {
-        [DataMember(Name = "committed_update_seq", EmitDefaultValue = false)]
+        [JsonPropertyName("committed_update_seq")]
         public int CommittedUpdateSeq { get; set; }
 
-        [DataMember(Name = "compact_running", EmitDefaultValue = false)]
+        [JsonPropertyName("compact_running")]
         public bool CompactRunning { get; set; }
 
-        [DataMember(Name = "db_name", EmitDefaultValue = false)]
-        public string DbName { get; set; }
+        [JsonPropertyName("db_name")]
+        public string? DbName { get; set; }
 
-        [DataMember(Name = "disk_format_version", EmitDefaultValue = false)]
+        [JsonPropertyName("disk_format_version")]
         public int DiskFormatVersion { get; set; }
 
-        [DataMember(Name = "disk_size", EmitDefaultValue = false)]
+        [JsonPropertyName("disk_size")]
         public int DiskSize { get; set; }
 
-        [DataMember(Name = "doc_count", EmitDefaultValue = false)]
+        [JsonPropertyName("doc_count")]
         public int DocCount { get; set; }
 
-        [DataMember(Name = "doc_del_count", EmitDefaultValue = false)]
+        [JsonPropertyName("doc_del_count")]
         public int DocDelCount { get; set; }
 
-        [DataMember(Name = "instance_start_time", EmitDefaultValue = false)]
-        public string InstanceStartTime { get; set; }
+        [JsonPropertyName("instance_start_time")]
+        public string? InstanceStartTime { get; set; }
 
-        [DataMember(Name = "purge_seq", EmitDefaultValue = false)]
+        [JsonPropertyName("purge_seq")]
         public int PurgeSeq { get; set; }
 
-        [DataMember(Name = "update_seq", EmitDefaultValue = false)]
+        [JsonPropertyName("update_seq")]
         public int UpdateSeq { get; set; }
     }
 }

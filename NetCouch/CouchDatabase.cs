@@ -72,10 +72,12 @@ namespace NetCouch
                 // Retrieve the current design doc.
                 var dbResponse = _api.Root()
                                      .Db(_api.DefaultDatabase)
-                                     .Put<dynamic, JsonSuccessStatement>("");
+                                     .Put<dynamic, InternalResult>("");
 
-                if ((dbResponse.DataDeserialized == null || dbResponse.DataDeserialized.Ok == false) && dbResponse.StatusCode != HttpStatusCode.Created)
-                    throw new CouchDbException("An error occurred while creating the database!");
+                if ((dbResponse.Body == null || dbResponse.Body.Ok == false) && dbResponse.StatusCode != HttpStatusCode.Created)
+                {
+                    throw new CouchDbException($"{dbResponse.StatusDescription}: {dbResponse.Body?.Error} -> {dbResponse.Body?.Reason}");
+                }
             }
         }
 

@@ -1,25 +1,13 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 
 namespace NetCouch.Http
 {
-    public class RequestData<T>
+    public class RequestData<T>(string url, T body = default!, string contentType = default!)
     {
-        public RequestData(string url)
-        {
-            Url = url;
-        }
-
-        public RequestData(string url, T requestObject, string contentType, WebHeaderCollection headers = null)
-        {
-            Url = url;
-            RequestObject = requestObject;
-            ContentType = contentType;
-            Headers = headers;
-        }
-
-        public string Url { get; set; }
-        public string ContentType { get; set; }
-        public WebHeaderCollection Headers { get; set; }
-        public T RequestObject { get; set; }
+        public string Url { get; set; } = url;
+        public string? ContentType { get; set; } = contentType;
+        public HttpHeaders? Headers { get; set; } = new CustomHttpHeaders();
+        public T? Body { get; set; } = body;
     }
 }

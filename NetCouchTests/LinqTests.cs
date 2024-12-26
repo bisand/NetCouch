@@ -17,7 +17,7 @@ namespace NetCouchTests
         [Test]
         public void TestingSomeLinq()
         {
-            var client = new RequestClient("http://localhost:5984/");
+            var client = new RequestClient("https://couchdb.publicnode.eu/");
             var api = new CouchApi(client, "trivial");
 
             //var cars = query.Where(p => (((p.Make == "Saab" || (p.Model == "1337" && p.HorsePowers == 200)) || p.Make != "Volvo") && p.Model != "2013")).ToList();
