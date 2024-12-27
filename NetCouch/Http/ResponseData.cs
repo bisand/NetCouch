@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 
 namespace NetCouch.Http
 {
-    public record ResponseData<T>(HttpHeaders Headers, HttpStatusCode StatusCode, string StatusDescription, string BodyString, T Body)
+    public record ResponseData<T>(HttpHeaders Headers, HttpStatusCode StatusCode, string? StatusDescription, string? BodyString, T? Body)
     {
         public ResponseData() : this(new CustomHttpHeaders(), default, default, default, default)
         {

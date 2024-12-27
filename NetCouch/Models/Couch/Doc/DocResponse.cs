@@ -6,7 +6,7 @@ namespace NetCouch.Models.Couch.Doc
     public class DocResponse
     {
         [JsonPropertyName("ok")]
-        public string? Ok { get; set; }
+        public bool? Ok { get; set; }
 
         [JsonPropertyName("id")]
         public string? Id { get; set; }

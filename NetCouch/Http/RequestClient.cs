@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
@@ -10,6 +11,7 @@ namespace NetCouch.Http
     public class RequestClient : IDisposable
     {
         private readonly HttpClient _httpClient;
+        private readonly JsonSerializerOptions _serializationOptions;
         private bool _disposed;
         private string _url;
 
@@ -29,12 +31,18 @@ namespace NetCouch.Http
                 var byteArray = Encoding.ASCII.GetBytes($"{username}:{password}");
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
             }
-        }
-
-        public RequestClient(string url, HttpClient httpClient)
-        {
-            _url = url;
-            _httpClient = httpClient;
+            _serializationOptions = new JsonSerializerOptions
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                PropertyNameCaseInsensitive = true,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = false,
+                AllowTrailingCommas = true,
+                ReadCommentHandling = JsonCommentHandling.Skip,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString,
+                Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+            };
         }
 
         private static async Task<ResponseData<TOut>> GetResponseDataAsync<TOut>(HttpResponseMessage response)
@@ -109,15 +117,14 @@ namespace NetCouch.Http
 
         public async Task<ResponseData<TOut>> PutAsync<TIn, TOut>(RequestData<TIn> requestData)
         {
-            if (requestData == null)
-                throw new ArgumentNullException(nameof(requestData));
-
-            JsonContent content = JsonContent.Create(requestData.Body);
-            foreach (var header in requestData.Headers)
+            ArgumentNullException.ThrowIfNull(requestData, nameof(requestData));
+            var jsonBody = JsonSerializer.Serialize(requestData.Body, _serializationOptions);
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+            foreach (var header in requestData?.Headers ?? new CustomHttpHeaders())
             {
                 content.Headers.Add(header.Key, header.Value);
             }
-            var url = new Uri(new Uri(_url), requestData.Url);
+            var url = new Uri(new Uri(_url), requestData?.Url);
             var response = await _httpClient.PutAsync(url, content);
             return await GetResponseDataAsync<TOut>(response);
         }
@@ -130,8 +137,14 @@ namespace NetCouch.Http
         public async Task<ResponseData<TOut>> PostAsync<TIn, TOut>(RequestData<TIn> requestData)
         {
             ArgumentNullException.ThrowIfNull(requestData, nameof(requestData));
-            var url = new Uri(new Uri(_url), requestData.Url);
-            var response = await _httpClient.PostAsync(url, JsonContent.Create(requestData.Body));
+            var jsonBody = JsonSerializer.Serialize(requestData.Body, _serializationOptions);
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+            foreach (var header in requestData?.Headers ?? new CustomHttpHeaders())
+            {
+                content.Headers.Add(header.Key, header.Value);
+            }
+            var url = new Uri(new Uri(_url), requestData?.Url);
+            var response = await _httpClient.PostAsync(url, content);
             return await GetResponseDataAsync<TOut>(response);
         }
 
