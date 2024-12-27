@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using NetCouch;
 using NetCouch.Db.Api;
 using NetCouch.Db.Api.Extensions;
 using NetCouch.Http;
 using NetCouch.Models.Couch.Doc;
-using Newtonsoft.Json;
-using NUnit.Framework;
 
 namespace NetCouchTests
 {

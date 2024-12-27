@@ -2,18 +2,12 @@
 
 namespace NetCouch.Models.Couch.DesignDoc;
 
-public class DesignDoc
+public class DesignDoc : CouchDoc
 {
     public DesignDoc()
     {
         Views = [];
     }
-
-    [JsonPropertyName("_id")]
-    public string? Id { get; set; }
-
-    [JsonPropertyName("_rev")]
-    public string? Rev { get; set; }
 
     [JsonPropertyName("language")]
     public string? Language { get; set; }

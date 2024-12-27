@@ -27,6 +27,10 @@ namespace NetCouchTests
         [Test]
         public void When_getting_data_from_then_server__Then_it_should_be_deserialized()
         {
+            if (string.IsNullOrEmpty(_url) || string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password))
+            {
+                Assert.Fail("Missing environment variables");
+            }
             var client = new RequestClient(_url, _username, _password);
             var api = new CouchApi(client);
 
@@ -47,12 +51,14 @@ namespace NetCouchTests
             {
                 var newDbData = api.Root().Db("Test").Put<dynamic, object>();
             }
-            var person = new Person();
-            person.FirstName = "André";
-            person.LastName = "Biseth";
-            person.BirthDate = new DateTime(1974, 3, 12);
-            person.Weight = 80;
-            person.Height = 180;
+            var person = new Person
+            {
+                FirstName = "André",
+                LastName = "Biseth",
+                BirthDate = new DateTime(1974, 3, 12),
+                Weight = 80,
+                Height = 180
+            };
 
             var post = api.Root().Db("test").Doc().Post<Person, dynamic>(person);
             Assert.IsNotNull(post);
