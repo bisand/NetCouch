@@ -11,10 +11,23 @@ namespace NetCouchTests
     [TestFixture]
     public class RequestClientTests
     {
+        private string? _username;
+        private string? _password;
+        private string? _url;
+
+        [SetUp]
+        public void Init()
+        {
+            DotEnv.Load(".env");
+            _username = Environment.GetEnvironmentVariable("COUCHDB_USERNAME") ?? "";
+            _password = Environment.GetEnvironmentVariable("COUCHDB_PASSWORD") ?? "";
+            _url = Environment.GetEnvironmentVariable("COUCHDB_URL") ?? "";
+        }
+
         [Test]
         public void When_getting_data_from_then_server__Then_it_should_be_deserialized()
         {
-            var client = new RequestClient("https://couchdb.publicnode.eu/");
+            var client = new RequestClient(_url, _username, _password);
             var api = new CouchApi(client);
 
             var responseData = api.Root().Stats().Get<dynamic>();
@@ -38,8 +51,8 @@ namespace NetCouchTests
             person.FirstName = "André";
             person.LastName = "Biseth";
             person.BirthDate = new DateTime(1974, 3, 12);
-            person.Weight = 78;
-            person.Height = 178;
+            person.Weight = 80;
+            person.Height = 180;
 
             var post = api.Root().Db("test").Doc().Post<Person, dynamic>(person);
             Assert.IsNotNull(post);

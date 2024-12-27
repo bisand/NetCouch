@@ -14,10 +14,23 @@ namespace NetCouchTests
     [TestFixture]
     public class LinqTests
     {
+        private string? _username;
+        private string? _password;
+        private string? _url;
+
+        [SetUp]
+        public void Init()
+        {
+            DotEnv.Load(".env");
+            _username = Environment.GetEnvironmentVariable("COUCHDB_USERNAME") ?? "";
+            _password = Environment.GetEnvironmentVariable("COUCHDB_PASSWORD") ?? "";
+            _url = Environment.GetEnvironmentVariable("COUCHDB_URL") ?? "";
+        }
+
         [Test]
         public void TestingSomeLinq()
         {
-            var client = new RequestClient("https://couchdb.publicnode.eu/");
+            var client = new RequestClient(_url, _username, _password);
             var api = new CouchApi(client, "trivial");
 
             //var cars = query.Where(p => (((p.Make == "Saab" || (p.Model == "1337" && p.HorsePowers == 200)) || p.Make != "Volvo") && p.Model != "2013")).ToList();

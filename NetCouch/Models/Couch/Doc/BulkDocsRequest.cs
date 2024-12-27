@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NetCouch.Models.Couch.Doc
 {
-    [DataContract]
     public class BulkDocsRequest
     {
         public BulkDocsRequest(IEnumerable<object> docmuents)
@@ -11,7 +11,7 @@ namespace NetCouch.Models.Couch.Doc
             Docs = new List<object>(docmuents);
         }
 
-        [DataMember(Name = "docs", IsRequired = true)]
+        [JsonPropertyName("docs")]
         public List<object> Docs { get; set; }
     }
 }

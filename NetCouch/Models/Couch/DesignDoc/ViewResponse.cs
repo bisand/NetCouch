@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NetCouch.Models.Couch.DesignDoc
 {
-    [DataContract]
+    
     public class ViewResponse<T>
     {
-        [DataMember(Name = "error")]
-        public string Error { get; set; }
+        [JsonPropertyName("error")]
+        public string? Error { get; set; }
 
-        [DataMember(Name = "reason")]
-        public string Reason { get; set; }
+        [JsonPropertyName("reason")]
+        public string? Reason { get; set; }
 
-        [DataMember(Name = "total_rows")]
+        [JsonPropertyName("total_rows")]
         public int TotalRows { get; set; }
 
-        [DataMember(Name = "offset")]
+        [JsonPropertyName("offset")]
         public int Offset { get; set; }
 
-        [DataMember(Name = "rows")]
-        public List<ViewRow<T>> Rows { get; set; }
+        [JsonPropertyName("rows")]
+        public List<ViewRow<T>>? Rows { get; set; }
     }
 }

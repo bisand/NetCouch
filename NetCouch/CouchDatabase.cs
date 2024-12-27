@@ -12,15 +12,15 @@ namespace NetCouch
 {
     public class CouchDatabase : IDisposable
     {
-        private static readonly ConcurrentBag<string> _availableDatabases = new ConcurrentBag<string>();
+        private static readonly ConcurrentBag<string> _availableDatabases = [];
         private readonly RequestClient _client;
         private CouchApi _api;
         private bool _disposed;
 
-        public CouchDatabase(string serverUrl)
+        public CouchDatabase(string serverUrl, string username = null, string password = null)
         {
             ServerUrl = serverUrl;
-            _client = new RequestClient(serverUrl);
+            _client = new RequestClient(serverUrl, username, password);
             _api = new CouchApi(_client);
         }
 

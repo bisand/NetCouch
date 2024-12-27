@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -12,7 +13,7 @@ namespace NetCouch.Http
         private bool _disposed;
         private string _url;
 
-        public RequestClient(string url)
+        public RequestClient(string url, string? username = null, string? password = null)
         {
             var handler = new SocketsHttpHandler
             {
@@ -23,6 +24,11 @@ namespace NetCouch.Http
 
             _url = url;
             _httpClient = new HttpClient(handler);
+            if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
+            {
+                var byteArray = Encoding.ASCII.GetBytes($"{username}:{password}");
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            }
         }
 
         public RequestClient(string url, HttpClient httpClient)

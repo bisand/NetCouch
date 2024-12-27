@@ -1,36 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace NetCouch.Models.Couch.DesignDoc
+namespace NetCouch.Models.Couch.DesignDoc;
+
+public class DesignDoc
 {
-    [DataContract]
-    public class DesignDoc
+    public DesignDoc()
     {
-        public DesignDoc()
-        {
-            Views = new Dictionary<string, View>();
-        }
-
-        [DataMember(Name = "_id", EmitDefaultValue = false)]
-        public string Id { get; set; }
-
-        [DataMember(Name = "_rev", EmitDefaultValue = false)]
-        public string Rev { get; set; }
-
-        [DataMember(Name = "language", EmitDefaultValue = false)]
-        public string Language { get; set; }
-
-        [DataMember(Name = "views")]
-        public Dictionary<string, View> Views { get; set; }
+        Views = [];
     }
 
-    [DataContract]
-    public class View
-    {
-        [DataMember(Name = "map", IsRequired = true)]
-        public string Map { get; set; }
+    [JsonPropertyName("_id")]
+    public string? Id { get; set; }
 
-        [DataMember(Name = "reduce", EmitDefaultValue = false)]
-        public string Reduce { get; set; }
-    }
+    [JsonPropertyName("_rev")]
+    public string? Rev { get; set; }
+
+    [JsonPropertyName("language")]
+    public string? Language { get; set; }
+
+    [JsonPropertyName("views")]
+    public Dictionary<string, View>? Views { get; set; }
 }

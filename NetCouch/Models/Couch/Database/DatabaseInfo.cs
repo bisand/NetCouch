@@ -29,9 +29,18 @@ namespace NetCouch.Models.Couch.Database
         public string? InstanceStartTime { get; set; }
 
         [JsonPropertyName("purge_seq")]
-        public int PurgeSeq { get; set; }
+        public string? PurgeSeq { get; set; }
 
         [JsonPropertyName("update_seq")]
-        public int UpdateSeq { get; set; }
+        public string? UpdateSeq { get; set; }
+
+        [JsonPropertyName("sizes")]
+        public Sizes? Sizes { get; set; }
+
+        [JsonPropertyName("props")]
+        public Dictionary<string, object>? Props { get; set; }
+
+        [JsonPropertyName("cluster")]
+        public Cluster? Cluster { get; set; }
     }
 }

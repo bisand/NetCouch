@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using NetCouch.Db.Api;
-using NetCouch.Models.Couch.DesignDoc;
 
 namespace NetCouch.Linq
 {
@@ -18,7 +14,7 @@ namespace NetCouch.Linq
         {
             _couchApi = couchApi;
             _trackedDocuments = trackedDocuments;
-            _trackedEntities = new List<T>();
+            _trackedEntities = [];
             QueryTranslation = queryTranslation;
         }
 
@@ -34,11 +30,15 @@ namespace NetCouch.Linq
             {
                 return (IQueryable) Activator.CreateInstance(
                     typeof (CouchDbQuery<>).MakeGenericType(elementType),
-                    new object[] {this, expression});
+                    [this, expression])!;
             }
             catch (TargetInvocationException tie)
             {
-                throw tie.InnerException;
+                if (tie.InnerException != null)
+                {
+                    throw tie.InnerException;
+                }
+                throw;
             }
         }
 
@@ -53,7 +53,7 @@ namespace NetCouch.Linq
             // Try to extract the result.
             if (queryResult != null)
             {
-                foreach (var row in queryResult.Body.Rows)
+                foreach (var row in queryResult.Body.Rows ?? [])
                 {
                     _trackedDocuments.Add(row.Doc);
                     _trackedEntities.Add(row.Doc.Entity);

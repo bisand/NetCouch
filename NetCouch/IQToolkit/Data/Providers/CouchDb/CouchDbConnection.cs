@@ -1,19 +1,18 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 using System.Net;
-using NetCouch.Db.Api;
 
 namespace NetCouch.IQToolkit.Data.Providers.CouchDb
 {
     public class CouchDbConnection : DbConnection
     {
         private readonly CouchDatabase _couchDatabase;
+        private string? _connectionString;
 
         public CouchDbConnection(CouchDatabase couchDatabase)
         {
             _couchDatabase = couchDatabase;
-            ConnectionString = couchDatabase.ServerUrl;
+            _connectionString = couchDatabase.ServerUrl;
         }
 
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
@@ -35,7 +34,11 @@ namespace NetCouch.IQToolkit.Data.Providers.CouchDb
             _couchDatabase.Initialize();
         }
 
-        public override string ConnectionString { get; set; }
+        public override string? ConnectionString
+        {
+            get => _connectionString;
+            set => _connectionString = value ?? "";
+        }
 
         public override string Database
         {

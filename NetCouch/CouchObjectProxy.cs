@@ -4,10 +4,11 @@ using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NetCouch
 {
-    [DataContract]
+    
     public class CouchObjectProxy<T> : DynamicObject
     {
         private readonly Dictionary<string, object> _dictionary = new Dictionary<string, object>();
@@ -28,13 +29,13 @@ namespace NetCouch
             _entityType = typeof(T);
         }
 
-        [DataMember(Name = "_id", EmitDefaultValue = false, Order = 0)]
+        [JsonPropertyName("_id")]
         public string Id { get; set; }
 
-        [DataMember(Name = "_rev", EmitDefaultValue = false, Order = 1)]
+        [JsonPropertyName("_rev")]
         public string Rev { get; set; }
 
-        [DataMember(Name = "doc__type", EmitDefaultValue = false, Order = 2)]
+        [JsonPropertyName("doc__type")]
         public string DocType { get; set; }
 
         public T Entity

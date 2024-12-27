@@ -1,20 +1,21 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NetCouch.Models.Couch.DesignDoc
 {
-    [DataContract]
+    
     public class ViewRow<T>
     {
-        [DataMember(Name = "id")]
-        public string Id { get; set; }
+        [JsonPropertyName("id")]
+        public string? Id { get; set; }
 
-        [DataMember(Name = "key")]
-        public object Key { get; set; }
+        [JsonPropertyName("key")]
+        public object? Key { get; set; }
 
-        [DataMember(Name = "value")]
-        public object Value { get; set; }
+        [JsonPropertyName("value")]
+        public object? Value { get; set; }
 
-        [DataMember(Name = "doc")]
-        public CouchObjectProxy<T> Doc { get; set; }
+        [JsonPropertyName("doc")]
+        public CouchObjectProxy<T>? Doc { get; set; }
     }
 }
