@@ -27,7 +27,6 @@ namespace NetCouchTests
 
             using var session = _database.OpenSession("trivial");
             var car = new Car { Id = Guid.NewGuid().ToString(), HorsePowers = 123, Make = "Audi", Model = "Test" };
-            var designDoc = new DesignDoc();
             session.Store(car);
             session.SaveChanges();
         }
@@ -41,7 +40,7 @@ namespace NetCouchTests
                 return;
             }
             using var session = _database.OpenSession("trivial");
-            var queryable = session.Query<Car>().Where(x => x.HorsePowers == 123 && x.Make == "Audi");
+            var queryable = session.Query<Car>().Where(x => x.HorsePowers == 7091 && x.Make == "Audi");
             var cars = queryable.ToList();
             foreach (var car in cars)
             {

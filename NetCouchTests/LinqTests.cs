@@ -26,6 +26,11 @@ namespace NetCouchTests
         [Test]
         public void TestingSomeLinq()
         {
+            if (string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password) || string.IsNullOrEmpty(_url))
+            {
+                Assert.Fail("Environment variables are not set");
+                return;
+            }
             var client = new RequestClient(_url, _username, _password);
             var api = new CouchApi(client, "trivial");
 

@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NetCouch
 {
-    
     public class CouchObjectProxy<T> : DynamicObject
     {
-        private readonly Dictionary<string, object> _dictionary = new Dictionary<string, object>();
+        private readonly ExpandoObject _expando;
+        private readonly IDictionary<string, object?> _dictionary;
         private readonly Type _entityType;
-        private T _entity;
+        private T _entity = default!;
         private bool _modified;
         private T _originalEntity;
 
@@ -21,12 +20,22 @@ namespace NetCouch
         {
             _entityType = typeof(T);
             _originalEntity = entity;
-            SetProperties(entity);
+            _expando = new ExpandoObject();
+            _dictionary = _expando;
+            Id = string.Empty;
+            Rev = string.Empty;
+            DocType = string.Empty;
         }
 
         public CouchObjectProxy()
         {
             _entityType = typeof(T);
+            _originalEntity = Activator.CreateInstance<T>();
+            _expando = new ExpandoObject();
+            _dictionary = _expando;
+            Id = string.Empty;
+            Rev = string.Empty;
+            DocType = string.Empty;
         }
 
         [JsonPropertyName("_id")]
@@ -59,15 +68,9 @@ namespace NetCouch
             }
         }
 
-        public int Count
-        {
-            get { return _dictionary.Count; }
-        }
+        public int Count => _dictionary.Count;
 
-        public bool Modified
-        {
-            get { return _modified; }
-        }
+        public bool Modified => _modified;
 
         public void ResetEntity()
         {
@@ -76,16 +79,15 @@ namespace NetCouch
 
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            return _dictionary.Select(x => x.Key);
+            return _dictionary.Keys;
         }
 
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        public override bool TryGetMember(GetMemberBinder binder, out object? result)
         {
-            var name = binder.Name;
-            return _dictionary.TryGetValue(name, out result);
+            return _dictionary.TryGetValue(binder.Name, out result);
         }
 
-        public override bool TrySetMember(SetMemberBinder binder, object value)
+        public override bool TrySetMember(SetMemberBinder binder, object? value)
         {
             _modified = true;
             _dictionary[binder.Name] = value;
@@ -94,6 +96,9 @@ namespace NetCouch
 
         private void SetProperties(T entity)
         {
+            if (entity == null)
+                return;
+
             DocType = entity.GetType().Name;
 
             var properties = _entityType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -105,12 +110,12 @@ namespace NetCouch
                 switch (propertyName.ToLower())
                 {
                     case "id":
-                        if (value != null)
-                            Id = value.ToString();
+                        if (value is not null)
+                            Id = value?.ToString();
                         break;
                     case "rev":
-                        if (value != null)
-                            Rev = value.ToString();
+                        if (value is not null)
+                            Rev = value?.ToString();
                         break;
                     default:
                         _dictionary[propertyName] = value;
@@ -120,7 +125,7 @@ namespace NetCouch
             _modified = false;
         }
 
-        private T GetEntity()
+        private T? GetEntity()
         {
             var entity = Activator.CreateInstance(_entityType);
             var piId = _entityType.GetProperty("Id", BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
@@ -132,16 +137,10 @@ namespace NetCouch
             {
                 var propertyInfo = _entityType.GetProperty(kvp.Key, BindingFlags.Public | BindingFlags.Instance);
                 if (propertyInfo != null)
-                    if (propertyInfo.PropertyType == typeof(int))
-                    {
-                        int tmpInt;
-                        if (kvp.Value != null && int.TryParse(kvp.Value.ToString(), out tmpInt))
-                            propertyInfo.SetValue(entity, tmpInt, null);
-                    }
-                    else
-                    {
-                        propertyInfo.SetValue(entity, kvp.Value, null);
-                    }
+                {
+                    var value = Convert.ChangeType(kvp.Value, propertyInfo.PropertyType);
+                    propertyInfo.SetValue(entity, value, null);
+                }
             }
             return (T)entity;
         }
