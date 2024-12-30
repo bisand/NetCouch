@@ -1,8 +1,9 @@
 using System.Text.Json.Serialization;
+using NetCouch.Models.Couch.Database;
 
 namespace NetCouch.Models.Couch;
 
-public class CouchDoc : CouchDbErrorStatus
+public class CouchDoc : InternalResult
 {
     [JsonPropertyName("_id")]
     public string? Id { get; set; }
