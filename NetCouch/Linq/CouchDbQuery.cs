@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Linq.Expressions;
 
 namespace NetCouch.Linq
@@ -10,39 +7,33 @@ namespace NetCouch.Linq
     {
         public CouchDbQuery(CouchDbQueryProvider<T> provider)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException("provider");
-            }
-            Provider = provider;
+            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             Expression = Expression.Constant(this);
+            ElementType = typeof(T);
         }
 
         public CouchDbQuery(ICouchDbQueryProvider provider, Expression expression)
         {
-            if (provider == null)
-            {
-                throw new ArgumentNullException("provider");
-            }
             if (expression == null)
             {
-                throw new ArgumentNullException("expression");
+                throw new ArgumentNullException(nameof(expression));
             }
-            if (!typeof (IQueryable<T>).IsAssignableFrom(expression.Type))
+            if (!typeof(IQueryable<T>).IsAssignableFrom(expression.Type))
             {
-                throw new ArgumentOutOfRangeException("expression");
+                throw new ArgumentOutOfRangeException(nameof(expression));
             }
-            Provider = provider;
+            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             Expression = expression;
+            ElementType = typeof(T);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
             var result = Provider.Execute(Expression);
-            if (result is IEnumerable<T>) 
-                return ((IEnumerable<T>) result).GetEnumerator();
-            
-            return new List<T> {(T) result}.GetEnumerator();
+            if (result is IEnumerable<T> enumerable)
+                return enumerable.GetEnumerator();
+
+            return new List<T> { (T)result! }.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

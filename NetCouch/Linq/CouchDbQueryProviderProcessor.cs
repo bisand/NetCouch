@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Text;
 
 namespace NetCouch.Linq
 {
-    public class CouchDbQueryProviderProcessor<T>
+    public class CouchDbQueryProviderProcessor<T>(CouchDbTranslation queryTranslation)
     {
-        private readonly CouchDbTranslation _queryTranslation;
+        private readonly CouchDbTranslation _queryTranslation = queryTranslation;
 
         private bool _chainedWhere;
         private bool _insideSelect;
         private ExpressionType _lastExpressionType;
         private int _level;
-        //private Expression<Func<T, bool>> _predicate;
-
-        public CouchDbQueryProviderProcessor(CouchDbTranslation queryTranslation)
-        {
-            _queryTranslation = queryTranslation;
-        }
 
         public CouchDbTranslation Execute(Expression expression)
         {
@@ -347,10 +338,10 @@ namespace NetCouch.Linq
             }
         }
 
-        private string GetSelectPath(MemberExpression expression)
+        private string GetSelectPath(MemberExpression? expression)
         {
-            var sb = new StringBuilder(expression.Member.Name);
-            expression = expression.Expression as MemberExpression;
+            var sb = new StringBuilder(expression?.Member.Name);
+            expression = expression?.Expression as MemberExpression;
             while (expression != null)
             {
                 sb.Insert(0, ".");
@@ -438,16 +429,16 @@ namespace NetCouch.Linq
             }
         }
 
-        private void VisitConstant(ConstantExpression expression)
+        private void VisitConstant(ConstantExpression? expression)
         {
-            if (expression.Type == typeof (CouchDbQuery<T>))
+            if (expression?.Type == typeof (CouchDbQuery<T>))
             {
                 _queryTranslation.DesignDocName = typeof (T).Name.ToLower();
                 _queryTranslation.ViewName = typeof (T).Name;
             }
             else
             {
-                if (expression.Value == null)
+                if (expression?.Value == null)
                     return;
 
                 switch (Type.GetTypeCode(expression.Value.GetType()))
@@ -458,7 +449,10 @@ namespace NetCouch.Linq
                     case TypeCode.Object:
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", expression.Value));
                     default:
-                        _queryTranslation.QueryValues.Add(expression.Value.ToString());
+                        if (expression?.Value != null)
+                        {
+                            _queryTranslation.QueryValues.Add(expression?.Value?.ToString()!);
+                        }
                         break;
                 }
             }
