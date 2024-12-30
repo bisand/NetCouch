@@ -1,9 +1,8 @@
 ﻿using System.Linq;
 
-namespace NetCouch.Linq
+namespace NetCouch.Linq;
+
+public interface ICouchDbQueryProvider : IQueryProvider
 {
-    public interface ICouchDbQueryProvider : IQueryProvider
-    {
-        CouchDbTranslation QueryTranslation { get; }
-    }
+    CouchDbTranslation QueryTranslation { get; }
 }

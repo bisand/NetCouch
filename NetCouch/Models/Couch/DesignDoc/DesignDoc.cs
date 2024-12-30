@@ -6,25 +6,25 @@ public class DesignDoc : CouchDoc
 {
     public DesignDoc()
     {
-        Views = new Dictionary<string, View>();
         Filters = new Dictionary<string, string>();
         Updates = new Dictionary<string, string>();
+        Views = new Dictionary<string, View>();
     }
 
     [JsonPropertyName("language")]
     public string? Language { get; private set; }
 
-    [JsonPropertyName("views")]
-    public IDictionary<string, View>? Views { get; private set; }
-
     [JsonPropertyName("options")]
     public object? Options { get; private set; }
 
     [JsonPropertyName("filters")]
-    public IDictionary<string, string>? Filters { get; private set; }
+    public IDictionary<string, string> Filters { get; private set; }
 
     [JsonPropertyName("updates")]
-    public IDictionary<string, string>? Updates { get; private set; }
+    public IDictionary<string, string> Updates { get; private set; }
+
+    [JsonPropertyName("views")]
+    public IDictionary<string, View> Views { get; private set; }
 
     [JsonPropertyName("validate_doc_update")]
     public string? ValidateDocUpdate { get; private set; }

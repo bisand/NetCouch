@@ -1,8 +1,11 @@
-﻿namespace NetCouch.Models.Couch.Database
+﻿using System.Text.Json.Serialization;
+
+namespace NetCouch.Models.Couch.Database;
+
+public class DatabaseVendor
 {
-    public class DatabaseVendor
-    {
-        public string Version { get; set; }
-        public string Name { get; set; }
-    }
+    [JsonPropertyName("vendor")]
+    public string? Version { get; set; }
+    [JsonPropertyName("version")]
+    public string? Name { get; set; }
 }

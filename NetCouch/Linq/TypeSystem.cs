@@ -3,86 +3,85 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NetCouch.Linq
+namespace NetCouch.Linq;
+
+internal static class TypeSystem
 {
-    internal static class TypeSystem
+    private static Type? FindIEnumerable(Type seqType)
     {
-        private static Type FindIEnumerable(Type seqType)
+        if (seqType == null || seqType == typeof (string))
+            return null;
+        if (seqType.IsArray)
+            return typeof (IEnumerable<>).MakeGenericType(seqType.GetElementType() ?? throw new InvalidOperationException());
+        if (seqType.IsGenericType)
         {
-            if (seqType == null || seqType == typeof (string))
-                return null;
-            if (seqType.IsArray)
-                return typeof (IEnumerable<>).MakeGenericType(seqType.GetElementType());
-            if (seqType.IsGenericType)
+            foreach (var arg in seqType.GetGenericArguments())
             {
-                foreach (var arg in seqType.GetGenericArguments())
+                var ienum = typeof (IEnumerable<>).MakeGenericType(arg);
+                if (ienum.IsAssignableFrom(seqType))
                 {
-                    var ienum = typeof (IEnumerable<>).MakeGenericType(arg);
-                    if (ienum.IsAssignableFrom(seqType))
-                    {
-                        return ienum;
-                    }
+                    return ienum;
                 }
             }
-            var ifaces = seqType.GetInterfaces();
-            if (ifaces != null && ifaces.Length > 0)
+        }
+        var ifaces = seqType.GetInterfaces();
+        if (ifaces != null && ifaces.Length > 0)
+        {
+            foreach (var iface in ifaces)
             {
-                foreach (var iface in ifaces)
-                {
-                    var ienum = FindIEnumerable(iface);
-                    if (ienum != null)
-                        return ienum;
-                }
+                var ienum = FindIEnumerable(iface);
+                if (ienum != null)
+                    return ienum;
             }
-            if (seqType.BaseType != null && seqType.BaseType != typeof (object))
-            {
-                return FindIEnumerable(seqType.BaseType);
-            }
-            return null;
         }
-
-        internal static Type GetSequenceType(Type elementType)
+        if (seqType.BaseType != null && seqType.BaseType != typeof (object))
         {
-            return typeof (IEnumerable<>).MakeGenericType(elementType);
+            return FindIEnumerable(seqType.BaseType);
         }
+        return null;
+    }
 
-        internal static Type GetElementType(Type seqType)
-        {
-            var ienum = FindIEnumerable(seqType);
-            return ienum == null ? seqType : ienum.GetGenericArguments().FirstOrDefault();
-        }
+    internal static Type GetSequenceType(Type elementType)
+    {
+        return typeof (IEnumerable<>).MakeGenericType(elementType);
+    }
 
-        internal static bool IsNullableType(Type type)
-        {
-            return type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>);
-        }
+    internal static Type? GetElementType(Type seqType)
+    {
+        var ienum = FindIEnumerable(seqType);
+        return ienum == null ? seqType : ienum.GetGenericArguments().FirstOrDefault();
+    }
 
-        internal static bool IsNullAssignable(Type type)
-        {
-            return !type.IsValueType || IsNullableType(type);
-        }
+    internal static bool IsNullableType(Type type)
+    {
+        return type != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>);
+    }
 
-        internal static Type GetNonNullableType(Type type)
-        {
-            if (IsNullableType(type))
-            {
-                return type.GetGenericArguments()[0];
-            }
-            return type;
-        }
+    internal static bool IsNullAssignable(Type type)
+    {
+        return !type.IsValueType || IsNullableType(type);
+    }
 
-        internal static Type GetMemberType(MemberInfo mi)
+    internal static Type GetNonNullableType(Type type)
+    {
+        if (IsNullableType(type))
         {
-            var fi = mi as FieldInfo;
-            if (fi != null)
-                return fi.FieldType;
-            var pi = mi as PropertyInfo;
-            if (pi != null)
-                return pi.PropertyType;
-            var ei = mi as EventInfo;
-            if (ei != null)
-                return ei.EventHandlerType;
-            return null;
+            return type.GetGenericArguments()[0];
         }
+        return type;
+    }
+
+    internal static Type? GetMemberType(MemberInfo mi)
+    {
+        var fi = mi as FieldInfo;
+        if (fi != null)
+            return fi.FieldType;
+        var pi = mi as PropertyInfo;
+        if (pi != null)
+            return pi.PropertyType;
+        var ei = mi as EventInfo;
+        if (ei != null)
+            return ei.EventHandlerType;
+        return null;
     }
 }

@@ -1,12 +1,11 @@
 ﻿using NetCouch.Http;
 
-namespace NetCouch.Db.Api.Elements
+namespace NetCouch.Db.Api.Elements;
+
+public class CouchApiDbCommand : CouchApiDb
 {
-    public class CouchApiDbCommand : CouchApiDb
+    public CouchApiDbCommand(CouchDbClient requestClient)
+        : base(requestClient)
     {
-        public CouchApiDbCommand(CouchDbClient requestClient)
-            : base(requestClient)
-        {
-        }
     }
 }

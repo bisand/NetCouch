@@ -1,10 +1,9 @@
 ﻿using NetCouch.Db.Api.Elements;
 
-namespace NetCouch.Db.Api
+namespace NetCouch.Db.Api;
+
+public interface ICouchApi
 {
-    public interface ICouchApi
-    {
-        string DefaultDatabase { get; }
-        CouchApiRoot Root();
-    }
+    string DefaultDatabase { get; }
+    CouchApiRoot Root();
 }

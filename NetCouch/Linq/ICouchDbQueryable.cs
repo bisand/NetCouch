@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 
-namespace NetCouch.Linq
+namespace NetCouch.Linq;
+
+public interface ICouchDbQueryable<out T> : IOrderedQueryable<T>
 {
-    public interface ICouchDbQueryable<out T> : IOrderedQueryable<T>
-    {
-    }
 }

@@ -1,10 +1,9 @@
-﻿namespace NetCouch.Models.Couch.Database
+﻿namespace NetCouch.Models.Couch.Database;
+
+public class HttpGetRoot
 {
-    public class HttpGetRoot
-    {
-        public string CouchDb { get; set; }
-        public string Uuid { get; set; }
-        public string Version { get; set; }
-        public DatabaseVendor Vendor { get; set; }
-    }
+    public string? CouchDb { get; set; }
+    public string? Uuid { get; set; }
+    public string? Version { get; set; }
+    public DatabaseVendor? Vendor { get; set; }
 }

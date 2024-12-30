@@ -1,19 +1,18 @@
 using System.Text.Json.Serialization;
 
-namespace NetCouch.Models.Couch.Database
+namespace NetCouch.Models.Couch.Database;
+
+public class Cluster
 {
-    public class Cluster
-    {
-        [JsonPropertyName("q")]
-        public int Q { get; set; }
+    [JsonPropertyName("q")]
+    public int Q { get; set; }
 
-        [JsonPropertyName("n")]
-        public int N { get; set; }
+    [JsonPropertyName("n")]
+    public int N { get; set; }
 
-        [JsonPropertyName("w")]
-        public int W { get; set; }
+    [JsonPropertyName("w")]
+    public int W { get; set; }
 
-        [JsonPropertyName("r")]
-        public int R { get; set; }
-    }
+    [JsonPropertyName("r")]
+    public int R { get; set; }
 }

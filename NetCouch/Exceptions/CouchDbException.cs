@@ -1,12 +1,7 @@
 ﻿using System;
 
-namespace NetCouch.Exceptions
+namespace NetCouch.Exceptions;
+
+internal class CouchDbException(string message) : Exception(message)
 {
-    internal class CouchDbException : Exception
-    {
-        public CouchDbException(string message)
-            : base(message)
-        {
-        }
-    }
 }
