@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace NetCouch.Models.Couch;
 
-public class CouchDoc
+public class CouchDoc : CouchDbErrorStatus
 {
     [JsonPropertyName("_id")]
     public string? Id { get; set; }

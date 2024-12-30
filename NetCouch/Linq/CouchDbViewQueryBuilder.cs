@@ -67,7 +67,7 @@ namespace NetCouch.Linq
                 {
                     if (prevExpr == null || eq.LastExprType == ExpressionType.Or)
                     {
-                        _query.Append("[");
+                        _query.Append('[');
                         _view.Append("emit([");
                     }
                     if (prevExpr != null && eq.LastExprType == ExpressionType.Or)
@@ -97,13 +97,25 @@ namespace NetCouch.Linq
         {
             if (IsMemberExpression(statement.Left, out string? memberName) && ContainsValue(statement.Right, out object? expressionValue))
             {
-                _view.AppendFormat("doc.{0} == '{1}',", memberName, expressionValue);
-                _query.AppendFormat("'{0}',", expressionValue);
+                AppendFormattedStatement(memberName, expressionValue);
             }
             else if (ContainsValue(statement.Left, out expressionValue) && IsMemberExpression(statement.Right, out memberName))
             {
+                AppendFormattedStatement(memberName, expressionValue);
+            }
+        }
+
+        private void AppendFormattedStatement(string memberName, object expressionValue)
+        {
+            if (expressionValue is string)
+            {
                 _view.AppendFormat("doc.{0} == '{1}',", memberName, expressionValue);
                 _query.AppendFormat("'{0}',", expressionValue);
+            }
+            else
+            {
+                _view.AppendFormat("doc.{0} == {1},", memberName, expressionValue);
+                _query.AppendFormat("{0},", expressionValue);
             }
         }
         private static bool IsMemberExpression(Expression expression, out string? memberName)

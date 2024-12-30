@@ -16,6 +16,6 @@ namespace NetCouch.Models.Couch.DesignDoc
         public object? Value { get; set; }
 
         [JsonPropertyName("doc")]
-        public CouchObjectProxy<T>? Doc { get; set; }
+        public T? Doc { get; set; }
     }
 }

@@ -8,14 +8,14 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace NetCouch.Http
 {
-    public class RequestClient : IDisposable
+    public class CouchDbClient : IDisposable
     {
         private readonly HttpClient _httpClient;
         private readonly JsonSerializerOptions _serializationOptions;
         private bool _disposed;
         private string _url;
 
-        public RequestClient(string url, string? username = null, string? password = null)
+        public CouchDbClient(string url, string? username = null, string? password = null)
         {
             var handler = new SocketsHttpHandler
             {
@@ -171,7 +171,7 @@ namespace NetCouch.Http
             _disposed = true;
         }
 
-        ~RequestClient()
+        ~CouchDbClient()
         {
             Dispose(false);
         }

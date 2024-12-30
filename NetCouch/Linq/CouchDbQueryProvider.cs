@@ -7,13 +7,11 @@ namespace NetCouch.Linq
     public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
     {
         private readonly ICouchApi _couchApi;
-        private readonly List<dynamic> _trackedDocuments;
         private readonly List<T> _trackedEntities;
 
         public CouchDbQueryProvider(ICouchApi couchApi, CouchDbTranslation queryTranslation, List<dynamic> trackedDocuments)
         {
             _couchApi = couchApi;
-            _trackedDocuments = trackedDocuments;
             _trackedEntities = [];
             QueryTranslation = queryTranslation;
         }
@@ -55,8 +53,8 @@ namespace NetCouch.Linq
             {
                 foreach (var row in queryResult.Body.Rows ?? [])
                 {
-                    _trackedDocuments.Add(row.Doc);
-                    _trackedEntities.Add(row.Doc.Entity);
+                    // TODO: Implement this.
+                    _trackedEntities.Add(row.Doc);
                 }
 
                 if (_trackedEntities.Count > 1)

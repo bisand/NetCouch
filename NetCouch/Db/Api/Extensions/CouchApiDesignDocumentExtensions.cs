@@ -4,7 +4,7 @@ namespace NetCouch.Db.Api.Extensions
 {
     public static class CouchApiDesignDocumentExtensions
     {
-        public static CouchApiDesignDoc DesignDoc(this CouchApiDb element, string name = null)
+        public static CouchApiDesignDoc DesignDoc(this CouchApiDb element, string? name = null)
         {
             var result = new CouchApiDesignDoc(element._requestClient)
                 {
@@ -14,7 +14,7 @@ namespace NetCouch.Db.Api.Extensions
             return result;
         }
 
-        public static CouchApiDesignDocAttachment Attachment(this CouchApiDesignDoc element, string attachment = null)
+        public static CouchApiDesignDocAttachment Attachment(this CouchApiDesignDoc element, string? attachment = null)
         {
             var result = new CouchApiDesignDocAttachment(element._requestClient)
                 {
@@ -33,7 +33,7 @@ namespace NetCouch.Db.Api.Extensions
             return result;
         }
 
-        public static CouchApiDesignDocCommandView View(this CouchApiDesignDoc element, string name, string parameters = null)
+        public static CouchApiDesignDocCommandView View(this CouchApiDesignDoc element, string name, string? parameters = null)
         {
             var result = new CouchApiDesignDocCommandView(element._requestClient)
                 {
@@ -77,7 +77,7 @@ namespace NetCouch.Db.Api.Extensions
             return result;
         }
 
-        public static CouchApiDesignDocCommandUpdate Update(this CouchApiDesignDoc element, string name, string doc = null)
+        public static CouchApiDesignDocCommandUpdate Update(this CouchApiDesignDoc element, string name, string? doc = null)
         {
             var result = new CouchApiDesignDocCommandUpdate(element._requestClient)
                 {

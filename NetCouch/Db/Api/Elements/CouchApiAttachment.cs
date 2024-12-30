@@ -4,7 +4,7 @@ namespace NetCouch.Db.Api.Elements
 {
     public class CouchApiAttachment : CouchApiDoc
     {
-        public CouchApiAttachment(RequestClient requestClient)
+        public CouchApiAttachment(CouchDbClient requestClient)
             : base(requestClient)
         {
         }

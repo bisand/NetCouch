@@ -32,7 +32,7 @@ namespace NetCouchTests
                 Assert.Fail("Missing environment variables");
                 return;
             }
-            var client = new RequestClient(_url, _username, _password);
+            var client = new CouchDbClient(_url, _username, _password);
             var api = new CouchApi(client);
 
             var responseData = api.Root().Stats().Get<dynamic>();

@@ -33,8 +33,7 @@ namespace NetCouch
 
         public void Store<T>(T entity)
         {
-            var proxy = new CouchObjectProxy<T>(entity);
-            _storedDocuments.Add(proxy);
+            _storedDocuments.Add(entity);
         }
 
         public T Load<T>(string id)
@@ -43,9 +42,9 @@ namespace NetCouch
                 _api.Root()
                     .Db(_api.DefaultDatabase)
                     .Doc(id)
-                    .Get<CouchObjectProxy<T>>();
+                    .Get<T>();
             
-            return responseData.Body.Entity;
+            return responseData.Body;
         }
 
         public void SaveChanges()

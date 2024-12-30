@@ -31,7 +31,7 @@ namespace NetCouchTests
                 Assert.Fail("Environment variables are not set");
                 return;
             }
-            var client = new RequestClient(_url, _username, _password);
+            var client = new CouchDbClient(_url, _username, _password);
             var api = new CouchApi(client, "trivial");
 
             //var cars = query.Where(p => (((p.Make == "Saab" || (p.Model == "1337" && p.HorsePowers == 200)) || p.Make != "Volvo") && p.Model != "2013")).ToList();
@@ -43,9 +43,7 @@ namespace NetCouchTests
             for (var i = 0; i < 1000; i++)
             {
                 var car = new Car {Id = Guid.NewGuid().ToString(), HorsePowers = 10 + i, Make = "Audi", Model = i.ToString()};
-                dynamic obj = new CouchObjectProxy<Car>(car);
-                obj.Test = "Test123";
-                cars.Add(obj);
+                cars.Add(car);
             }
             var request = new BulkDocsRequest(cars);
             var responseData = api.Root().Db("trivial").BulkDocs().Post<BulkDocsRequest, BulkDocsResponse>(request);
@@ -63,15 +61,10 @@ namespace NetCouchTests
             stopwatch.Start();
 
             var car = new Car { HorsePowers = 180, Make = "Audi", Model = "A6 Quatro" };
-            dynamic obj = new CouchObjectProxy<Car>(car);
             for (int i = 0; i < 1000; i++)
             {
-                obj.HorsePowers = i;
+                car.HorsePowers = i;
             }
-            var originalEntity = obj.OriginalEntity;
-            var entity = obj.Entity;
-            Assert.AreEqual(car, originalEntity);
-            Assert.AreNotEqual(car, entity);
 
             stopwatch.Stop();
             Console.WriteLine("Finished!");
