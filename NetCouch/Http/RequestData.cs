@@ -7,7 +7,7 @@ namespace NetCouch.Http
     {
         public string Url { get; set; } = url;
         public string? ContentType { get; set; } = contentType;
-        public HttpHeaders? Headers { get; set; } = new CustomHttpHeaders();
+        public HttpHeaders? Headers { get; set; } = new CouchDbHttpHeaders();
         public T? Body { get; set; } = body;
     }
 }

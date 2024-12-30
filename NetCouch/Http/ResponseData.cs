@@ -5,7 +5,7 @@ namespace NetCouch.Http
 {
     public record ResponseData<T>(HttpHeaders Headers, HttpStatusCode StatusCode, string? StatusDescription, string? BodyString, T? Body)
     {
-        public ResponseData() : this(new CustomHttpHeaders(), default, default, default, default)
+        public ResponseData() : this(new CouchDbHttpHeaders(), default, default, default, default)
         {
         }
 
@@ -53,10 +53,10 @@ namespace NetCouch.Http
             get
             {
                 if (string.IsNullOrWhiteSpace(BodyString))
-                    return default;
+                    return default!;
 
                 var body = System.Text.Json.JsonSerializer.Deserialize<dynamic>(BodyString);
-                return body;
+                return body!;
             }
         }
     }

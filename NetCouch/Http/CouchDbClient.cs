@@ -1,10 +1,8 @@
 ﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 
 namespace NetCouch.Http
 {
@@ -120,7 +118,7 @@ namespace NetCouch.Http
             ArgumentNullException.ThrowIfNull(requestData, nameof(requestData));
             var jsonBody = JsonSerializer.Serialize(requestData.Body, _serializationOptions);
             var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-            foreach (var header in requestData?.Headers ?? new CustomHttpHeaders())
+            foreach (var header in requestData?.Headers ?? new CouchDbHttpHeaders())
             {
                 content.Headers.Add(header.Key, header.Value);
             }
@@ -139,7 +137,7 @@ namespace NetCouch.Http
             ArgumentNullException.ThrowIfNull(requestData, nameof(requestData));
             var jsonBody = JsonSerializer.Serialize(requestData.Body, _serializationOptions);
             var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-            foreach (var header in requestData?.Headers ?? new CustomHttpHeaders())
+            foreach (var header in requestData?.Headers ?? new CouchDbHttpHeaders())
             {
                 content.Headers.Add(header.Key, header.Value);
             }
