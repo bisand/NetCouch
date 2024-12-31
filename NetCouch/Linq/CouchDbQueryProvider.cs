@@ -44,7 +44,7 @@ public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
     {
         //var translation = GetQueryProviderProcessor<T>().Execute(expression);
         var translation = new CouchDbVisitor<T>(QueryTranslation).Execute(expression);
-        translation.ViewQuery = new CouchDbViewQueryBuilder(translation).Build();
+        translation.ViewQuery = new CouchDbViewQueryBuilder<T>(translation).Build();
         translation.ViewQuery.Query += "&include_docs=true";
         var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(translation);
 

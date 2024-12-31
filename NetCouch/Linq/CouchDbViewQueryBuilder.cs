@@ -1,16 +1,20 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
+using System.Numerics;
+using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace NetCouch.Linq;
 
-public class CouchDbViewQueryBuilder
+public class CouchDbViewQueryBuilder<T>
 {
     private readonly StringBuilder _query;
     private readonly CouchDbTranslation _translation;
     private readonly StringBuilder _view;
+    private readonly Type _type;
 
-    private const string DocTypeCheck = "function(doc) { if (doc.doc__type && doc.doc__type == '";
+    private const string DocTypeCheck = "function(doc) { if (doc.doc_type_ && doc.doc_type_ == '";
 
     public CouchDbViewQueryBuilder(CouchDbTranslation translation)
     {
@@ -18,6 +22,7 @@ public class CouchDbViewQueryBuilder
         _query = new StringBuilder();
         _view = new StringBuilder();
         _view.Append(DocTypeCheck);
+        _type = typeof(T);
     }
 
     public ViewAndQuery Build()
@@ -28,12 +33,14 @@ public class CouchDbViewQueryBuilder
 
         _view.Append(_translation.DesignDocName);
         _view.Append("') { ");
-        // emit operations go here
 
         AppendNotEqualStatements(notEqualStatements);
         AppendEqualStatements(equalStatements);
 
-        _view.Append(" } } }");
+        if (notEqualStatements.Count > 0)
+            _view.Append(" } ");
+
+        _view.Append(" } }");
 
         return new ViewAndQuery { View = _view.ToString(), Query = _query.ToString() };
     }
@@ -95,7 +102,7 @@ public class CouchDbViewQueryBuilder
 
     private void AppendStatement(Statement statement)
     {
-        if (IsMemberExpression(statement.Left, out string? memberName) && ContainsValue(statement.Right, out object? expressionValue))
+        if (IsMemberExpression(statement.Left, out string? memberName) && ContainsValue(statement.Right, out Expression? expressionValue))
         {
             AppendFormattedStatement(memberName, expressionValue);
         }
@@ -105,25 +112,61 @@ public class CouchDbViewQueryBuilder
         }
     }
 
-    private static bool IsNumeric(object? expressionValue) => expressionValue is int or long or double or float or decimal or short or byte or sbyte or ushort or uint or ulong or char or Enum;
-
-    private void AppendFormattedStatement(string? memberName, object? expressionValue)
+    static bool ImplementsINumber(Type type)
     {
-        if (expressionValue is string)
+        return type.GetInterfaces()
+                   .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INumber<>));
+    }
+
+    private void AppendFormattedStatement(string? memberName, Expression? expressionValue)
+    {
+        string jsonPropertyName = GetJsonPropertyName(memberName);
+
+        if (expressionValue?.Type == typeof(string))
         {
-            _view.AppendFormat("doc.{0} == '{1}',", memberName, expressionValue);
-            _query.AppendFormat("'{0}',", expressionValue);
+            _view.Append($"doc.{jsonPropertyName},");
+            _query.Append($"{expressionValue},");
         }
-        else if (expressionValue is bool)
+        else if (expressionValue?.Type == typeof(bool))
         {
-            _view.AppendFormat("doc.{0} == {1},", memberName, expressionValue?.ToString()?.ToLower());
-            _query.AppendFormat("{0},", expressionValue?.ToString()?.ToLower());
+            string boolValue = expressionValue?.ToString()?.ToLower() ?? "false";
+            _view.Append($"doc.{jsonPropertyName},");
+            _query.Append($"{boolValue},");
         }
-        else if (IsNumeric(expressionValue))
+        else if (expressionValue?.Type != null && ImplementsINumber(expressionValue.Type))
         {
-            _view.AppendFormat("doc.{0} == {1},", memberName, expressionValue);
-            _query.AppendFormat("{0},", expressionValue);
+            _view.Append($"doc.{jsonPropertyName},");
+            _query.Append($"{expressionValue},");
         }
+    }
+
+    private string GetJsonPropertyName(string? memberName)
+    {
+        if (string.IsNullOrEmpty(memberName))
+            return string.Empty;
+
+        var property = _type.GetProperty(memberName);
+        if (property != null)
+        {
+            var jsonPropertyAttribute = property.GetCustomAttribute<JsonPropertyNameAttribute>();
+            if (jsonPropertyAttribute != null)
+            {
+                return jsonPropertyAttribute.Name;
+            }
+        }
+
+        // Fallback to camel case if no attribute is found
+        return ToCamelCase(memberName);
+    }
+
+    private string ToCamelCase(string str)
+    {
+        if (string.IsNullOrEmpty(str) || !char.IsUpper(str[0]))
+            return str;
+
+        char[] chars = str.ToCharArray();
+        chars[0] = char.ToLower(chars[0]);
+        return new string(chars);
     }
 
     private static bool IsMemberExpression(Expression expression, out string? memberName)
@@ -137,7 +180,7 @@ public class CouchDbViewQueryBuilder
         return false;
     }
 
-    private static bool ContainsValue(Expression? expression, out object? expressionValue)
+    private static bool ContainsValue(Expression? expression, out Expression? expressionValue)
     {
         expressionValue = null;
 
