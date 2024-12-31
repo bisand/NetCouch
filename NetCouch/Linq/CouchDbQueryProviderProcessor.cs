@@ -431,7 +431,7 @@ public class CouchDbQueryProviderProcessor<T>(CouchDbTranslation queryTranslatio
 
     private void VisitConstant(ConstantExpression? expression)
     {
-        if (expression?.Type == typeof (CouchDbQuery<T>))
+        if (expression?.Type == typeof (CouchDbQueryable<T>))
         {
             _queryTranslation.DesignDocName = typeof (T).Name.ToLower();
             _queryTranslation.ViewName = typeof (T).Name;

@@ -22,9 +22,9 @@ public class CouchDbSession : IDisposable
         _trackedDocuments = [];
     }
 
-    public CouchDbQuery<T> Query<T>()
+    public CouchDbQueryable<T> Query<T>()
     {
-        var query = new CouchDbQuery<T>(new CouchDbQueryProvider<T>(_api, new CouchDbTranslation(), _trackedDocuments));
+        var query = new CouchDbQueryable<T>(new CouchDbQueryProvider<T>(_api, new CouchDbTranslation(), _trackedDocuments));
         return query;
     }
 

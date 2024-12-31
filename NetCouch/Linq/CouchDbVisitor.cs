@@ -69,7 +69,7 @@ public class CouchDbVisitor<T> : ExpressionVisitor
                 _queryTranslation.QueryValues.Add("'" + node?.Value + "'");
                 break;
             case TypeCode.Object:
-                if (node?.Type != null && node.Type.IsGenericType && node.Type.GetGenericTypeDefinition() == typeof(CouchDbQuery<>))
+                if (node?.Type != null && node.Type.IsGenericType && node.Type.GetGenericTypeDefinition() == typeof(CouchDbQueryable<>))
                 {
                     var type = node.Type.GetGenericArguments()[0];
                     _queryTranslation.DesignDocName = type.Name;

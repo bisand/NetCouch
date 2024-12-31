@@ -3,16 +3,18 @@ using System.Linq.Expressions;
 
 namespace NetCouch.Linq;
 
-public class CouchDbQuery<T> : ICouchDbQueryable<T>
+public class CouchDbQueryable<T> : ICouchDbQueryable<T>
 {
-    public CouchDbQuery(CouchDbQueryProvider<T> provider)
+    private readonly Expression _expression;
+    private readonly IQueryProvider _provider;
+
+    public CouchDbQueryable(CouchDbQueryProvider<T> provider)
     {
-        Provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        Expression = Expression.Constant(this);
-        ElementType = typeof(T);
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _expression = Expression.Constant(this);
     }
 
-    public CouchDbQuery(ICouchDbQueryProvider provider, Expression expression)
+    public CouchDbQueryable(ICouchDbQueryProvider provider, Expression expression)
     {
         if (expression == null)
         {
@@ -22,9 +24,8 @@ public class CouchDbQuery<T> : ICouchDbQueryable<T>
         {
             throw new ArgumentOutOfRangeException(nameof(expression));
         }
-        Provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        Expression = expression;
-        ElementType = typeof(T);
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _expression = expression;
     }
 
     public IEnumerator<T> GetEnumerator()
@@ -41,7 +42,7 @@ public class CouchDbQuery<T> : ICouchDbQueryable<T>
         return GetEnumerator();
     }
 
-    public Expression Expression { get; private set; }
-    public Type ElementType { get; private set; }
-    public IQueryProvider Provider { get; private set; }
+    public Expression Expression => _expression;
+    public IQueryProvider Provider => _provider;
+    public Type ElementType => typeof(T);
 }

@@ -3,6 +3,7 @@ using NetCouch;
 using NetCouch.Db.Api;
 using NetCouch.Db.Api.Extensions;
 using NetCouch.Http;
+using NetCouch.Linq;
 using NetCouch.Models.Couch.Doc;
 
 namespace NetCouchTests
@@ -24,6 +25,25 @@ namespace NetCouchTests
         }
 
         [Test]
+        public void TestFirstOrDefault()
+        {
+            if (string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password) || string.IsNullOrEmpty(_url))
+            {
+                Assert.Fail("Environment variables are not set");
+                return;
+            }
+            var client = new CouchDbClient(_url, _username, _password);
+            var api = new CouchApi(client, "trivial");
+            var provider = new CouchDbQueryProvider<Car>(api, new CouchDbTranslation(), []);
+            var queryable = new CouchDbQueryable<Car>(provider);
+
+            var result = queryable.FirstOrDefault();
+
+            // Assert the result
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
         public void TestingSomeLinq()
         {
             if (string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password) || string.IsNullOrEmpty(_url))
@@ -42,7 +62,7 @@ namespace NetCouchTests
             var cars = new List<object>();
             for (var i = 0; i < 1000; i++)
             {
-                var car = new Car {Id = Guid.NewGuid().ToString(), HorsePowers = 10 + i, Make = "Audi", Model = i.ToString()};
+                var car = new Car { Id = Guid.NewGuid().ToString(), HorsePowers = 100 + i, Make = "Tesla", Model = $"Model {i + 1}" };
                 cars.Add(car);
             }
             var request = new BulkDocsRequest(cars);
@@ -60,7 +80,7 @@ namespace NetCouchTests
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var car = new Car { HorsePowers = 180, Make = "Audi", Model = "A6 Quatro" };
+            var car = new Car { HorsePowers = 180, Make = "Tesla", Model = "Model 3" };
             for (int i = 0; i < 1000; i++)
             {
                 car.HorsePowers = i;

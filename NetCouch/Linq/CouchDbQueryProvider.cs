@@ -18,7 +18,7 @@ public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
 
     public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
     {
-        return new CouchDbQuery<TElement>(this, expression);
+        return new CouchDbQueryable<TElement>(this, expression);
     }
 
     public IQueryable CreateQuery(Expression expression)
@@ -27,7 +27,7 @@ public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
         try
         {
             return (IQueryable) Activator.CreateInstance(
-                typeof (CouchDbQuery<>).MakeGenericType(elementType),
+                typeof (CouchDbQueryable<>).MakeGenericType(elementType),
                 [this, expression])!;
         }
         catch (TargetInvocationException tie)

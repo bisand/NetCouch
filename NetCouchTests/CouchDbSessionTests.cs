@@ -26,7 +26,7 @@ namespace NetCouchTests
             _database = new CouchDatabase(url, username, password);
 
             using var session = _database.OpenSession("trivial");
-            var car = new Car { Id = Guid.NewGuid().ToString(), HorsePowers = 123, Make = "Audi", Model = "Test" };
+            var car = new Car { Id = Guid.NewGuid().ToString(), HorsePowers = 1337, Make = "Tesla", Model = "Model 3" };
             session.Store(car);
             session.SaveChanges();
         }
@@ -40,11 +40,11 @@ namespace NetCouchTests
                 return;
             }
             using var session = _database.OpenSession("trivial");
-            var queryable = session.Query<Car>().Where(x => x.HorsePowers == 123 && x.Make == "Audi");
+            var queryable = session.Query<Car>().Where(x => x.HorsePowers == 1337 && x.Make == "Tesla");
             var cars = queryable.ToList();
             foreach (var car in cars)
             {
-                car.Model = "Cool";
+                car.Model = "Model Y";
                 var test = session.Load<Car>(car.Id);
             }
             session.SaveChanges();
@@ -69,7 +69,7 @@ namespace NetCouchTests
                 using var session = _database.OpenSession("trivial");
                 for (var i = 0; i < 10000; i++)
                 {
-                    var car = new Car { Id = Guid.NewGuid().ToString(), HorsePowers = 10 + i, Make = "Audi", Model = i.ToString() };
+                    var car = new Car { Id = Guid.NewGuid().ToString(), HorsePowers = 100 + i, Make = "Tesla", Model = $"Model {i}" };
                     session.Store(car);
                 }
                 session.SaveChanges();
