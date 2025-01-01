@@ -5,11 +5,11 @@ namespace NetCouch.Models.Couch.Database;
 public class InternalResult
 {
     [JsonPropertyName("ok")]
-    public bool? Ok { get; private set; }
+    public bool? Ok { get; set; }
 
     [JsonPropertyName("error")]
-    public string? Error { get; private set; }
+    public string? Error { get; set; }
 
     [JsonPropertyName("reason")]
-    public string? Reason { get; private set; }
+    public string? Reason { get; set; }
 }

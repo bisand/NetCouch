@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 using NetCouch;
 using NetCouch.Db.Api;
 using NetCouch.Db.Api.Extensions;
 using NetCouch.Http;
 using NetCouch.Linq;
+using NetCouch.Models.Couch.DesignDoc;
 using NetCouch.Models.Couch.Doc;
 
 namespace NetCouchTests
@@ -41,6 +43,37 @@ namespace NetCouchTests
 
             // Assert the result
             Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void Deserialize_ViewsProperty_ShouldBeDeserializedCorrectly()
+        {
+            // Arrange
+            string jsonString = @"{
+                ""_id"": ""_design/Car"",
+                ""_rev"": ""16-3bd6e35abc1a0efaf67bd304d70858c8"",
+                ""filters"": {},
+                ""updates"": {},
+                ""views"": {
+                    ""HorsePowers"": {
+                        ""map"": ""function(doc) { if (doc.doc_type_ && doc.doc_type_ == 'Car') { emit([doc.horsePowers],null); } }""
+                    }
+                },
+                ""doc_type_"": ""DesignDoc""
+            }";
+
+            // Act
+            var designDoc = JsonSerializer.Deserialize<DesignDoc>(jsonString);
+
+            // Debug output
+            Console.WriteLine(JsonSerializer.Serialize(designDoc));
+
+            string map = "function(doc) { if (doc.doc_type_ && doc.doc_type_ == 'Car') { emit([doc.horsePowers],null); } }";
+
+            // Assert
+            Assert.NotNull(designDoc.Views);
+            Assert.True(designDoc.Views.ContainsKey("HorsePowers"));
+            Assert.That(map, Is.EqualTo(designDoc.Views["HorsePowers"].Map));
         }
 
         [Test]

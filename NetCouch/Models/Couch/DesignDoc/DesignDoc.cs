@@ -12,25 +12,25 @@ public class DesignDoc : CouchDoc
     }
 
     [JsonPropertyName("language")]
-    public string? Language { get; private set; }
+    public string? Language { get; set; }
 
     [JsonPropertyName("options")]
-    public object? Options { get; private set; }
+    public object? Options { get; set; }
 
     [JsonPropertyName("filters")]
-    public IDictionary<string, string> Filters { get; private set; }
+    public IDictionary<string, string> Filters { get; set; }
 
     [JsonPropertyName("updates")]
-    public IDictionary<string, string> Updates { get; private set; }
+    public IDictionary<string, string> Updates { get; set; }
 
     [JsonPropertyName("views")]
-    public IDictionary<string, View> Views { get; private set; }
+    public IDictionary<string, View> Views { get; set; }
 
     [JsonPropertyName("validate_doc_update")]
-    public string? ValidateDocUpdate { get; private set; }
+    public string? ValidateDocUpdate { get; set; }
 
     [JsonPropertyName("autoupdate")]
-    public bool? AutoUpdate { get; private set; }
+    public bool? AutoUpdate { get; set; }
 
     public void AddView(string name, View view)
     {

@@ -95,7 +95,7 @@ public class CouchDbViewQueryBuilder<T>
         }
         else
         {
-            _view.Append("emit(null, null);");
+            _view.Append("emit(doc._id, 1);");
         }
     }
 

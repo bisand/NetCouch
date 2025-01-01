@@ -19,7 +19,6 @@ public class CouchDbQueryExecuter<T>
     {
         ArgumentNullException.ThrowIfNull(nameof(translation));
         ArgumentException.ThrowIfNullOrWhiteSpace(translation.DesignDocName, nameof(translation.DesignDocName));
-        // ArgumentException.ThrowIfNullOrWhiteSpace(translation.ViewName, nameof(translation.ViewName));
         ArgumentNullException.ThrowIfNull(translation.ViewQuery, nameof(translation.ViewQuery));
         ArgumentException.ThrowIfNullOrWhiteSpace(translation.ViewQuery.Query, nameof(translation.ViewQuery.Query));
 

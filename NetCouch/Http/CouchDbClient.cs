@@ -43,12 +43,12 @@ public class CouchDbClient : IDisposable
         };
     }
 
-    private static async Task<ResponseData<TOut>> GetResponseDataAsync<TOut>(HttpResponseMessage response)
+    private async Task<ResponseData<TOut>> GetResponseDataAsync<TOut>(HttpResponseMessage response)
     {
         var data = await response.Content.ReadAsStringAsync();
         var length = response.Content.Headers.ContentLength ?? 0;
         var contentType = response.Content.Headers.ContentType?.MediaType ?? "application/json";
-        var body = JsonSerializer.Deserialize<TOut>(data);
+        var body = JsonSerializer.Deserialize<TOut>(data, _serializationOptions);
         return new ResponseData<TOut> { BodyString = data, Body = body, ContentLength = length, ContentType = contentType, StatusCode = response.StatusCode, StatusDescription = response.ReasonPhrase ?? string.Empty };
     }
 

@@ -12,7 +12,7 @@ public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
     public CouchDbQueryProvider(ICouchApi couchApi, CouchDbTranslation queryTranslation, List<dynamic> trackedDocuments)
     {
         _couchApi = couchApi;
-        _trackedEntities = [];
+        _trackedEntities = new List<T>();
         QueryTranslation = queryTranslation;
     }
 
@@ -26,9 +26,9 @@ public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
         var elementType = TypeSystem.GetElementType(expression.Type) ?? throw new InvalidOperationException($"No element type by the name of {expression.Type} found.");
         try
         {
-            return (IQueryable) Activator.CreateInstance(
-                typeof (CouchDbQueryable<>).MakeGenericType(elementType),
-                [this, expression])!;
+            return (IQueryable)Activator.CreateInstance(
+                typeof(CouchDbQueryable<>).MakeGenericType(elementType),
+                new object[] { this, expression })!;
         }
         catch (TargetInvocationException tie)
         {
@@ -42,7 +42,6 @@ public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
 
     public object Execute(Expression expression)
     {
-        //var translation = GetQueryProviderProcessor<T>().Execute(expression);
         var translation = new CouchDbVisitor<T>(QueryTranslation).Execute(expression);
         translation.ViewQuery = new CouchDbViewQueryBuilder<T>(translation).Build();
         translation.ViewQuery.Query += "&include_docs=true";
@@ -51,9 +50,8 @@ public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
         // Try to extract the result.
         if (queryResult != null && queryResult.Body != null && queryResult.Body.Rows != null)
         {
-            foreach (var row in queryResult.Body.Rows ?? [])
+            foreach (var row in queryResult.Body.Rows)
             {
-                // TODO: Implement this.
                 if (row.Doc != null)
                     _trackedEntities.Add(row.Doc);
             }
@@ -66,10 +64,32 @@ public class CouchDbQueryProvider<T> : ICouchDbQueryProvider
 
     public TResult Execute<TResult>(Expression expression)
     {
-        return (TResult) Execute(expression);
+        var translation = new CouchDbVisitor<T>(QueryTranslation).Execute(expression);
+        translation.ViewQuery = new CouchDbViewQueryBuilder<T>(translation).Build();
+        translation.ViewQuery.Query += "&include_docs=true";
+        var queryResult = new CouchDbQueryExecuter<T>(_couchApi).Execute(translation);
+
+        if (queryResult != null && queryResult.Body != null && queryResult.Body.Rows != null)
+        {
+            foreach (var row in queryResult.Body.Rows)
+            {
+                if (row.Doc != null)
+                    _trackedEntities.Add(row.Doc);
+            }
+            if (expression is MethodCallExpression methodCall)
+            {
+                if (methodCall.Method.Name == nameof(Queryable.FirstOrDefault))
+                {
+                    if (_trackedEntities.Count > 1)
+                        return (TResult)(object)_trackedEntities.FirstOrDefault()!;
+                }
+            }
+        }
+
+        return (TResult)Execute(expression);
     }
 
-    public CouchDbTranslation QueryTranslation { get; private set; }
+    public CouchDbTranslation QueryTranslation { get; set; }
 
     private CouchDbQueryProviderProcessor<TResult> GetQueryProviderProcessor<TResult>()
     {
