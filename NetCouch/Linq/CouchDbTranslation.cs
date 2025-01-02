@@ -10,6 +10,8 @@ public class CouchDbTranslation
         QueryValues = [];
         Statements = [];
         ViewQuery = new ViewAndQuery();
+        Skip = 0;
+        Limit = 100;
     }
 
     public string? QueryText { get; set; }
@@ -19,4 +21,6 @@ public class CouchDbTranslation
     public List<string> QueryValues { get; set; }
     public List<Statement> Statements { get; set; }
     public ViewAndQuery ViewQuery { get; set; }
+    public int Skip { get; set; }
+    public int Limit { get; set; }
 }

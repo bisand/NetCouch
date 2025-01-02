@@ -32,6 +32,8 @@ public class CouchDbQueryExecuter<T>
                      .Db(_couchApi.DefaultDatabase)
                      .DesignDoc(translation.DesignDocName)
                      .View(translation.ViewName, translation.ViewQuery.Query)
+                     .Skip(translation.Skip)
+                     .Limit(translation.Limit)
                      .Get<ViewResponse<T>>();
 
 

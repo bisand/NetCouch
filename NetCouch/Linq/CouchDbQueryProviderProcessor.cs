@@ -508,9 +508,17 @@ public class CouchDbQueryProviderProcessor<T>(CouchDbTranslation queryTranslatio
 
     private void VisitTake(ConstantExpression constantExpression)
     {
+        if (constantExpression.Value != null)
+        {
+            _queryTranslation.Skip = (int)constantExpression.Value;
+        }
     }
 
     private void VisitSkip(ConstantExpression constantExpression)
     {
+        if (constantExpression.Value != null)
+        {
+            _queryTranslation.Skip = (int)constantExpression.Value;
+        }
     }
 }

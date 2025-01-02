@@ -92,7 +92,7 @@ namespace NetCouchTests
             var queryable = from car in session.Query<Car>()
                             where car.HorsePowers == 1337
                             select car;
-            var cars = queryable.ToList();
+            var cars = queryable.Skip(1).Take(1).ToList();
             Assert.That(cars != null && cars.Count > 0);
         }
 
