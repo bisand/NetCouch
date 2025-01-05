@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace NetCouch.Http;
 
-public class CouchDbClient : IDisposable
+public class CouchDbClient : IRequestClient, IDisposable
 {
     private readonly HttpClient _httpClient;
     private readonly JsonSerializerOptions _serializationOptions;
@@ -69,7 +69,7 @@ public class CouchDbClient : IDisposable
     public async Task<ResponseData<TOut>> HeadAsync<TOut>(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
-            throw new ArgumentNullException("path");
+            throw new ArgumentNullException(nameof(path));
 
         var requestData = new RequestData<TOut>(path);
         var httpRequestData = new HttpRequestMessage(HttpMethod.Head, path);
@@ -85,7 +85,7 @@ public class CouchDbClient : IDisposable
     public async Task<ResponseData<TOut>> OptionsAsync<TOut>(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
-            throw new ArgumentNullException("path");
+            throw new ArgumentNullException(nameof(path));
 
         var requestData = new RequestData<TOut>(path);
         var httpRequestData = new HttpRequestMessage(HttpMethod.Options, path);
@@ -101,7 +101,7 @@ public class CouchDbClient : IDisposable
     public async Task<ResponseData<TOut>> DeleteAsync<TOut>(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
-            throw new ArgumentNullException("path");
+            throw new ArgumentNullException(nameof(path));
 
         var url = new Uri(new Uri(_url), path);
         var response = await _httpClient.DeleteAsync(url);
@@ -113,42 +113,40 @@ public class CouchDbClient : IDisposable
         return DeleteAsync<TOut>(path).GetAwaiter().GetResult();
     }
 
-    public async Task<ResponseData<TOut>> PutAsync<TIn, TOut>(RequestData<TIn>? requestData)
+    public async Task<ResponseData<TOut>> SendAsync<TIn, TOut>(RequestData<TIn>? requestData, HttpMethod method)
     {
         ArgumentNullException.ThrowIfNull(requestData, nameof(requestData));
+
+        // Serialize request body
         var jsonBody = JsonSerializer.Serialize(requestData.Body, _serializationOptions);
         var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+        // Prepare the request
+        var url = new Uri(new Uri(_url), requestData?.Url);
+        var request = new HttpRequestMessage(method, url)
+        {
+            Content = content
+        };
+
+        // Add headers to the request
         foreach (var header in requestData?.Headers ?? new CouchDbHttpHeaders())
         {
-            content.Headers.Add(header.Key, header.Value);
+            request.Headers.TryAddWithoutValidation(header.Key, header.Value);
         }
-        var url = new Uri(new Uri(_url), requestData?.Url);
-        var response = await _httpClient.PutAsync(url, content);
+
+        // Send the request
+        var response = await _httpClient.SendAsync(request);
         return await GetResponseDataAsync<TOut>(response);
     }
 
     public ResponseData<TOut> Put<TIn, TOut>(RequestData<TIn>? requestData)
     {
-        return PutAsync<TIn, TOut>(requestData).GetAwaiter().GetResult();
-    }
-
-    public async Task<ResponseData<TOut>> PostAsync<TIn, TOut>(RequestData<TIn> requestData)
-    {
-        ArgumentNullException.ThrowIfNull(requestData, nameof(requestData));
-        var jsonBody = JsonSerializer.Serialize(requestData.Body, _serializationOptions);
-        var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-        foreach (var header in requestData?.Headers ?? new CouchDbHttpHeaders())
-        {
-            content.Headers.Add(header.Key, header.Value);
-        }
-        var url = new Uri(new Uri(_url), requestData?.Url);
-        var response = await _httpClient.PostAsync(url, content);
-        return await GetResponseDataAsync<TOut>(response);
+        return SendAsync<TIn, TOut>(requestData, HttpMethod.Put).GetAwaiter().GetResult();
     }
 
     public ResponseData<TOut> Post<TIn, TOut>(RequestData<TIn> requestData)
     {
-        return PostAsync<TIn, TOut>(requestData).GetAwaiter().GetResult();
+        return SendAsync<TIn, TOut>(requestData, HttpMethod.Post).GetAwaiter().GetResult();
     }
 
     #region IDisposable members

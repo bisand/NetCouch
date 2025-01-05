@@ -4,7 +4,7 @@ namespace NetCouch.Db.Api.Elements;
 
 public class CouchApiRootCommand : CouchApiDesignDoc
 {
-    public CouchApiRootCommand(CouchDbClient requestClient)
+    public CouchApiRootCommand(IRequestClient requestClient)
         : base(requestClient)
     {
     }

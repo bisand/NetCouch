@@ -1,5 +1,6 @@
 ﻿using NetCouch.Db.Api.Elements;
 using NetCouch.Http;
+using NetCouch.Models.Couch.Database;
 
 namespace NetCouch.Db.Api.Extensions;
 
@@ -102,15 +103,38 @@ public static class CouchApiRootExtensions
     {
         var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");
         if (!string.IsNullOrWhiteSpace(revision))
+        {
+            // Ensure the revision string is enclosed in double quotes
+            if (!revision.StartsWith('\"') && !revision.EndsWith('\"'))
+            {
+                revision = $"\"{revision}\"";
+            }
             requestData?.Headers?.Add("If-Match", revision);
+        }
         var responseData = element._requestClient.Put<TIn, TOut>(requestData);
         return responseData;
     }
 
-    public static ResponseData<object> Put(this CouchApiRoot element, dynamic? obj = default)
+    public static ResponseData<CouchDbResult> Put<TIn>(this CouchApiRoot element, TIn? obj = default, string? revision = null)
+    {
+        var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");
+        if (!string.IsNullOrWhiteSpace(revision))
+        {
+            // Ensure the revision string is enclosed in double quotes
+            if (!revision.StartsWith('\"') && !revision.EndsWith('\"'))
+            {
+                revision = $"\"{revision}\"";
+            }
+            requestData?.Headers?.Add("If-Match", revision);
+        }
+        var responseData = element._requestClient.Put<TIn, CouchDbResult>(requestData);
+        return responseData;
+    }
+
+    public static ResponseData<CouchDbResult> Put(this CouchApiRoot element, dynamic? obj = default)
     {
         var requestData = new RequestData<dynamic>(element.PathElement, obj, "application/json");
-        var responseData = element._requestClient.Put<dynamic, object>(requestData);
+        var responseData = element._requestClient.Put<dynamic, CouchDbResult>(requestData);
         return responseData;
     }
 
@@ -118,6 +142,13 @@ public static class CouchApiRootExtensions
     {
         var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");
         var responseData = element._requestClient.Post<TIn, TOut>(requestData);
+        return responseData;
+    }
+
+    public static ResponseData<CouchDbResult> Post<TIn>(this CouchApiRoot element, TIn? obj = default)
+    {
+        var requestData = new RequestData<TIn>(element.PathElement, obj, "application/json");
+        var responseData = element._requestClient.Post<TIn, CouchDbResult>(requestData);
         return responseData;
     }
 }

@@ -4,7 +4,7 @@ namespace NetCouch.Db.Api.Elements;
 
 public class CouchApiConfigSectionKey : CouchApiRoot
 {
-    public CouchApiConfigSectionKey(CouchDbClient requestClient)
+    public CouchApiConfigSectionKey(IRequestClient requestClient)
         : base(requestClient)
     {
     }

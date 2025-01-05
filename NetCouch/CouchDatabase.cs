@@ -69,7 +69,7 @@ public class CouchDatabase : IDisposable
             // Retrieve the current design doc.
             var dbResponse = _api.Root()
                                  .Db(_api.DefaultDatabase)
-                                 .Put<dynamic, InternalResult>("");
+                                 .Put<dynamic, CouchDbResult>("");
 
             if ((dbResponse.Body == null || dbResponse.Body.Ok == false) && dbResponse.StatusCode != HttpStatusCode.Created)
             {

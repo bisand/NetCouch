@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text.Json;
 using NetCouch.Db.Api;
 using NetCouch.Db.Api.Extensions;
 using NetCouch.Http;
@@ -9,7 +10,7 @@ using NUnit.Framework;
 namespace NetCouchTests
 {
     [TestFixture]
-    public class RequestClientTests
+    public class RequestClientTestsTest
     {
         private string? _username;
         private string? _password;
@@ -25,7 +26,7 @@ namespace NetCouchTests
         }
 
         [Test]
-        public void When_getting_data_from_then_server__Then_it_should_be_deserialized()
+        public void When_getting_data_from_the_server__Then_it_should_be_deserialized()
         {
             if (string.IsNullOrEmpty(_url) || string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password))
             {
@@ -36,6 +37,7 @@ namespace NetCouchTests
             var api = new CouchApi(client);
 
             var responseData = api.Root().Stats().Get<dynamic>();
+            Assert.IsNotNull(responseData);
 
             var rootData = api.Root().Get<HttpGetRoot>();
             Assert.IsNotNull(rootData);
@@ -43,15 +45,23 @@ namespace NetCouchTests
             var configData = api.Root().Config().Get<dynamic>();
             Assert.IsNotNull(configData);
 
-            var configSectionData = api.Root().Config().Section("daemons").Get<dynamic>();
-            var indexServer = configSectionData.Body.index_server.ToString();
+            var configSectionData = api.Root().Db("test").Get<dynamic>();
             Assert.IsNotNull(configSectionData);
+
+            JsonElement dbName = default;
+            if (configSectionData?.Body?.TryGetProperty("db_name", out dbName))
+            {
+                var indexServer = dbName.ToString();
+                Assert.IsNotNull(indexServer);
+            }
 
             var dbData = api.Root().Db("Test").Get<dynamic>();
             if (dbData.StatusCode != HttpStatusCode.OK)
             {
                 var newDbData = api.Root().Db("Test").Put<dynamic, object>();
+                Assert.IsNotNull(newDbData);
             }
+
             var person = new Person
             {
                 FirstName = "André",
@@ -61,7 +71,7 @@ namespace NetCouchTests
                 Height = 180
             };
 
-            var post = api.Root().Db("test").Doc().Post<Person, dynamic>(person);
+            var post = api.Root().Db("test").Doc().Post<Person>(person);
             Assert.IsNotNull(post);
 
             var getDoc = api.Root().Db("test").Doc("Test").Get<Person>();
@@ -69,10 +79,8 @@ namespace NetCouchTests
 
             getDoc.Body.Weight = 77;
 
-            var postDoc = api.Root().Db("test").Doc("Test").Put<Person, dynamic>(getDoc.Body, (string)getDoc.DynamicData._rev);
+            var postDoc = api.Root().Db("test").Doc("Test").Put<Person>(getDoc.Body, (string)getDoc.Body.Rev);
             Assert.IsNotNull(postDoc);
-
-
         }
     }
 }

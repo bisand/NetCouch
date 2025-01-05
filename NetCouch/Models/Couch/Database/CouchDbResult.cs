@@ -2,7 +2,7 @@
 
 namespace NetCouch.Models.Couch.Database;
 
-public class InternalResult
+public class CouchDbResult
 {
     [JsonPropertyName("ok")]
     public bool? Ok { get; set; }

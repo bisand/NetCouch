@@ -3,6 +3,6 @@ using System.Runtime.Serialization;
 
 namespace NetCouch.Models.Couch.Doc;
 
-public class BulkDocsResponse : List<DocResponse>
+public class BulkDocsResponse : List<CouchDoc>
 {
 }

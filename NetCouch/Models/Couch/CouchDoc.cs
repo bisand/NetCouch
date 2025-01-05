@@ -3,7 +3,7 @@ using NetCouch.Models.Couch.Database;
 
 namespace NetCouch.Models.Couch;
 
-public class CouchDoc : InternalResult
+public class CouchDoc : CouchDbResult
 {
     [JsonPropertyName("_id")]
     public string? Id { get; set; }

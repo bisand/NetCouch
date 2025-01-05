@@ -2,7 +2,7 @@
 
 namespace NetCouch.Models.Couch.Database;
 
-public class DatabaseInfo : InternalResult
+public class DatabaseInfo : CouchDbResult
 {
     [JsonPropertyName("committed_update_seq")]
     public int CommittedUpdateSeq { get; set; }

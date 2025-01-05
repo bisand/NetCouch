@@ -2,9 +2,9 @@
 
 namespace NetCouch.Db.Api.Elements;
 
-public class CouchApiRoot(CouchDbClient requestClient)
+public class CouchApiRoot(IRequestClient requestClient)
 {
-    protected internal readonly CouchDbClient _requestClient = requestClient;
+    protected internal readonly IRequestClient _requestClient = requestClient;
 
     public string PathElement { get; set; } = "/";
 }
